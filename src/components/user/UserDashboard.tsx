@@ -238,37 +238,7 @@ const UserDashboard = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header Section - Simplified for Mobile */}
-      {!isMobile && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
-                Messaging Dashboard
-              </h1>
-              <p className="text-blue-100">Manage your conversations and contacts</p>
-            </div>
-            <div className="flex items-center gap-4">
-              <Badge variant="secondary" className="bg-blue-500/20 text-blue-300">
-                Online
-              </Badge>
-              <Button 
-                onClick={() => setShowAddContact(true)}
-                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-              >
-                <UserPlus className="mr-2 h-4 w-4" />
-                New Contact
-              </Button>
-            </div>
-          </div>
-        </motion.div>
-      )}
-
-      {/* Mobile Header Bar - Clean and minimal */}
+      {/* Mobile Action Bar - Only shown on mobile */}
       {isMobile && (
         <div className="flex items-center justify-between p-4 bg-gradient-to-r from-slate-800/50 to-slate-900/50 rounded-lg border border-slate-700/50 backdrop-blur-sm">
           <div className="flex items-center gap-2">
