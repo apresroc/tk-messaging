@@ -9,9 +9,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Bell, Volume2, Palette, User, Shield, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '@/components/theme-provider';
 
 const UserSettings = () => {
   const navigate = useNavigate();
+  const { theme, setTheme } = useTheme();
   const [settings, setSettings] = useState({
     notifications: {
       email: true,
@@ -42,9 +44,21 @@ const UserSettings = () => {
   useEffect(() => {
     const savedSettings = localStorage.getItem('userSettings');
     if (savedSettings) {
-      setSettings(JSON.parse(savedSettings));
+      const parsedSettings = JSON.parse(savedSettings);
+      setSettings(parsedSettings);
+      // Apply saved theme
+      setTheme(parsedSettings.theme.mode);
+    } else {
+      // Set initial theme from context
+      setSettings(prev => ({
+        ...prev,
+        theme: {
+          ...prev.theme,
+          mode: theme
+        }
+      }));
     }
-  }, []);
+  }, [theme, setTheme]);
 
   // Save settings to localStorage
   useEffect(() => {
@@ -83,6 +97,11 @@ const UserSettings = () => {
         [key]: value,
       },
     }));
+    
+    // Apply theme change immediately
+    if (key === 'mode') {
+      setTheme(value);
+    }
   };
 
   const handlePrivacyChange = (key: string, value: boolean) => {
@@ -347,10 +366,12 @@ const UserSettings = () => {
               {['blue', 'green', 'red', 'purple', 'yellow'].map((color) => (
                 <Button
                   key={color}
-                  variant="outline"
+                  variant={settings.theme.color === color ? "default" : "outline"}
                   size="icon"
                   className={`w-8 h-8 rounded-full border-slate-300 dark:border-slate-700 ${
-                    settings.theme.color === color ? 'ring-2 ring-offset-2 ring-primary' : ''
+                    settings.theme.color === color 
+                      ? 'ring-2 ring-offset-2 ring-primary' 
+                      : ''
                   } bg-${color}-500`}
                   onClick={() => handleThemeChange('color', color)}
                 />

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ModeToggle } from '@/components/mode-toggle';
 import { User, LogOut, Settings } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -54,7 +53,6 @@ const Header = () => {
               <Settings className="h-5 w-5" />
             </Button>
           )}
-          <ModeToggle />
           <Button 
             variant="ghost" 
             size="icon" 
