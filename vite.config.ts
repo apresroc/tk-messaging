@@ -18,9 +18,9 @@ export default defineConfig(() => ({
         enabled: true
       },
       manifest: {
-        name: 'Twilio Messaging Platform',
-        short_name: 'TwilioMsg',
-        description: 'A powerful messaging platform built with Twilio',
+        name: 'TK Messaging',
+        short_name: 'TKMsg',
+        description: 'A powerful messaging platform',
         theme_color: '#ffffff',
         icons: [
           {

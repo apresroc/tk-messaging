@@ -25,7 +25,7 @@ const Header = () => {
           <Button variant="ghost" size="icon" onClick={goToHome}>
             <Home className="h-6 w-6 text-primary" />
           </Button>
-          <span className="text-xl font-bold">Twilio Messenger</span>
+          <span className="text-xl font-bold">TK Messaging</span>
         </div>
         
         <div className="ml-auto flex items-center space-x-4">

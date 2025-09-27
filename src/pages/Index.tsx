@@ -49,7 +49,7 @@ const Index = () => {
           <div className="hidden lg:block">
             <div className="space-y-6">
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
-                Twilio Messaging <span className="text-primary">Platform</span>
+                TK Messaging <span className="text-primary">Platform</span>
               </h1>
               <p className="text-xl text-gray-600">
                 Streamline your customer communication with our powerful, easy-to-use messaging platform.
