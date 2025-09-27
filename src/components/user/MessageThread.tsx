@@ -3,7 +3,7 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Send } from 'lucide-react';
+import { Send, MessageCircle } from 'lucide-react';
 import { Message, Conversation } from '@/lib/types';
 import { twilioClient } from '@/lib/twilio-client';
 import { toast } from 'sonner';
