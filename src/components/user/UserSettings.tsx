@@ -7,12 +7,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Bell, Volume2, Palette, User, Shield, ArrowLeft } from 'lucide-react';
+import { Bell, Volume2, Palette, User, Shield } from 'lucide-react';
 import { toast } from 'sonner';
-import { useNavigate } from 'react-router-dom';
 
 const UserSettings = () => {
-  const navigate = useNavigate();
   const [settings, setSettings] = useState({
     notifications: {
       email: true,
@@ -53,7 +51,6 @@ const UserSettings = () => {
   }, [settings]);
 
   const handleSaveSettings = () => {
-    localStorage.setItem('userSettings', JSON.stringify(settings));
     toast.success('Settings saved successfully');
   };
 
@@ -107,25 +104,11 @@ const UserSettings = () => {
     }));
   };
 
-  const handleBackToDashboard = () => {
-    navigate('/conversations');
-  };
-
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">User Settings</h1>
-          <p className="text-muted-foreground">Manage your preferences and account settings</p>
-        </div>
-        <Button 
-          onClick={handleBackToDashboard} 
-          variant="outline" 
-          className="flex items-center gap-2"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to Dashboard
-        </Button>
+      <div>
+        <h1 className="text-3xl font-bold">User Settings</h1>
+        <p className="text-muted-foreground">Manage your preferences and account settings</p>
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -381,13 +364,8 @@ const UserSettings = () => {
         </CardContent>
       </Card>
       
-      <div className="flex justify-end gap-2">
-        <Button onClick={handleBackToDashboard} variant="outline">
-          Back to Dashboard
-        </Button>
-        <Button onClick={handleSaveSettings}>
-          Save All Settings
-        </Button>
+      <div className="flex justify-end">
+        <Button onClick={handleSaveSettings}>Save All Settings</Button>
       </div>
     </div>
   );
