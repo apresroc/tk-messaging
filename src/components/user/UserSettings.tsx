@@ -115,7 +115,7 @@ const UserSettings = () => {
     }));
   };
 
-  // New toggle button component matching the requested design
+  // iOS-style toggle button component
   const ToggleSwitch = ({ 
     isOn, 
     onToggle,
@@ -136,12 +136,12 @@ const UserSettings = () => {
       </div>
       <button
         onClick={onToggle}
-        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all duration-200 ${
-          isOn ? 'bg-blue-500' : 'bg-slate-600'
+        className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all duration-200 ${
+          isOn ? 'bg-blue-500' : 'bg-gray-400'
         }`}
       >
         <span
-          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ${
+          className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform duration-200 shadow-md ${
             isOn ? 'translate-x-6' : 'translate-x-1'
           }`}
         />
