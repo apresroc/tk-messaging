@@ -157,7 +157,7 @@ const UserSettings = () => {
         <Button 
           variant="outline" 
           onClick={() => navigate('/conversations')}
-          className="border-blue-400 text-blue-100 hover:bg-blue-400 hover:text-white"
+          className="border-blue-400 text-white hover:bg-blue-400 hover:text-white font-medium"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Dashboard
