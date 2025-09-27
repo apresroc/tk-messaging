@@ -12,8 +12,10 @@ import { twilioClient } from '@/lib/twilio-client';
 import { toast } from 'sonner';
 import { Plus, MessageSquare, Settings, UserPlus, ArrowLeft, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const UserDashboard = () => {
+  const navigate = useNavigate();
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [messages, setMessages] = useState<Record<string, Message[]>>({});
@@ -232,6 +234,15 @@ const UserDashboard = () => {
     }
   };
 
+  const handleNavigateToSettings = () => {
+    navigate('/settings');
+  };
+
+  const handleAddNewMessage = () => {
+    // For now, we'll just show a toast since we don't have a new message UI
+    toast.info('New message functionality will be implemented');
+  };
+
   const selectedConversation = conversations.find(c => c.id === selectedConversationId) || null;
   const selectedMessages = selectedConversationId ? messages[selectedConversationId] || [] : [];
 
@@ -258,7 +269,7 @@ const UserDashboard = () => {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => {/* Add message functionality */}}
+              onClick={handleAddNewMessage}
               className="text-blue-200 hover:text-white hover:bg-white/10"
               title="New Message"
             >
@@ -280,7 +291,7 @@ const UserDashboard = () => {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => {/* Navigate to settings */}}
+              onClick={handleNavigateToSettings}
               className="text-blue-200 hover:text-white hover:bg-white/10"
               title="Settings"
             >
