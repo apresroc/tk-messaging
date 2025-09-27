@@ -9,7 +9,6 @@ import Admin from "./pages/Admin";
 import Conversations from "./pages/Conversations";
 import Customers from "./pages/Customers";
 import SettingsPage from "./pages/SettingsPage";
-import Sidebar from "@/components/layout/Sidebar";
 import Header from "@/components/layout/Header";
 
 const queryClient = new QueryClient();
@@ -22,20 +21,17 @@ const App = () => (
       <BrowserRouter>
         <div className="flex flex-col min-h-screen">
           <Header />
-          <div className="flex flex-1">
-            <Sidebar />
-            <main className="flex-1 overflow-y-auto">
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/admin" element={<Admin />} />
-                <Route path="/conversations" element={<Conversations />} />
-                <Route path="/customers" element={<Customers />} />
-                <Route path="/settings" element={<SettingsPage />} />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </main>
-          </div>
+          <main className="flex-1 overflow-y-auto">
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/admin" element={<Admin />} />
+              <Route path="/conversations" element={<Conversations />} />
+              <Route path="/customers" element={<Customers />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
         </div>
       </BrowserRouter>
     </TooltipProvider>
