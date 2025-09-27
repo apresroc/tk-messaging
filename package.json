@@ -60,6 +60,7 @@
     "tailwindcss-animate": "^1.0.7",
     "twilio": "^5.10.1",
     "vaul": "^0.9.3",
+    "vite-plugin-pwa": "^1.0.3",
     "zod": "^3.23.8"
   },
   "devDependencies": {

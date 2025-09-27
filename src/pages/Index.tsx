@@ -29,6 +29,13 @@ const Index = () => {
       return;
     }
     
+    // Check for user credentials
+    if (email === 'apresroc@gmail.com' && password === '123') {
+      toast.success('User login successful');
+      navigate('/conversations');
+      return;
+    }
+    
     // For demo purposes, any other valid login goes to conversations
     toast.success('Login successful');
     navigate('/conversations');
@@ -140,7 +147,8 @@ const Index = () => {
                   <p className="text-sm text-muted-foreground">
                     <strong>Demo Credentials:</strong><br />
                     Admin: sysad@techkrafted.com / 123<br />
-                    Regular user: Any other valid email/password
+                    User: apresroc@gmail.com / 123<br />
+                    Other: Any other valid email/password
                   </p>
                 </div>
               </CardContent>

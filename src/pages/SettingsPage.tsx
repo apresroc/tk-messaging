@@ -1,10 +1,10 @@
 import React from 'react';
-import Settings from '@/components/user/Settings';
+import UserSettings from '@/components/user/UserSettings';
 
 const SettingsPage = () => {
   return (
     <div className="container py-6">
-      <Settings />
+      <UserSettings />
     </div>
   );
 };
