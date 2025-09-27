@@ -26,7 +26,7 @@ const UserSettings = () => {
       volume: 80,
     },
     theme: {
-      mode: 'system',
+      mode: 'light',
       color: 'blue',
     },
     privacy: {
@@ -48,7 +48,7 @@ const UserSettings = () => {
       const parsedSettings = JSON.parse(savedSettings);
       setSettings(parsedSettings);
       
-      // Only apply theme if it's different from current theme
+      // Apply saved theme mode
       if (parsedSettings.theme.mode !== theme) {
         setTheme(parsedSettings.theme.mode);
       }
@@ -58,7 +58,7 @@ const UserSettings = () => {
         ...prev,
         theme: {
           ...prev.theme,
-          mode: theme
+          mode: theme === 'system' ? 'light' : theme
         }
       }));
     }
@@ -105,7 +105,7 @@ const UserSettings = () => {
       },
     }));
     
-    // Apply theme change immediately
+    // Apply theme change immediately for mode
     if (key === 'mode') {
       setTheme(value);
     }
@@ -371,7 +371,6 @@ const UserSettings = () => {
               <SelectContent className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700">
                 <SelectItem value="light" className="text-gray-900 dark:text-white">Light</SelectItem>
                 <SelectItem value="dark" className="text-gray-900 dark:text-white">Dark</SelectItem>
-                <SelectItem value="system" className="text-gray-900 dark:text-white">System Default</SelectItem>
               </SelectContent>
             </Select>
           </div>
