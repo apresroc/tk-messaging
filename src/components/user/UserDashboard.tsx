@@ -250,56 +250,6 @@ const UserDashboard = () => {
         </div>
       </motion.div>
 
-      {/* Stats Cards */}
-      <motion.div 
-        className="grid grid-cols-1 md:grid-cols-3 gap-6"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.1 }}
-      >
-        <Card className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-slate-700/50 backdrop-blur-sm">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-3">
-              <div className="bg-blue-500/20 p-2 rounded-lg">
-                <MessageSquare className="h-5 w-5 text-blue-400" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-white">{conversations.length}</p>
-                <p className="text-blue-200 text-sm">Conversations</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-slate-700/50 backdrop-blur-sm">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-3">
-              <div className="bg-purple-500/20 p-2 rounded-lg">
-                <Users className="h-5 w-5 text-purple-400" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-white">{contacts.length}</p>
-                <p className="text-purple-200 text-sm">Contacts</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-slate-700/50 backdrop-blur-sm">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-3">
-              <div className="bg-green-500/20 p-2 rounded-lg">
-                <Zap className="h-5 w-5 text-green-400" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-white">1.2s</p>
-                <p className="text-green-200 text-sm">Avg Response</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-
       {/* Main Content Grid */}
       <motion.div 
         className="grid grid-cols-1 lg:grid-cols-3 gap-6"
