@@ -42,9 +42,9 @@ const Login = () => {
       <header className="px-6 py-8">
         <div className="container mx-auto">
           <div className="flex items-center gap-3">
-            <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-3 rounded-xl relative">
-              <Smartphone className="h-7 w-7 text-white" />
-              <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-white" style={{ textShadow: '0 0 2px rgba(0,0,0,0.5)' }}>TK</span>
+            <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-xl relative">
+              <Smartphone className="h-6 w-6 text-white" />
+              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">TK</span>
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent">
               Messaging
@@ -57,9 +57,9 @@ const Login = () => {
         <div className="w-full max-w-md">
           <Card className="bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700 text-white">
             <CardHeader className="text-center">
-              <div className="mx-auto bg-gradient-to-r from-blue-500 to-purple-600 w-20 h-20 rounded-2xl flex items-center justify-center mb-4 relative">
-                <Smartphone className="h-10 w-10 text-white" />
-                <span className="absolute inset-0 flex items-center justify-center text-base font-bold text-white" style={{ textShadow: '0 0 3px rgba(0,0,0,0.7)' }}>TK</span>
+              <div className="mx-auto bg-gradient-to-r from-blue-500 to-purple-600 w-16 h-16 rounded-2xl flex items-center justify-center mb-4 relative">
+                <Smartphone className="h-8 w-8 text-white" />
+                <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-white">TK</span>
               </div>
               <CardTitle className="text-3xl font-bold">Welcome to TK Messaging</CardTitle>
               <CardDescription className="text-blue-200">
