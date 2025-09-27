@@ -303,7 +303,7 @@ const Index = () => {
               </span>
             </h2>
             <p className="text-xl text-blue-100 max-w-2xl mx-auto">
-              Cost-effective messaging solutions with a small margin to support our platform development
+              Cost-effective messaging solutions for your business
             </p>
           </motion.div>
           
@@ -377,10 +377,6 @@ const Index = () => {
                 </tr>
               </tbody>
             </table>
-          </div>
-          
-          <div className="mt-6 text-center text-slate-400 text-sm">
-            * All prices include a $0.0005 per-message margin to support platform development
           </div>
         </div>
       </section>
