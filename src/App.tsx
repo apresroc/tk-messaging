@@ -9,7 +9,6 @@ import Admin from "./pages/Admin";
 import Conversations from "./pages/Conversations";
 import Customers from "./pages/Customers";
 import SettingsPage from "./pages/SettingsPage";
-import Header from "@/components/layout/Header";
 
 const queryClient = new QueryClient();
 
@@ -20,7 +19,6 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <div className="flex flex-col min-h-screen">
-          <Header />
           <main className="flex-1 overflow-y-auto">
             <Routes>
               <Route path="/" element={<Index />} />
