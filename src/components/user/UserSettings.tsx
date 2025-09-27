@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Bell, Volume2, Palette, User, Shield, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
@@ -27,7 +26,6 @@ const UserSettings = () => {
     },
     theme: {
       mode: 'light',
-      color: 'blue',
     },
     privacy: {
       readReceipts: true,
@@ -85,22 +83,15 @@ const UserSettings = () => {
     }));
   };
 
-  const handleThemeChange = (key: string, value: string) => {
-    if (key === 'mode') {
-      // Apply theme change immediately
-      setTheme(value as "light" | "dark");
-    }
-    
-    if (key === 'color') {
-      // Apply accent color immediately
-      document.documentElement.style.setProperty('--accent-color', `var(--${value}-500)`);
-    }
+  const handleThemeChange = (value: "light" | "dark") => {
+    // Apply theme change immediately
+    setTheme(value);
     
     setSettings(prev => ({
       ...prev,
       theme: {
         ...prev.theme,
-        [key]: value,
+        mode: value,
       },
     }));
   };
@@ -125,10 +116,30 @@ const UserSettings = () => {
     }));
   };
 
-  // Apply accent color on initial load
-  useEffect(() => {
-    document.documentElement.style.setProperty('--accent-color', `var(--${settings.theme.color}-500)`);
-  }, []);
+  // Toggle button component for on/off states
+  const ToggleButton = ({ 
+    isOn, 
+    onToggle,
+    onLabel = "On",
+    offLabel = "Off"
+  }: { 
+    isOn: boolean; 
+    onToggle: () => void;
+    onLabel?: string;
+    offLabel?: string;
+  }) => (
+    <Button
+      variant="outline"
+      onClick={onToggle}
+      className={`w-20 h-9 rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+        isOn 
+          ? 'bg-green-500 hover:bg-green-600 text-white border-green-500' 
+          : 'bg-red-500 hover:bg-red-600 text-white border-red-500'
+      }`}
+    >
+      {isOn ? onLabel : offLabel}
+    </Button>
+  );
 
   return (
     <div className="space-y-6">
@@ -248,9 +259,9 @@ const UserSettings = () => {
               <Label className="text-gray-700 dark:text-blue-100">Email Notifications</Label>
               <p className="text-sm text-slate-500 dark:text-slate-400">Receive notifications via email</p>
             </div>
-            <Switch
-              checked={settings.notifications.email}
-              onCheckedChange={(checked) => handleNotificationChange('email', checked)}
+            <ToggleButton
+              isOn={settings.notifications.email}
+              onToggle={() => handleNotificationChange('email', !settings.notifications.email)}
             />
           </div>
           
@@ -261,9 +272,9 @@ const UserSettings = () => {
               <Label className="text-gray-700 dark:text-blue-100">SMS Notifications</Label>
               <p className="text-sm text-slate-500 dark:text-slate-400">Receive notifications via SMS</p>
             </div>
-            <Switch
-              checked={settings.notifications.sms}
-              onCheckedChange={(checked) => handleNotificationChange('sms', checked)}
+            <ToggleButton
+              isOn={settings.notifications.sms}
+              onToggle={() => handleNotificationChange('sms', !settings.notifications.sms)}
             />
           </div>
           
@@ -274,9 +285,9 @@ const UserSettings = () => {
               <Label className="text-gray-700 dark:text-blue-100">Push Notifications</Label>
               <p className="text-sm text-slate-500 dark:text-slate-400">Receive push notifications on your devices</p>
             </div>
-            <Switch
-              checked={settings.notifications.push}
-              onCheckedChange={(checked) => handleNotificationChange('push', checked)}
+            <ToggleButton
+              isOn={settings.notifications.push}
+              onToggle={() => handleNotificationChange('push', !settings.notifications.push)}
             />
           </div>
         </CardContent>
@@ -296,9 +307,9 @@ const UserSettings = () => {
               <Label className="text-gray-700 dark:text-blue-100">Message Sounds</Label>
               <p className="text-sm text-slate-500 dark:text-slate-400">Play sound when receiving messages</p>
             </div>
-            <Switch
-              checked={settings.sounds.message}
-              onCheckedChange={(checked) => handleSoundChange('message', checked)}
+            <ToggleButton
+              isOn={settings.sounds.message}
+              onToggle={() => handleSoundChange('message', !settings.sounds.message)}
             />
           </div>
           
@@ -309,9 +320,9 @@ const UserSettings = () => {
               <Label className="text-gray-700 dark:text-blue-100">Notification Sounds</Label>
               <p className="text-sm text-slate-500 dark:text-slate-400">Play sound for notifications</p>
             </div>
-            <Switch
-              checked={settings.sounds.notification}
-              onCheckedChange={(checked) => handleSoundChange('notification', checked)}
+            <ToggleButton
+              isOn={settings.sounds.notification}
+              onToggle={() => handleSoundChange('notification', !settings.sounds.notification)}
             />
           </div>
           
@@ -345,41 +356,32 @@ const UserSettings = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label className="text-gray-700 dark:text-blue-100">Theme Mode</Label>
-            <Select 
-              value={settings.theme.mode} 
-              onValueChange={(value) => {
-                handleThemeChange('mode', value);
-              }}
-            >
-              <SelectTrigger className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white">
-                <SelectValue placeholder="Select theme mode" />
-              </SelectTrigger>
-              <SelectContent className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700">
-                <SelectItem value="light" className="text-gray-900 dark:text-white">Light</SelectItem>
-                <SelectItem value="dark" className="text-gray-900 dark:text-white">Dark</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="flex items-center justify-between">
+            <div>
+              <Label className="text-gray-700 dark:text-blue-100">Light Theme</Label>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Use light color scheme</p>
+            </div>
+            <ToggleButton
+              isOn={settings.theme.mode === 'light'}
+              onToggle={() => handleThemeChange(settings.theme.mode === 'light' ? 'dark' : 'light')}
+              onLabel="On"
+              offLabel="Off"
+            />
           </div>
           
-          <div className="space-y-2">
-            <Label className="text-gray-700 dark:text-blue-100">Accent Color</Label>
-            <div className="flex gap-2">
-              {['blue', 'green', 'red', 'purple', 'yellow'].map((color) => (
-                <button
-                  key={color}
-                  className={`w-8 h-8 rounded-full border-2 ${
-                    settings.theme.color === color 
-                      ? 'border-gray-800 dark:border-gray-200 ring-2 ring-offset-2 ring-primary' 
-                      : 'border-slate-300 dark:border-slate-700'
-                  }`}
-                  style={{ backgroundColor: `var(--${color}-500)` }}
-                  onClick={() => handleThemeChange('color', color)}
-                  aria-label={`Select ${color} accent color`}
-                />
-              ))}
+          <Separator className="bg-slate-200 dark:bg-slate-700" />
+          
+          <div className="flex items-center justify-between">
+            <div>
+              <Label className="text-gray-700 dark:text-blue-100">Dark Theme</Label>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Use dark color scheme</p>
             </div>
+            <ToggleButton
+              isOn={settings.theme.mode === 'dark'}
+              onToggle={() => handleThemeChange(settings.theme.mode === 'dark' ? 'light' : 'dark')}
+              onLabel="On"
+              offLabel="Off"
+            />
           </div>
         </CardContent>
       </Card>
@@ -395,9 +397,9 @@ const UserSettings = () => {
               <Label className="text-gray-700 dark:text-blue-100">Read Receipts</Label>
               <p className="text-sm text-slate-500 dark:text-slate-400">Allow others to see when you've read their messages</p>
             </div>
-            <Switch
-              checked={settings.privacy.readReceipts}
-              onCheckedChange={(checked) => handlePrivacyChange('readReceipts', checked)}
+            <ToggleButton
+              isOn={settings.privacy.readReceipts}
+              onToggle={() => handlePrivacyChange('readReceipts', !settings.privacy.readReceipts)}
             />
           </div>
           
@@ -408,9 +410,9 @@ const UserSettings = () => {
               <Label className="text-gray-700 dark:text-blue-100">Typing Indicators</Label>
               <p className="text-sm text-slate-500 dark:text-slate-400">Show when you're typing to others</p>
             </div>
-            <Switch
-              checked={settings.privacy.typingIndicators}
-              onCheckedChange={(checked) => handlePrivacyChange('typingIndicators', checked)}
+            <ToggleButton
+              isOn={settings.privacy.typingIndicators}
+              onToggle={() => handlePrivacyChange('typingIndicators', !settings.privacy.typingIndicators)}
             />
           </div>
         </CardContent>
