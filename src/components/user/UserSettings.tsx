@@ -115,7 +115,7 @@ const UserSettings = () => {
     }));
   };
 
-  // Square red/green toggle button component with styling from screenshot
+  // Single box toggle button component showing either ON or OFF
   const ToggleSwitch = ({ 
     isOn, 
     onToggle,
@@ -134,28 +134,16 @@ const UserSettings = () => {
           <p className="text-sm text-blue-200 mt-1">{description}</p>
         )}
       </div>
-      <div className="flex rounded-md overflow-hidden border border-gray-600">
-        <button
-          onClick={() => !isOn && onToggle()}
-          className={`px-3 py-1 text-sm font-medium transition-colors ${
-            isOn 
-              ? 'bg-green-500 text-white' 
-              : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-          }`}
-        >
-          ON
-        </button>
-        <button
-          onClick={() => isOn && onToggle()}
-          className={`px-3 py-1 text-sm font-medium transition-colors ${
-            !isOn 
-              ? 'bg-red-500 text-white' 
-              : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-          }`}
-        >
-          OFF
-        </button>
-      </div>
+      <button
+        onClick={onToggle}
+        className={`px-4 py-2 text-sm font-medium rounded-md transition-colors border border-gray-600 ${
+          isOn 
+            ? 'bg-green-500 text-white' 
+            : 'bg-red-500 text-white'
+        }`}
+      >
+        {isOn ? 'ON' : 'OFF'}
+      </button>
     </div>
   );
 
