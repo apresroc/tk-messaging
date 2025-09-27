@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/mode-toggle';
-import { User } from 'lucide-react';
+import { User, MessageSquare } from 'lucide-react';
 
 const Header = () => {
   return (
