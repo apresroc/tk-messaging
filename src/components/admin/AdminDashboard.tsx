@@ -13,7 +13,6 @@ import {
   TableRow 
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { Customer, AdminSettings } from '@/lib/types';
 import { twilioClient } from '@/lib/twilio-client';
 import { toast } from 'sonner';
@@ -123,20 +122,6 @@ const AdminDashboard = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header Section */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
-            Admin Dashboard
-          </h1>
-          <p className="text-blue-100">Manage Twilio settings and customers</p>
-        </div>
-      </motion.div>
-
       {/* Stats Cards */}
       <motion.div 
         className="grid grid-cols-1 md:grid-cols-4 gap-6"
