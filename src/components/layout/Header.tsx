@@ -34,7 +34,7 @@ const Header = () => {
   const showSettingsButton = location.pathname !== '/admin' && location.pathname !== '/settings';
 
   return (
-    <header className="border-b border-slate-700/50">
+    <header className="border-b border-white/20">
       <div className="flex h-16 items-center px-4">
         <div className="flex-1">
           <h1 className="text-lg font-semibold text-white">
@@ -47,7 +47,7 @@ const Header = () => {
               variant="ghost" 
               size="icon" 
               onClick={handleSettings}
-              className="text-slate-400 hover:text-white hover:bg-slate-800/50"
+              className="text-blue-200 hover:text-white hover:bg-white/10"
               title="Settings"
             >
               <Settings className="h-5 w-5" />
@@ -57,7 +57,7 @@ const Header = () => {
             variant="ghost" 
             size="icon" 
             onClick={handleLogout}
-            className="text-slate-400 hover:text-white hover:bg-slate-800/50"
+            className="text-blue-200 hover:text-white hover:bg-white/10"
             title="Logout"
           >
             <LogOut className="h-5 w-5" />

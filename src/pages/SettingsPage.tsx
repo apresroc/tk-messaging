@@ -4,9 +4,9 @@ import Header from '@/components/layout/Header';
 
 const SettingsPage = () => {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-purple-900 text-white">
       <Header />
-      <div className="container py-6 flex-1">
+      <div className="container py-6 flex-1 relative z-10">
         <UserSettings />
       </div>
     </div>

@@ -144,13 +144,13 @@ const UserSettings = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">User Settings</h1>
-          <p className="text-slate-600 dark:text-slate-300">Manage your preferences and account settings</p>
+          <h1 className="text-3xl font-bold text-white">User Settings</h1>
+          <p className="text-blue-100">Manage your preferences and account settings</p>
         </div>
         <Button 
           variant="outline" 
           onClick={() => navigate('/conversations')}
-          className="border-slate-300 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+          className="border-blue-400 text-blue-100 hover:bg-blue-400 hover:text-white"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Dashboard
@@ -159,9 +159,9 @@ const UserSettings = () => {
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Profile Settings */}
-        <Card className="bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50 lg:col-span-2">
+        <Card className="bg-white/10 backdrop-blur-sm border-white/20 lg:col-span-2">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+            <CardTitle className="flex items-center gap-2 text-white">
               <User className="h-5 w-5 text-blue-400" />
               Profile Settings
             </CardTitle>
@@ -169,36 +169,36 @@ const UserSettings = () => {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-gray-700 dark:text-blue-100">Full Name</Label>
+                <Label htmlFor="name" className="text-blue-100">Full Name</Label>
                 <Input
                   id="name"
                   value={settings.profile.name}
                   onChange={(e) => handleProfileChange('name', e.target.value)}
                   placeholder="Your name"
-                  className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white placeholder:text-slate-400"
+                  className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-gray-700 dark:text-blue-100">Email</Label>
+                <Label htmlFor="email" className="text-blue-100">Email</Label>
                 <Input
                   id="email"
                   type="email"
                   value={settings.profile.email}
                   onChange={(e) => handleProfileChange('email', e.target.value)}
                   placeholder="your.email@example.com"
-                  className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white placeholder:text-slate-400"
+                  className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="phone" className="text-gray-700 dark:text-blue-100">Phone Number</Label>
+                <Label htmlFor="phone" className="text-blue-100">Phone Number</Label>
                 <Input
                   id="phone"
                   value={settings.profile.phone}
                   onChange={(e) => handleProfileChange('phone', e.target.value)}
                   placeholder="+1234567890"
-                  className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white placeholder:text-slate-400"
+                  className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
                 />
               </div>
             </div>
@@ -206,9 +206,9 @@ const UserSettings = () => {
         </Card>
         
         {/* Account Security */}
-        <Card className="bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50">
+        <Card className="bg-white/10 backdrop-blur-sm border-white/20">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+            <CardTitle className="flex items-center gap-2 text-white">
               <Shield className="h-5 w-5 text-purple-400" />
               Account Security
             </CardTitle>
@@ -217,7 +217,7 @@ const UserSettings = () => {
             <div className="space-y-2">
               <Button 
                 variant="outline" 
-                className="w-full border-slate-300 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                className="w-full border-white/20 text-blue-100 hover:bg-white/20"
               >
                 Change Password
               </Button>
@@ -226,7 +226,7 @@ const UserSettings = () => {
             <div className="space-y-2">
               <Button 
                 variant="outline" 
-                className="w-full border-slate-300 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                className="w-full border-white/20 text-blue-100 hover:bg-white/20"
               >
                 Two-Factor Authentication
               </Button>
@@ -235,7 +235,7 @@ const UserSettings = () => {
             <div className="space-y-2">
               <Button 
                 variant="outline" 
-                className="w-full border-slate-300 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                className="w-full border-white/20 text-blue-100 hover:bg-white/20"
               >
                 Active Sessions
               </Button>
@@ -245,9 +245,9 @@ const UserSettings = () => {
       </div>
       
       {/* Notification Settings */}
-      <Card className="bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50">
+      <Card className="bg-white/10 backdrop-blur-sm border-white/20">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+          <CardTitle className="flex items-center gap-2 text-white">
             <Bell className="h-5 w-5 text-amber-400" />
             Notification Settings
           </CardTitle>
@@ -255,8 +255,8 @@ const UserSettings = () => {
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <Label className="text-gray-700 dark:text-blue-100">Email Notifications</Label>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Receive notifications via email</p>
+              <Label className="text-blue-100">Email Notifications</Label>
+              <p className="text-sm text-blue-200">Receive notifications via email</p>
             </div>
             <ToggleButton
               isOn={settings.notifications.email}
@@ -264,12 +264,12 @@ const UserSettings = () => {
             />
           </div>
           
-          <Separator className="bg-slate-200 dark:bg-slate-700" />
+          <Separator className="bg-white/20" />
           
           <div className="flex items-center justify-between">
             <div>
-              <Label className="text-gray-700 dark:text-blue-100">SMS Notifications</Label>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Receive notifications via SMS</p>
+              <Label className="text-blue-100">SMS Notifications</Label>
+              <p className="text-sm text-blue-200">Receive notifications via SMS</p>
             </div>
             <ToggleButton
               isOn={settings.notifications.sms}
@@ -277,12 +277,12 @@ const UserSettings = () => {
             />
           </div>
           
-          <Separator className="bg-slate-200 dark:bg-slate-700" />
+          <Separator className="bg-white/20" />
           
           <div className="flex items-center justify-between">
             <div>
-              <Label className="text-gray-700 dark:text-blue-100">Push Notifications</Label>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Receive push notifications on your devices</p>
+              <Label className="text-blue-100">Push Notifications</Label>
+              <p className="text-sm text-blue-200">Receive push notifications on your devices</p>
             </div>
             <ToggleButton
               isOn={settings.notifications.push}
@@ -293,9 +293,9 @@ const UserSettings = () => {
       </Card>
       
       {/* Sound Settings */}
-      <Card className="bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50">
+      <Card className="bg-white/10 backdrop-blur-sm border-white/20">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+          <CardTitle className="flex items-center gap-2 text-white">
             <Volume2 className="h-5 w-5 text-green-400" />
             Sound Settings
           </CardTitle>
@@ -303,8 +303,8 @@ const UserSettings = () => {
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <Label className="text-gray-700 dark:text-blue-100">Message Sounds</Label>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Play sound when receiving messages</p>
+              <Label className="text-blue-100">Message Sounds</Label>
+              <p className="text-sm text-blue-200">Play sound when receiving messages</p>
             </div>
             <ToggleButton
               isOn={settings.sounds.message}
@@ -312,12 +312,12 @@ const UserSettings = () => {
             />
           </div>
           
-          <Separator className="bg-slate-200 dark:bg-slate-700" />
+          <Separator className="bg-white/20" />
           
           <div className="flex items-center justify-between">
             <div>
-              <Label className="text-gray-700 dark:text-blue-100">Notification Sounds</Label>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Play sound for notifications</p>
+              <Label className="text-blue-100">Notification Sounds</Label>
+              <p className="text-sm text-blue-200">Play sound for notifications</p>
             </div>
             <ToggleButton
               isOn={settings.sounds.notification}
@@ -325,10 +325,10 @@ const UserSettings = () => {
             />
           </div>
           
-          <Separator className="bg-slate-200 dark:bg-slate-700" />
+          <Separator className="bg-white/20" />
           
           <div className="space-y-2">
-            <Label className="text-gray-700 dark:text-blue-100">Volume Level</Label>
+            <Label className="text-blue-100">Volume Level</Label>
             <Input
               type="range"
               min="0"
@@ -337,7 +337,7 @@ const UserSettings = () => {
               onChange={(e) => handleSoundChange('volume', parseInt(e.target.value))}
               className="w-full"
             />
-            <div className="flex justify-between text-sm text-slate-500 dark:text-slate-400">
+            <div className="flex justify-between text-sm text-blue-200">
               <span>0%</span>
               <span>{settings.sounds.volume}%</span>
               <span>100%</span>
@@ -347,9 +347,9 @@ const UserSettings = () => {
       </Card>
       
       {/* Theme Settings */}
-      <Card className="bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50">
+      <Card className="bg-white/10 backdrop-blur-sm border-white/20">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+          <CardTitle className="flex items-center gap-2 text-white">
             <Palette className="h-5 w-5 text-pink-400" />
             Theme Settings
           </CardTitle>
@@ -357,8 +357,8 @@ const UserSettings = () => {
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <Label className="text-gray-700 dark:text-blue-100">Light Theme</Label>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Use light color scheme</p>
+              <Label className="text-blue-100">Light Theme</Label>
+              <p className="text-sm text-blue-200">Use light color scheme</p>
             </div>
             <ToggleButton
               isOn={settings.theme.mode === 'light'}
@@ -368,12 +368,12 @@ const UserSettings = () => {
             />
           </div>
           
-          <Separator className="bg-slate-200 dark:bg-slate-700" />
+          <Separator className="bg-white/20" />
           
           <div className="flex items-center justify-between">
             <div>
-              <Label className="text-gray-700 dark:text-blue-100">Dark Theme</Label>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Use dark color scheme</p>
+              <Label className="text-blue-100">Dark Theme</Label>
+              <p className="text-sm text-blue-200">Use dark color scheme</p>
             </div>
             <ToggleButton
               isOn={settings.theme.mode === 'dark'}
@@ -386,15 +386,15 @@ const UserSettings = () => {
       </Card>
       
       {/* Privacy Settings */}
-      <Card className="bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50">
+      <Card className="bg-white/10 backdrop-blur-sm border-white/20">
         <CardHeader>
-          <CardTitle className="text-gray-900 dark:text-white">Privacy Settings</CardTitle>
+          <CardTitle className="text-white">Privacy Settings</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <Label className="text-gray-700 dark:text-blue-100">Read Receipts</Label>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Allow others to see when you've read their messages</p>
+              <Label className="text-blue-100">Read Receipts</Label>
+              <p className="text-sm text-blue-200">Allow others to see when you've read their messages</p>
             </div>
             <ToggleButton
               isOn={settings.privacy.readReceipts}
@@ -402,12 +402,12 @@ const UserSettings = () => {
             />
           </div>
           
-          <Separator className="bg-slate-200 dark:bg-slate-700" />
+          <Separator className="bg-white/20" />
           
           <div className="flex items-center justify-between">
             <div>
-              <Label className="text-gray-700 dark:text-blue-100">Typing Indicators</Label>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Show when you're typing to others</p>
+              <Label className="text-blue-100">Typing Indicators</Label>
+              <p className="text-sm text-blue-200">Show when you're typing to others</p>
             </div>
             <ToggleButton
               isOn={settings.privacy.typingIndicators}
