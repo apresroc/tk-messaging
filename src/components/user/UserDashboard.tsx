@@ -237,6 +237,14 @@ const UserDashboard = () => {
 
   return (
     <div className="space-y-0">
+      {/* Header - Visible only on desktop */}
+      {!isMobile && (
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-white">Messaging Dashboard</h1>
+          <p className="text-blue-200">Manage your conversations and contacts</p>
+        </div>
+      )}
+
       {/* Action Bar - Only visible on mobile */}
       {isMobile && (
         <div className="flex items-center justify-between p-4 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 mb-4">
