@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { MessageSquare, Shield, Smartphone, Zap, Users, ArrowRight, Star } from 'lucide-react';
+import { Phone, Shield, Smartphone, Zap, Users, ArrowRight, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Index = () => {
@@ -76,11 +76,12 @@ const Index = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-xl">
-              <MessageSquare className="h-6 w-6 text-white" />
+            <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-xl relative">
+              <Phone className="h-6 w-6 text-white" />
+              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">TK</span>
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent">
-              TK Messaging
+              Messaging
             </span>
           </motion.div>
           
@@ -453,11 +454,12 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-xl">
-                  <MessageSquare className="h-5 w-5 text-white" />
+                <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-xl relative">
+                  <Phone className="h-5 w-5 text-white" />
+                  <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">TK</span>
                 </div>
                 <span className="text-xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent">
-                  TK Messaging
+                  Messaging
                 </span>
               </div>
               <p className="text-slate-400">
