@@ -10,7 +10,7 @@ import ConversationList from './ConversationList';
 import MessageThread from './MessageThread';
 import { twilioClient } from '@/lib/twilio-client';
 import { toast } from 'sonner';
-import { Plus, MessageSquare, Settings, UserPlus, ArrowLeft, X, LogOut } from 'lucide-react';
+import { Plus, MessageSquare, Settings, UserPlus, X, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
@@ -359,20 +359,6 @@ const UserDashboard = () => {
               <Settings className="h-5 w-5" />
             </Button>
           </div>
-        </div>
-      )}
-
-      {/* Mobile Back Button */}
-      {isMobile && selectedConversationId && (
-        <div className="lg:hidden mb-4">
-          <Button 
-            onClick={handleBackToConversations}
-            variant="outline"
-            className="w-full border-white/20 text-blue-100 hover:bg-white/20"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Conversations
-          </Button>
         </div>
       )}
 
