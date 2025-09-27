@@ -1,6 +1,5 @@
 import React from 'react';
 import AdminDashboard from '@/components/admin/AdminDashboard';
-import Header from '@/components/layout/Header';
 
 const Admin = () => {
   return (
@@ -12,7 +11,6 @@ const Admin = () => {
         <div className="absolute bottom-1/4 left-1/3 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl animate-pulse delay-2000"></div>
       </div>
       
-      <Header />
       <div className="container py-6 flex-1 relative z-10">
         <AdminDashboard />
       </div>
