@@ -47,18 +47,22 @@ const UserSettings = () => {
     if (savedSettings) {
       const parsedSettings = JSON.parse(savedSettings);
       setSettings(parsedSettings);
+      // Apply the saved theme mode
+      if (parsedSettings.theme.mode) {
+        setTheme(parsedSettings.theme.mode);
+      }
     } else {
       // Set initial theme from context
       setSettings(prev => ({
         ...prev,
         theme: {
           ...prev.theme,
-          mode: theme === 'system' ? 'light' : theme
+          mode: theme
         }
       }));
     }
     setIsInitialized(true);
-  }, [theme]);
+  }, [theme, setTheme]);
 
   // Save settings to localStorage (only after initialization)
   useEffect(() => {
@@ -102,7 +106,7 @@ const UserSettings = () => {
     
     // Apply theme change immediately for mode
     if (key === 'mode') {
-      setTheme(value);
+      setTheme(value as "light" | "dark");
     }
   };
 
@@ -363,7 +367,6 @@ const UserSettings = () => {
               value={settings.theme.mode} 
               onValueChange={(value) => {
                 handleThemeChange('mode', value);
-                setTheme(value); // Apply theme immediately
               }}
             >
               <SelectTrigger className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white">
