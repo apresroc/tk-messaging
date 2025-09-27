@@ -10,7 +10,7 @@ import ConversationList from './ConversationList';
 import MessageThread from './MessageThread';
 import { twilioClient } from '@/lib/twilio-client';
 import { toast } from 'sonner';
-import { Plus, MessageSquare, Settings, UserPlus, ArrowLeft } from 'lucide-react';
+import { Plus, MessageSquare, Settings, UserPlus, ArrowLeft, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ModeToggle } from '@/components/mode-toggle';
 
@@ -268,7 +268,7 @@ const UserDashboard = () => {
         </motion.div>
       )}
 
-      {/* Mobile Header Bar - Only shown on mobile */}
+      {/* Mobile Header Bar - Clean and minimal */}
       {isMobile && (
         <div className="flex items-center justify-between p-4 bg-gradient-to-r from-slate-800/50 to-slate-900/50 rounded-lg border border-slate-700/50 backdrop-blur-sm">
           <div className="flex items-center gap-2">
@@ -277,24 +277,40 @@ const UserDashboard = () => {
           </div>
           
           <div className="flex items-center gap-2">
+            {/* Add Message Button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {/* Add message functionality */}}
+              className="text-slate-400 hover:text-white"
+              title="New Message"
+            >
+              <Plus className="h-5 w-5" />
+            </Button>
+            
+            {/* Add Contact Button */}
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setShowAddContact(true)}
               className="text-slate-400 hover:text-white"
+              title="Add Contact"
             >
               <UserPlus className="h-5 w-5" />
             </Button>
             
+            {/* Settings Button */}
             <Button
               variant="ghost"
               size="icon"
               onClick={() => {/* Navigate to settings */}}
               className="text-slate-400 hover:text-white"
+              title="Settings"
             >
               <Settings className="h-5 w-5" />
             </Button>
             
+            {/* Theme Toggle */}
             <ModeToggle />
           </div>
         </div>
