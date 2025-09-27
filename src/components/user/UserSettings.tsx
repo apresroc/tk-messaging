@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -107,80 +106,97 @@ const UserSettings = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">User Settings</h1>
-        <p className="text-muted-foreground">Manage your preferences and account settings</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">User Settings</h1>
+        <p className="text-slate-600 dark:text-slate-300">Manage your preferences and account settings</p>
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Profile Settings */}
-        <Card className="lg:col-span-2">
+        <Card className="bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50 lg:col-span-2">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <User className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+              <User className="h-5 w-5 text-blue-400" />
               Profile Settings
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
+                <Label htmlFor="name" className="text-gray-700 dark:text-blue-100">Full Name</Label>
                 <Input
                   id="name"
                   value={settings.profile.name}
                   onChange={(e) => handleProfileChange('name', e.target.value)}
                   placeholder="Your name"
+                  className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white placeholder:text-slate-400"
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email" className="text-gray-700 dark:text-blue-100">Email</Label>
                 <Input
                   id="email"
                   type="email"
                   value={settings.profile.email}
                   onChange={(e) => handleProfileChange('email', e.target.value)}
                   placeholder="your.email@example.com"
+                  className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white placeholder:text-slate-400"
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
+                <Label htmlFor="phone" className="text-gray-700 dark:text-blue-100">Phone Number</Label>
                 <Input
                   id="phone"
                   value={settings.profile.phone}
                   onChange={(e) => handleProfileChange('phone', e.target.value)}
                   placeholder="+1234567890"
+                  className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white placeholder:text-slate-400"
                 />
               </div>
             </div>
             
-            <Button onClick={handleSaveSettings}>Save Profile</Button>
+            <Button 
+              onClick={handleSaveSettings}
+              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
+            >
+              Save Profile
+            </Button>
           </CardContent>
         </Card>
         
         {/* Account Security */}
-        <Card>
+        <Card className="bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Shield className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+              <Shield className="h-5 w-5 text-purple-400" />
               Account Security
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Button variant="outline" className="w-full">
+              <Button 
+                variant="outline" 
+                className="w-full border-slate-300 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+              >
                 Change Password
               </Button>
             </div>
             
             <div className="space-y-2">
-              <Button variant="outline" className="w-full">
+              <Button 
+                variant="outline" 
+                className="w-full border-slate-300 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+              >
                 Two-Factor Authentication
               </Button>
             </div>
             
             <div className="space-y-2">
-              <Button variant="outline" className="w-full">
+              <Button 
+                variant="outline" 
+                className="w-full border-slate-300 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+              >
                 Active Sessions
               </Button>
             </div>
@@ -189,18 +205,18 @@ const UserSettings = () => {
       </div>
       
       {/* Notification Settings */}
-      <Card>
+      <Card className="bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Bell className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+            <Bell className="h-5 w-5 text-amber-400" />
             Notification Settings
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <Label>Email Notifications</Label>
-              <p className="text-sm text-muted-foreground">Receive notifications via email</p>
+              <Label className="text-gray-700 dark:text-blue-100">Email Notifications</Label>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Receive notifications via email</p>
             </div>
             <Switch
               checked={settings.notifications.email}
@@ -208,12 +224,12 @@ const UserSettings = () => {
             />
           </div>
           
-          <Separator />
+          <Separator className="bg-slate-200 dark:bg-slate-700" />
           
           <div className="flex items-center justify-between">
             <div>
-              <Label>SMS Notifications</Label>
-              <p className="text-sm text-muted-foreground">Receive notifications via SMS</p>
+              <Label className="text-gray-700 dark:text-blue-100">SMS Notifications</Label>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Receive notifications via SMS</p>
             </div>
             <Switch
               checked={settings.notifications.sms}
@@ -221,12 +237,12 @@ const UserSettings = () => {
             />
           </div>
           
-          <Separator />
+          <Separator className="bg-slate-200 dark:bg-slate-700" />
           
           <div className="flex items-center justify-between">
             <div>
-              <Label>Push Notifications</Label>
-              <p className="text-sm text-muted-foreground">Receive push notifications on your devices</p>
+              <Label className="text-gray-700 dark:text-blue-100">Push Notifications</Label>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Receive push notifications on your devices</p>
             </div>
             <Switch
               checked={settings.notifications.push}
@@ -237,18 +253,18 @@ const UserSettings = () => {
       </Card>
       
       {/* Sound Settings */}
-      <Card>
+      <Card className="bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Volume2 className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+            <Volume2 className="h-5 w-5 text-green-400" />
             Sound Settings
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <Label>Message Sounds</Label>
-              <p className="text-sm text-muted-foreground">Play sound when receiving messages</p>
+              <Label className="text-gray-700 dark:text-blue-100">Message Sounds</Label>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Play sound when receiving messages</p>
             </div>
             <Switch
               checked={settings.sounds.message}
@@ -256,12 +272,12 @@ const UserSettings = () => {
             />
           </div>
           
-          <Separator />
+          <Separator className="bg-slate-200 dark:bg-slate-700" />
           
           <div className="flex items-center justify-between">
             <div>
-              <Label>Notification Sounds</Label>
-              <p className="text-sm text-muted-foreground">Play sound for notifications</p>
+              <Label className="text-gray-700 dark:text-blue-100">Notification Sounds</Label>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Play sound for notifications</p>
             </div>
             <Switch
               checked={settings.sounds.notification}
@@ -269,10 +285,10 @@ const UserSettings = () => {
             />
           </div>
           
-          <Separator />
+          <Separator className="bg-slate-200 dark:bg-slate-700" />
           
           <div className="space-y-2">
-            <Label>Volume Level</Label>
+            <Label className="text-gray-700 dark:text-blue-100">Volume Level</Label>
             <Input
               type="range"
               min="0"
@@ -281,7 +297,7 @@ const UserSettings = () => {
               onChange={(e) => handleSoundChange('volume', parseInt(e.target.value))}
               className="w-full"
             />
-            <div className="flex justify-between text-sm text-muted-foreground">
+            <div className="flex justify-between text-sm text-slate-500 dark:text-slate-400">
               <span>0%</span>
               <span>{settings.sounds.volume}%</span>
               <span>100%</span>
@@ -291,37 +307,37 @@ const UserSettings = () => {
       </Card>
       
       {/* Theme Settings */}
-      <Card>
+      <Card className="bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Palette className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+            <Palette className="h-5 w-5 text-pink-400" />
             Theme Settings
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label>Theme Mode</Label>
+            <Label className="text-gray-700 dark:text-blue-100">Theme Mode</Label>
             <Select value={settings.theme.mode} onValueChange={(value) => handleThemeChange('mode', value)}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white">
                 <SelectValue placeholder="Select theme mode" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="light">Light</SelectItem>
-                <SelectItem value="dark">Dark</SelectItem>
-                <SelectItem value="system">System Default</SelectItem>
+              <SelectContent className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700">
+                <SelectItem value="light" className="text-gray-900 dark:text-white">Light</SelectItem>
+                <SelectItem value="dark" className="text-gray-900 dark:text-white">Dark</SelectItem>
+                <SelectItem value="system" className="text-gray-900 dark:text-white">System Default</SelectItem>
               </SelectContent>
             </Select>
           </div>
           
           <div className="space-y-2">
-            <Label>Accent Color</Label>
+            <Label className="text-gray-700 dark:text-blue-100">Accent Color</Label>
             <div className="flex gap-2">
               {['blue', 'green', 'red', 'purple', 'yellow'].map((color) => (
                 <Button
                   key={color}
                   variant="outline"
                   size="icon"
-                  className={`w-8 h-8 rounded-full ${
+                  className={`w-8 h-8 rounded-full border-slate-300 dark:border-slate-700 ${
                     settings.theme.color === color ? 'ring-2 ring-offset-2 ring-primary' : ''
                   } bg-${color}-500`}
                   onClick={() => handleThemeChange('color', color)}
@@ -333,15 +349,15 @@ const UserSettings = () => {
       </Card>
       
       {/* Privacy Settings */}
-      <Card>
+      <Card className="bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50">
         <CardHeader>
-          <CardTitle>Privacy Settings</CardTitle>
+          <CardTitle className="text-gray-900 dark:text-white">Privacy Settings</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <Label>Read Receipts</Label>
-              <p className="text-sm text-muted-foreground">Allow others to see when you've read their messages</p>
+              <Label className="text-gray-700 dark:text-blue-100">Read Receipts</Label>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Allow others to see when you've read their messages</p>
             </div>
             <Switch
               checked={settings.privacy.readReceipts}
@@ -349,12 +365,12 @@ const UserSettings = () => {
             />
           </div>
           
-          <Separator />
+          <Separator className="bg-slate-200 dark:bg-slate-700" />
           
           <div className="flex items-center justify-between">
             <div>
-              <Label>Typing Indicators</Label>
-              <p className="text-sm text-muted-foreground">Show when you're typing to others</p>
+              <Label className="text-gray-700 dark:text-blue-100">Typing Indicators</Label>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Show when you're typing to others</p>
             </div>
             <Switch
               checked={settings.privacy.typingIndicators}
@@ -365,7 +381,12 @@ const UserSettings = () => {
       </Card>
       
       <div className="flex justify-end">
-        <Button onClick={handleSaveSettings}>Save All Settings</Button>
+        <Button 
+          onClick={handleSaveSettings}
+          className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
+        >
+          Save All Settings
+        </Button>
       </div>
     </div>
   );
