@@ -4,51 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { Phone, Shield, Smartphone, Zap, Users, ArrowRight, Star } from 'lucide-react';
-import { motion } from 'framer-motion';
-
-const Index = () => {
-  const navigate = useNavigate();
-
-  const handleGetStarted = () => {
-    navigate('/login');
-  };
-
-  const features = [
-    {
-      icon: <Smartphone className="h-6 w-6" />,
-      title: "Instant Messaging",
-      description: "Real-time SMS conversations with your customers"
-    },
-    {
-      icon: <Zap className="h-6 w-6" />,
-      title: "Lightning Fast",
-      description: "Deliver messages in milliseconds"
-    },
-    {
-      icon: <Shield className="h-6 w-6" />,
-      title: "Bank-grade Security",
-      description: "End-to-end encrypted communications"
-    },
-    {
-      icon: <Users className="h-6 w-6" />,
-      title: "Smart Contacts",
-      description: "AI-powered contact management"
-    }
-  ];
-
-  const testimonials = [
-    {
-      name: "Sarah Johnson",
-      role: "Marketing Director",
-      content: "This platform transformed our customer support. Response times dropped by 80% and satisfaction scores skyrocket<dyad-write path="src/pages/Index.tsx" description="Updating the header logo to use a phone icon with TK inside">
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { toast } from 'sonner';
-import { MadeWithDyad } from "@/components/made-with-dyad";
-import { Phone, Shield, Smartphone, Zap, Users, ArrowRight, Star } from 'lucide-react';
+import { MessageSquare, Shield, Smartphone, Zap, Users, ArrowRight, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Index = () => {
@@ -120,9 +76,8 @@ const Index = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-xl relative">
-              <Phone className="h-6 w-6 text-white" />
-              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">TK</span>
+            <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-xl">
+              <MessageSquare className="h-6 w-6 text-white" />
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent">
               TK Messaging
@@ -498,9 +453,8 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-xl relative">
-                  <Phone className="h-5 w-5 text-white" />
-                  <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">TK</span>
+                <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-xl">
+                  <MessageSquare className="h-5 w-5 text-white" />
                 </div>
                 <span className="text-xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent">
                   TK Messaging

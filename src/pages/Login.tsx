@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { Phone, ArrowRight } from 'lucide-react';
+import { MessageSquare, ArrowRight } from 'lucide-react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -42,9 +42,8 @@ const Login = () => {
       <header className="px-6 py-8">
         <div className="container mx-auto">
           <div className="flex items-center gap-3">
-            <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-xl relative">
-              <Phone className="h-6 w-6 text-white" />
-              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">TK</span>
+            <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-xl">
+              <MessageSquare className="h-6 w-6 text-white" />
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent">
               TK Messaging
@@ -57,9 +56,8 @@ const Login = () => {
         <div className="w-full max-w-md">
           <Card className="bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700 text-white">
             <CardHeader className="text-center">
-              <div className="mx-auto bg-gradient-to-r from-blue-500 to-purple-600 w-16 h-16 rounded-2xl flex items-center justify-center mb-4 relative">
-                <Phone className="h-8 w-8 text-white" />
-                <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-white">TK</span>
+              <div className="mx-auto bg-gradient-to-r from-blue-500 to-purple-600 w-16 h-16 rounded-2xl flex items-center justify-center mb-4">
+                <MessageSquare className="h-8 w-8 text-white" />
               </div>
               <CardTitle className="text-3xl font-bold">Welcome to TK Messaging</CardTitle>
               <CardDescription className="text-blue-200">
