@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { MessageSquare, Shield, Smartphone, Zap, Users, Settings, Send, ArrowRight, Star, CheckCircle, Play } from 'lucide-react';
+import { MessageSquare, Shield, Smartphone, Zap, Users, Settings, ArrowRight, Star, CheckCircle, Play } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Index = () => {
@@ -122,7 +122,7 @@ const Index = () => {
               className="border-blue-400 text-blue-100 hover:bg-blue-400 hover:text-white"
               onClick={() => document.getElementById('login-section')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              Get Started
+              Login
             </Button>
           </motion.nav>
         </div>
@@ -160,17 +160,8 @@ const Index = () => {
                   className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-6 px-8 rounded-xl"
                   onClick={() => document.getElementById('login-section')?.scrollIntoView({ behavior: 'smooth' })}
                 >
-                  Start Free Trial
+                  Login
                   <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-                
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="border-blue-400 text-blue-100 hover:bg-blue-400 hover:text-white py-6 px-8 rounded-xl font-semibold"
-                >
-                  <Play className="mr-2 h-5 w-5" />
-                  Watch Demo
                 </Button>
               </div>
             </motion.div>
