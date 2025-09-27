@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/mode-toggle';
-import { LogOut } from 'lucide-react';
+import { User, LogOut, Settings } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -12,6 +12,10 @@ const Header = () => {
   const handleLogout = () => {
     toast.success('You have been logged out');
     navigate('/');
+  };
+
+  const handleSettings = () => {
+    navigate('/settings');
   };
 
   const getPageTitle = () => {
@@ -27,6 +31,9 @@ const Header = () => {
     return '';
   };
 
+  // Show settings button only on user dashboard pages
+  const showSettingsButton = location.pathname !== '/admin' && location.pathname !== '/settings';
+
   return (
     <header className="border-b border-slate-700/50">
       <div className="flex h-16 items-center px-4">
@@ -36,6 +43,17 @@ const Header = () => {
           </h1>
         </div>
         <div className="flex items-center space-x-4">
+          {showSettingsButton && (
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={handleSettings}
+              className="text-slate-400 hover:text-white hover:bg-slate-800/50"
+              title="Settings"
+            >
+              <Settings className="h-5 w-5" />
+            </Button>
+          )}
           <ModeToggle />
           <Button 
             variant="ghost" 
