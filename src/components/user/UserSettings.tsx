@@ -47,10 +47,6 @@ const UserSettings = () => {
     if (savedSettings) {
       const parsedSettings = JSON.parse(savedSettings);
       setSettings(parsedSettings);
-      // Apply the saved theme mode
-      if (parsedSettings.theme.mode) {
-        setTheme(parsedSettings.theme.mode);
-      }
     } else {
       // Set initial theme from context
       setSettings(prev => ({
@@ -62,7 +58,7 @@ const UserSettings = () => {
       }));
     }
     setIsInitialized(true);
-  }, [theme, setTheme]);
+  }, [theme]);
 
   // Save settings to localStorage (only after initialization)
   useEffect(() => {
