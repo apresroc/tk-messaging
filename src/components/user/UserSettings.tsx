@@ -39,7 +39,6 @@ const UserSettings = () => {
       phone: '',
     },
   });
-  const [isInitialized, setIsInitialized] = useState(false);
 
   // Load settings from localStorage
   useEffect(() => {
@@ -57,15 +56,12 @@ const UserSettings = () => {
         }
       }));
     }
-    setIsInitialized(true);
   }, [theme]);
 
-  // Save settings to localStorage (only after initialization)
+  // Save settings to localStorage
   useEffect(() => {
-    if (isInitialized) {
-      localStorage.setItem('userSettings', JSON.stringify(settings));
-    }
-  }, [settings, isInitialized]);
+    localStorage.setItem('userSettings', JSON.stringify(settings));
+  }, [settings]);
 
   const handleSaveSettings = () => {
     toast.success('Settings saved successfully');
@@ -125,15 +121,6 @@ const UserSettings = () => {
       },
     }));
   };
-
-  // Don't render until initialized to prevent flashing
-  if (!isInitialized) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div className="animate-pulse">Loading settings...</div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">
