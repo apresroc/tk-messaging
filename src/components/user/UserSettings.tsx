@@ -107,7 +107,11 @@ const UserSettings = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">User Settings</h1>
+          <p className="text-slate-600 dark:text-slate-300">Manage your preferences and account settings</p>
+        </div>
         <Button 
           variant="outline" 
           onClick={() => navigate('/conversations')}
@@ -116,11 +120,6 @@ const UserSettings = () => {
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Dashboard
         </Button>
-      </div>
-      
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">User Settings</h1>
-        <p className="text-slate-600 dark:text-slate-300">Manage your preferences and account settings</p>
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
