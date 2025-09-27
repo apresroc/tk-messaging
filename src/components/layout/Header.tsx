@@ -1,9 +1,10 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/mode-toggle';
-import { User, Home } from 'lucide-react';
+import { User, Home, MessageSquare, Users, Settings } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import Sidebar from './Sidebar';
 
 const Header = () => {
   const navigate = useNavigate();
