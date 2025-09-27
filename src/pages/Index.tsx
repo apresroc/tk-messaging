@@ -388,14 +388,6 @@ const Index = () => {
                     Sign In
                   </Button>
                 </form>
-                
-                <div className="mt-6 p-4 bg-slate-800/50 rounded-lg border border-slate-700">
-                  <p className="text-sm text-blue-200 text-center">
-                    <strong>Demo Credentials:</strong><br />
-                    Admin: sysad@techkrafted.com / 123<br />
-                    User: apresroc@gmail.com / 123
-                  </p>
-                </div>
               </CardContent>
             </Card>
           </motion.div>
