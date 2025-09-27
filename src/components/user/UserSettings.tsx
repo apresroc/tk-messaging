@@ -65,10 +65,6 @@ const UserSettings = () => {
     localStorage.setItem('userSettings', JSON.stringify(settings));
   }, [settings]);
 
-  const handleSaveSettings = () => {
-    toast.success('Settings saved successfully');
-  };
-
   const handleNotificationChange = (key: string, value: boolean) => {
     setSettings(prev => ({
       ...prev,
@@ -93,6 +89,11 @@ const UserSettings = () => {
     if (key === 'mode') {
       // Apply theme change immediately
       setTheme(value as "light" | "dark");
+    }
+    
+    if (key === 'color') {
+      // Apply accent color immediately
+      document.documentElement.style.setProperty('--accent-color', `var(--${value}-500)`);
     }
     
     setSettings(prev => ({
@@ -123,6 +124,11 @@ const UserSettings = () => {
       },
     }));
   };
+
+  // Apply accent color on initial load
+  useEffect(() => {
+    document.documentElement.style.setProperty('--accent-color', `var(--${settings.theme.color}-500)`);
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -186,13 +192,6 @@ const UserSettings = () => {
                 />
               </div>
             </div>
-            
-            <Button 
-              onClick={handleSaveSettings}
-              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
-            >
-              Save Profile
-            </Button>
           </CardContent>
         </Card>
         
@@ -368,23 +367,17 @@ const UserSettings = () => {
             <Label className="text-gray-700 dark:text-blue-100">Accent Color</Label>
             <div className="flex gap-2">
               {['blue', 'green', 'red', 'purple', 'yellow'].map((color) => (
-                <Button
+                <button
                   key={color}
-                  variant={settings.theme.color === color ? "default" : "outline"}
-                  size="icon"
-                  className={`w-8 h-8 rounded-full border-slate-300 dark:border-slate-700 ${
+                  className={`w-8 h-8 rounded-full border-2 ${
                     settings.theme.color === color 
-                      ? 'ring-2 ring-offset-2 ring-primary' 
-                      : ''
+                      ? 'border-gray-800 dark:border-gray-200 ring-2 ring-offset-2 ring-primary' 
+                      : 'border-slate-300 dark:border-slate-700'
                   }`}
-                  style={{ backgroundColor: settings.theme.color === color ? `var(--${color}-500)` : 'transparent' }}
+                  style={{ backgroundColor: `var(--${color}-500)` }}
                   onClick={() => handleThemeChange('color', color)}
-                >
-                  <div 
-                    className="w-6 h-6 rounded-full"
-                    style={{ backgroundColor: `var(--${color}-500)` }}
-                  />
-                </Button>
+                  aria-label={`Select ${color} accent color`}
+                />
               ))}
             </div>
           </div>
@@ -422,15 +415,6 @@ const UserSettings = () => {
           </div>
         </CardContent>
       </Card>
-      
-      <div className="flex justify-end">
-        <Button 
-          onClick={handleSaveSettings}
-          className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
-        >
-          Save All Settings
-        </Button>
-      </div>
     </div>
   );
 };
