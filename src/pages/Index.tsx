@@ -1,41 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { MessageSquare, Shield, Smartphone, Zap, Users, Settings, ArrowRight, Star, CheckCircle, Play } from 'lucide-react';
+import { MessageSquare, Shield, Smartphone, Zap, Users, ArrowRight, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Index = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!email || !password) {
-      toast.error('Please enter both email and password');
-      return;
-    }
-    
-    if (email === 'sysad@techkrafted.com' && password === '123') {
-      toast.success('Admin login successful');
-      navigate('/admin');
-      return;
-    }
-    
-    if (email === 'apresroc@gmail.com' && password === '123') {
-      toast.success('User login successful');
-      navigate('/conversations');
-      return;
-    }
-    
-    toast.success('Login successful');
-    navigate('/conversations');
+  const handleGetStarted = () => {
+    navigate('/login');
   };
 
   const features = [
@@ -118,6 +94,20 @@ const Index = () => {
             <a href="#pricing" className="text-blue-100 hover:text-white transition-colors font-medium">Pricing</a>
             <a href="#testimonials" className="text-blue-100 hover:text-white transition-colors font-medium">Testimonials</a>
           </motion.nav>
+          
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <Button 
+              onClick={handleGetStarted}
+              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-2 px-6 rounded-xl"
+            >
+              Login
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </motion.div>
         </div>
       </header>
 
@@ -151,9 +141,9 @@ const Index = () => {
                 <Button 
                   size="lg" 
                   className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-6 px-8 rounded-xl"
-                  onClick={() => document.getElementById('login-section')?.scrollIntoView({ behavior: 'smooth' })}
+                  onClick={handleGetStarted}
                 >
-                  Login
+                  Get Started
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </div>
@@ -427,63 +417,32 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Login Section */}
-      <section id="login-section" className="relative z-10 py-20 px-6">
-        <div className="container mx-auto max-w-2xl">
-          <motion.div
+      {/* CTA Section */}
+      <section className="relative z-10 py-20 px-6">
+        <div className="container mx-auto">
+          <motion.div 
+            className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-12 border border-slate-700 text-center"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <Card className="bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700 text-white">
-              <CardHeader className="text-center">
-                <div className="mx-auto bg-gradient-to-r from-blue-500 to-purple-600 w-16 h-16 rounded-2xl flex items-center justify-center mb-4">
-                  <MessageSquare className="h-8 w-8 text-white" />
-                </div>
-                <CardTitle className="text-3xl font-bold">Welcome to TK Messaging</CardTitle>
-                <CardDescription className="text-blue-200">
-                  Sign in to start revolutionizing your customer conversations
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleLogin} className="space-y-6">
-                  <div className="space-y-3">
-                    <Label htmlFor="email" className="text-blue-100">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="name@example.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-400 py-6 rounded-xl"
-                    />
-                  </div>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <Label htmlFor="password" className="text-blue-100">Password</Label>
-                      <Button variant="link" className="p-0 h-auto text-sm text-blue-300 hover:text-blue-200">
-                        Forgot?
-                      </Button>
-                    </div>
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder="Enter your password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-400 py-6 rounded-xl"
-                    />
-                  </div>
-                  <Button 
-                    type="submit" 
-                    className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-6 rounded-xl"
-                  >
-                    Sign In
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              <span className="bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
+                Ready to Transform Your Customer Conversations?
+              </span>
+            </h2>
+            <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+              Join thousands of businesses already using TK Messaging to connect with their customers.
+            </p>
+            <Button 
+              size="lg" 
+              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-6 px-8 rounded-xl"
+              onClick={handleGetStarted}
+            >
+              Get Started Today
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
           </motion.div>
         </div>
       </section>

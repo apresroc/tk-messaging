@@ -9,6 +9,7 @@ import Admin from "./pages/Admin";
 import Conversations from "./pages/Conversations";
 import Customers from "./pages/Customers";
 import SettingsPage from "./pages/SettingsPage";
+import Login from "./pages/Login";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
           <main className="flex-1 overflow-y-auto">
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/login" element={<Login />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/conversations" element={<Conversations />} />
               <Route path="/customers" element={<Customers />} />
