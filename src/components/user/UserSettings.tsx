@@ -47,11 +47,6 @@ const UserSettings = () => {
     if (savedSettings) {
       const parsedSettings = JSON.parse(savedSettings);
       setSettings(parsedSettings);
-      
-      // Apply saved theme mode
-      if (parsedSettings.theme.mode !== theme) {
-        setTheme(parsedSettings.theme.mode);
-      }
     } else {
       // Set initial theme from context
       setSettings(prev => ({
@@ -63,7 +58,7 @@ const UserSettings = () => {
       }));
     }
     setIsInitialized(true);
-  }, [theme, setTheme]);
+  }, [theme]);
 
   // Save settings to localStorage (only after initialization)
   useEffect(() => {
@@ -364,7 +359,13 @@ const UserSettings = () => {
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label className="text-gray-700 dark:text-blue-100">Theme Mode</Label>
-            <Select value={settings.theme.mode} onValueChange={(value) => handleThemeChange('mode', value)}>
+            <Select 
+              value={settings.theme.mode} 
+              onValueChange={(value) => {
+                handleThemeChange('mode', value);
+                setTheme(value); // Apply theme immediately
+              }}
+            >
               <SelectTrigger className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white">
                 <SelectValue placeholder="Select theme mode" />
               </SelectTrigger>
@@ -387,9 +388,15 @@ const UserSettings = () => {
                     settings.theme.color === color 
                       ? 'ring-2 ring-offset-2 ring-primary' 
                       : ''
-                  } bg-${color}-500`}
+                  }`}
+                  style={{ backgroundColor: settings.theme.color === color ? `var(--${color}-500)` : 'transparent' }}
                   onClick={() => handleThemeChange('color', color)}
-                />
+                >
+                  <div 
+                    className="w-6 h-6 rounded-full"
+                    style={{ backgroundColor: `var(--${color}-500)` }}
+                  />
+                </Button>
               ))}
             </div>
           </div>
