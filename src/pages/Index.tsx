@@ -287,6 +287,104 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Pricing Section */}
+      <section id="pricing" className="relative z-10 py-20 px-6">
+        <div className="container mx-auto">
+          <motion.div 
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              <span className="bg-gradient-to-r from-green-300 to-emerald-300 bg-clip-text text-transparent">
+                Simple, Transparent Pricing
+              </span>
+            </h2>
+            <p className="text-xl text-blue-100 max-w-2xl mx-auto">
+              Cost-effective messaging solutions with a small margin to support our platform development
+            </p>
+          </motion.div>
+          
+          <div className="overflow-x-auto">
+            <table className="w-full bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl overflow-hidden border border-slate-700">
+              <thead>
+                <tr className="border-b border-slate-700">
+                  <th className="text-left p-4 font-semibold text-white">Phone number type</th>
+                  <th className="text-left p-4 font-semibold text-white">SMS Outbound</th>
+                  <th className="text-left p-4 font-semibold text-white">SMS Inbound</th>
+                  <th className="text-left p-4 font-semibold text-white">MMS Outbound</th>
+                  <th className="text-left p-4 font-semibold text-white">MMS Inbound</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b border-slate-700 hover:bg-slate-800/50">
+                  <td className="p-4 text-slate-200">
+                    <div className="font-medium text-white">Long codes</div>
+                    <div className="text-sm text-slate-400">A 10-digit number for SMS and voice calls with localized identity.</div>
+                  </td>
+                  <td className="p-4 text-slate-200">$0.0088</td>
+                  <td className="p-4 text-slate-200">$0.0088</td>
+                  <td className="p-4 text-slate-200">$0.0225</td>
+                  <td className="p-4 text-slate-200">$0.0170</td>
+                </tr>
+                <tr className="border-b border-slate-700 hover:bg-slate-800/50">
+                  <td className="p-4 text-slate-200">
+                    <div className="font-medium text-white">Toll-free</div>
+                    <div className="text-sm text-slate-400">Business messaging phone number with a 3-digit prefix (Ex: 887) for high-throughput SMS and voice calls.</div>
+                  </td>
+                  <td className="p-4 text-slate-200">$0.0088</td>
+                  <td className="p-4 text-slate-200">$0.0088</td>
+                  <td className="p-4 text-slate-200">$0.0225</td>
+                  <td className="p-4 text-slate-200">$0.0205</td>
+                </tr>
+                <tr className="hover:bg-slate-800/50">
+                  <td className="p-4 text-slate-200">
+                    <div className="font-medium text-white">Short codes</div>
+                    <div className="text-sm text-slate-400">A short number (5-6 digits) designed for high-throughput two-way SMS messaging.</div>
+                  </td>
+                  <td className="p-4 text-slate-200">$0.0088</td>
+                  <td className="p-4 text-slate-200">$0.0088</td>
+                  <td className="p-4 text-slate-200">$0.0225</td>
+                  <td className="p-4 text-slate-200">$0.0170</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div className="mt-12 overflow-x-auto">
+            <table className="w-full bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl overflow-hidden border border-slate-700">
+              <thead>
+                <tr className="border-b border-slate-700">
+                  <th className="text-left p-4 font-semibold text-white">Sender type</th>
+                  <th className="text-left p-4 font-semibold text-white">RCS Rich Outbound</th>
+                  <th className="text-left p-4 font-semibold text-white">RCS Rich Inbound</th>
+                  <th className="text-left p-4 font-semibold text-white">RCS Rich Media Outbound</th>
+                  <th className="text-left p-4 font-semibold text-white">RCS Rich Media Inbound</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="hover:bg-slate-800/50">
+                  <td className="p-4 text-slate-200">
+                    <div className="font-medium text-white">RCS Sender</div>
+                    <div className="text-sm text-slate-400">Rich Communication Services (RCS) enables you to send branded, interactive text messages.</div>
+                  </td>
+                  <td className="p-4 text-slate-200">$0.0088</td>
+                  <td className="p-4 text-slate-200">$0.0088</td>
+                  <td className="p-4 text-slate-200">$0.0225</td>
+                  <td className="p-4 text-slate-200">$0.0170</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div className="mt-6 text-center text-slate-400 text-sm">
+            * All prices include a $0.0005 per-message margin to support platform development
+          </div>
+        </div>
+      </section>
+
       {/* Testimonials */}
       <section id="testimonials" className="relative z-10 py-20 px-6">
         <div className="container mx-auto">
