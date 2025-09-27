@@ -3,11 +3,17 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Send, MessageCircle, Mail, MoreHorizontal, ArrowLeft } from 'lucide-react';
+import { Send, MessageCircle, Mail, MoreHorizontal, ArrowLeft, Trash2, UserPlus, User } from 'lucide-react';
 import { Message, Conversation } from '@/lib/types';
 import { twilioClient } from '@/lib/twilio-client';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const MessageThread = ({ 
   conversation,
@@ -43,6 +49,25 @@ const MessageThread = ({
       e.preventDefault();
       handleSend();
     }
+  };
+
+  const handleDeleteConversation = () => {
+    if (!conversation) return;
+    toast.success(`Conversation with ${conversation.contactName} deleted`);
+    // In a real app, this would delete the conversation from the backend
+    if (onBack) onBack();
+  };
+
+  const handleAddRecipient = () => {
+    if (!conversation) return;
+    toast.info('Add recipient functionality would open here');
+    // In a real app, this would open a modal to add recipients
+  };
+
+  const handleAddToContacts = () => {
+    if (!conversation) return;
+    toast.success(`${conversation.contactName} added to contacts`);
+    // In a real app, this would add the contact to the user's contacts
   };
 
   if (!conversation) {
@@ -87,9 +112,27 @@ const MessageThread = ({
               <span className="text-sm text-slate-500 dark:text-slate-400 truncate">{conversation.contactPhone}</span>
             </div>
           </div>
-          <Button variant="ghost" size="icon" className="text-slate-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white">
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="text-slate-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem onClick={handleDeleteConversation}>
+                <Trash2 className="mr-2 h-4 w-4" />
+                <span>Delete Conversation</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleAddRecipient}>
+                <UserPlus className="mr-2 h-4 w-4" />
+                <span>Add Recipient</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleAddToContacts}>
+                <User className="mr-2 h-4 w-4" />
+                <span>Add to Contacts</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </CardHeader>
       
