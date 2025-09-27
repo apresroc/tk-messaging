@@ -39,6 +39,7 @@ const UserSettings = () => {
       phone: '',
     },
   });
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Load settings from localStorage
   useEffect(() => {
@@ -46,8 +47,11 @@ const UserSettings = () => {
     if (savedSettings) {
       const parsedSettings = JSON.parse(savedSettings);
       setSettings(parsedSettings);
-      // Apply saved theme
-      setTheme(parsedSettings.theme.mode);
+      
+      // Only apply theme if it's different from current theme
+      if (parsedSettings.theme.mode !== theme) {
+        setTheme(parsedSettings.theme.mode);
+      }
     } else {
       // Set initial theme from context
       setSettings(prev => ({
@@ -58,12 +62,15 @@ const UserSettings = () => {
         }
       }));
     }
+    setIsInitialized(true);
   }, [theme, setTheme]);
 
-  // Save settings to localStorage
+  // Save settings to localStorage (only after initialization)
   useEffect(() => {
-    localStorage.setItem('userSettings', JSON.stringify(settings));
-  }, [settings]);
+    if (isInitialized) {
+      localStorage.setItem('userSettings', JSON.stringify(settings));
+    }
+  }, [settings, isInitialized]);
 
   const handleSaveSettings = () => {
     toast.success('Settings saved successfully');
@@ -123,6 +130,15 @@ const UserSettings = () => {
       },
     }));
   };
+
+  // Don't render until initialized to prevent flashing
+  if (!isInitialized) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="animate-pulse">Loading settings...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
