@@ -5,6 +5,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import Admin from "./pages/Admin";
+import Conversations from "./pages/Conversations";
+import Customers from "./pages/Customers";
+import SettingsPage from "./pages/SettingsPage";
+import { Sidebar } from "@/components/layout/Sidebar";
+import Header from "@/components/layout/Header";
 
 const queryClient = new QueryClient();
 
@@ -14,11 +20,23 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <div className="flex flex-col min-h-screen">
+          <Header />
+          <div className="flex flex-1">
+            <Sidebar />
+            <main className="flex-1 overflow-y-auto">
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/admin" element={<Admin />} />
+                <Route path="/conversations" element={<Conversations />} />
+                <Route path="/customers" element={<Customers />} />
+                <Route path="/settings" element={<SettingsPage />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </main>
+          </div>
+        </div>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
