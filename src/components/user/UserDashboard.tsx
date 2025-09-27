@@ -237,7 +237,7 @@ const UserDashboard = () => {
 
   return (
     <div className="space-y-0">
-      {/* Action Bar - Always visible on mobile */}
+      {/* Action Bar - Only visible on mobile */}
       {isMobile && (
         <div className="flex items-center justify-between p-4 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 mb-4">
           <div className="flex items-center gap-2">
@@ -296,7 +296,7 @@ const UserDashboard = () => {
         </div>
       )}
 
-      {/* Main Content - Mobile Flow */}
+      {/* Main Content - Same for both mobile and desktop */}
       <motion.div 
         className="grid grid-cols-1 lg:grid-cols-3 gap-6"
         initial={{ opacity: 0, y: 20 }}
