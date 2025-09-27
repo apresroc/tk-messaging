@@ -10,8 +10,9 @@ import ConversationList from './ConversationList';
 import MessageThread from './MessageThread';
 import { twilioClient } from '@/lib/twilio-client';
 import { toast } from 'sonner';
-import { Plus, Search, Users, MessageSquare, Zap, X, ArrowLeft } from 'lucide-react';
+import { Plus, MessageSquare, Settings, UserPlus, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ModeToggle } from '@/components/mode-toggle';
 
 const UserDashboard = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -237,34 +238,67 @@ const UserDashboard = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header Section */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
-              Messaging Dashboard
-            </h1>
-            <p className="text-blue-100">Manage your conversations and contacts</p>
+      {/* Header Section - Simplified for Mobile */}
+      {!isMobile && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
+                Messaging Dashboard
+              </h1>
+              <p className="text-blue-100">Manage your conversations and contacts</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <Badge variant="secondary" className="bg-blue-500/20 text-blue-300">
+                Online
+              </Badge>
+              <Button 
+                onClick={() => setShowAddContact(true)}
+                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+              >
+                <UserPlus className="mr-2 h-4 w-4" />
+                New Contact
+              </Button>
+            </div>
           </div>
-          <div className="flex items-center gap-4">
-            <Badge variant="secondary" className="bg-blue-500/20 text-blue-300">
-              <Zap className="h-3 w-3 mr-1" />
-              Online
-            </Badge>
-            <Button 
+        </motion.div>
+      )}
+
+      {/* Mobile Header Bar - Only shown on mobile */}
+      {isMobile && (
+        <div className="flex items-center justify-between p-4 bg-gradient-to-r from-slate-800/50 to-slate-900/50 rounded-lg border border-slate-700/50 backdrop-blur-sm">
+          <div className="flex items-center gap-2">
+            <MessageSquare className="h-6 w-6 text-blue-400" />
+            <span className="text-lg font-semibold text-white">Messages</span>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={() => setShowAddContact(true)}
-              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+              className="text-slate-400 hover:text-white"
             >
-              <Plus className="mr-2 h-4 w-4" />
-              New Contact
+              <UserPlus className="h-5 w-5" />
             </Button>
+            
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {/* Navigate to settings */}}
+              className="text-slate-400 hover:text-white"
+            >
+              <Settings className="h-5 w-5" />
+            </Button>
+            
+            <ModeToggle />
           </div>
         </div>
-      </motion.div>
+      )}
 
       {/* Mobile Back Button */}
       {isMobile && selectedConversationId && (
@@ -310,14 +344,6 @@ const UserDashboard = () => {
                 <MessageSquare className="mx-auto h-16 w-16 mb-4 opacity-50" />
                 <h3 className="text-lg font-semibold text-white mb-2">No conversation selected</h3>
                 <p className="mb-4">Select a conversation to start messaging</p>
-                {isMobile && (
-                  <Button 
-                    onClick={() => window.location.reload()}
-                    className="bg-gradient-to-r from-blue-500 to-purple-600"
-                  >
-                    View Conversations
-                  </Button>
-                )}
               </div>
             </Card>
           )}
