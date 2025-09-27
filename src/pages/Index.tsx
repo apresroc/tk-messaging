@@ -22,8 +22,14 @@ const Index = () => {
       return;
     }
     
-    // In a real app, you would authenticate with a backend here
-    // For demo purposes, we'll just navigate to the dashboard
+    // Check for admin credentials
+    if (email === 'sysad@techkrafted.com' && password === '123') {
+      toast.success('Admin login successful');
+      navigate('/admin');
+      return;
+    }
+    
+    // For demo purposes, any other valid login goes to conversations
     toast.success('Login successful');
     navigate('/conversations');
   };
@@ -128,6 +134,15 @@ const Index = () => {
                     Sign In
                   </Button>
                 </form>
+                
+                {/* Demo credentials note */}
+                <div className="mt-6 p-4 bg-muted rounded-lg">
+                  <p className="text-sm text-muted-foreground">
+                    <strong>Demo Credentials:</strong><br />
+                    Admin: sysad@techkrafted.com / 123<br />
+                    Regular user: Any other valid email/password
+                  </p>
+                </div>
               </CardContent>
               <CardFooter className="flex flex-col gap-4">
                 <div className="text-sm text-muted-foreground">
