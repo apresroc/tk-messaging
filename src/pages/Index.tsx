@@ -78,7 +78,7 @@ const Index = () => {
           >
             <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-3 rounded-xl relative">
               <Smartphone className="h-7 w-7 text-white" />
-              <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-white">TK</span>
+              <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-white" style={{ textShadow: '0 0 2px rgba(0,0,0,0.5)' }}>TK</span>
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent">
               Messaging
@@ -456,7 +456,7 @@ const Index = () => {
               <div className="flex items-center gap-3 mb-4">
                 <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-3 rounded-xl relative">
                   <Smartphone className="h-6 w-6 text-white" />
-                  <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-white">TK</span>
+                  <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-white" style={{ textShadow: '0 0 2px rgba(0,0,0,0.5)' }}>TK</span>
                 </div>
                 <span className="text-xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent">
                   Messaging
