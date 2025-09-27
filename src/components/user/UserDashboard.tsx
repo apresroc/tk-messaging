@@ -10,7 +10,7 @@ import ConversationList from './ConversationList';
 import MessageThread from './MessageThread';
 import { twilioClient } from '@/lib/twilio-client';
 import { toast } from 'sonner';
-import { Plus, MessageSquare, Settings, UserPlus, ArrowLeft, X } from 'lucide-react';
+import { Plus, MessageSquare, Settings, UserPlus, ArrowLeft, X, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
@@ -26,6 +26,11 @@ const UserDashboard = () => {
   });
   const [showAddContact, setShowAddContact] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [showNewMessage, setShowNewMessage] = useState(false);
+  const [newMessage, setNewMessage] = useState({
+    phone: '',
+    content: ''
+  });
 
   // Check if we're on mobile
   useEffect(() => {
@@ -238,9 +243,34 @@ const UserDashboard = () => {
     navigate('/settings');
   };
 
+  const handleLogout = () => {
+    toast.success('You have been logged out');
+    navigate('/');
+  };
+
   const handleAddNewMessage = () => {
-    // For now, we'll just show a toast since we don't have a new message UI
-    toast.info('New message functionality will be implemented');
+    setShowNewMessage(true);
+  };
+
+  const handleSendNewMessage = async () => {
+    if (!newMessage.phone || !newMessage.content) {
+      toast.error('Phone number and message content are required');
+      return;
+    }
+    
+    try {
+      const result = await twilioClient.sendMessage(newMessage.phone, newMessage.content);
+      if (result.success) {
+        toast.success('Message sent successfully');
+        setNewMessage({ phone: '', content: '' });
+        setShowNewMessage(false);
+      } else {
+        toast.error(`Failed to send message: ${result.error}`);
+      }
+    } catch (error) {
+      toast.error('Failed to send message');
+      console.error(error);
+    }
   };
 
   const selectedConversation = conversations.find(c => c.id === selectedConversationId) || null;
@@ -273,6 +303,15 @@ const UserDashboard = () => {
               title="Settings"
             >
               <Settings className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleLogout}
+              className="text-blue-200 hover:text-white hover:bg-white/10"
+              title="Logout"
+            >
+              <LogOut className="h-5 w-5" />
             </Button>
           </div>
         </div>
@@ -433,6 +472,73 @@ const UserDashboard = () => {
                   className="w-full sm:w-auto bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
                 >
                   Add Contact
+                </Button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* New Message Modal */}
+      <AnimatePresence>
+        {showNewMessage && (
+          <motion.div 
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div 
+              className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 w-full max-w-md mx-auto"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+            >
+              <CardHeader className="p-0 mb-4 flex flex-row items-center justify-between">
+                <CardTitle className="text-gray-900 dark:text-white">New Message</CardTitle>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => setShowNewMessage(false)}
+                  className="text-slate-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
+                >
+                  <X className="h-5 w-5" />
+                </Button>
+              </CardHeader>
+              <CardContent className="p-0 space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-gray-700 dark:text-blue-100">Phone Number</Label>
+                  <Input
+                    value={newMessage.phone}
+                    onChange={(e) => setNewMessage({...newMessage, phone: e.target.value})}
+                    placeholder="+1234567890"
+                    className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label className="text-gray-700 dark:text-blue-100">Message</Label>
+                  <textarea
+                    value={newMessage.content}
+                    onChange={(e) => setNewMessage({...newMessage, content: e.target.value})}
+                    placeholder="Type your message here..."
+                    className="w-full min-h-[120px] bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white rounded-md p-3"
+                  />
+                </div>
+              </CardContent>
+              <div className="p-0 mt-6 flex flex-col sm:flex-row justify-end gap-2">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setShowNewMessage(false)}
+                  className="w-full sm:w-auto border-slate-300 dark:border-slate-700 text-gray-700 dark:text-slate-300"
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  onClick={handleSendNewMessage}
+                  className="w-full sm:w-auto bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
+                >
+                  Send Message
                 </Button>
               </div>
             </motion.div>
