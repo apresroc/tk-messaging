@@ -238,7 +238,7 @@ const UserDashboard = () => {
 
   return (
     <div className="space-y-6">
-      {/* Mobile Action Bar - Only shown on mobile */}
+      {/* Action Bar - Always visible on mobile */}
       {isMobile && (
         <div className="flex items-center justify-between p-4 bg-gradient-to-r from-slate-800/50 to-slate-900/50 rounded-lg border border-slate-700/50 backdrop-blur-sm">
           <div className="flex items-center gap-2">
