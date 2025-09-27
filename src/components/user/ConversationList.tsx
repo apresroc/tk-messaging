@@ -47,11 +47,11 @@ const ConversationList = ({
   };
 
   return (
-    <Card className="h-full flex flex-col bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-slate-700/50 backdrop-blur-sm">
+    <Card className="h-full flex flex-col bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-white">Conversations</CardTitle>
-          <Badge variant="secondary" className="bg-blue-500/20 text-blue-300">
+          <CardTitle className="text-gray-900 dark:text-white">Conversations</CardTitle>
+          <Badge variant="secondary" className="bg-blue-500/20 text-blue-700 dark:text-blue-300">
             {conversations.length}
           </Badge>
         </div>
@@ -59,7 +59,7 @@ const ConversationList = ({
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
           <Input
             placeholder="Search conversations..."
-            className="pl-10 bg-slate-800 border-slate-700 text-white placeholder:text-slate-400"
+            className="pl-10 bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white placeholder:text-slate-400"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -68,7 +68,7 @@ const ConversationList = ({
       <CardContent className="flex-1 overflow-y-auto p-0">
         {filteredConversations.length === 0 ? (
           <motion.div 
-            className="text-center py-8 text-slate-400"
+            className="text-center py-8 text-slate-500 dark:text-slate-400"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
@@ -76,11 +76,11 @@ const ConversationList = ({
             <p className="mt-2">No conversations found</p>
           </motion.div>
         ) : (
-          <div className="divide-y divide-slate-700/50">
+          <div className="divide-y divide-slate-200 dark:divide-slate-700/50">
             {filteredConversations.map((conversation, index) => (
               <motion.div 
                 key={conversation.id}
-                className="p-4 hover:bg-slate-800/50 cursor-pointer transition-all duration-200 group"
+                className="p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition-all duration-200 group"
                 onClick={() => onSelectConversation(conversation.id)}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -88,30 +88,30 @@ const ConversationList = ({
                 whileHover={{ scale: 1.02 }}
               >
                 <div className="flex items-start gap-3">
-                  <Avatar className="border-2 border-slate-600 group-hover:border-blue-500 transition-colors flex-shrink-0">
+                  <Avatar className="border-2 border-slate-300 dark:border-slate-600 group-hover:border-blue-500 transition-colors flex-shrink-0">
                     <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
                       {conversation.contactName.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <h3 className="font-semibold text-white truncate">{conversation.contactName}</h3>
-                      <span className="text-xs text-slate-400 whitespace-nowrap ml-2">
+                      <h3 className="font-semibold text-gray-900 dark:text-white truncate">{conversation.contactName}</h3>
+                      <span className="text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap ml-2">
                         {formatTime(conversation.lastMessageTime)}
                       </span>
                     </div>
-                    <p className="text-sm text-slate-300 truncate mt-1">
+                    <p className="text-sm text-slate-600 dark:text-slate-300 truncate mt-1">
                       {conversation.lastMessage}
                     </p>
                     <div className="flex items-center justify-between mt-2">
                       <div className="flex items-center gap-2">
-                        <Phone className="h-3 w-3 text-slate-400 flex-shrink-0" />
-                        <span className="text-xs text-slate-400 truncate">
+                        <Phone className="h-3 w-3 text-slate-400 dark:text-slate-500 flex-shrink-0" />
+                        <span className="text-xs text-slate-500 dark:text-slate-400 truncate">
                           {conversation.contactPhone}
                         </span>
                       </div>
                       {conversation.unreadCount > 0 && (
-                        <Badge className="bg-blue-500/20 text-blue-300 border-0 flex-shrink-0">
+                        <Badge className="bg-blue-500/20 text-blue-700 dark:text-blue-300 border-0 flex-shrink-0">
                           {conversation.unreadCount}
                         </Badge>
                       )}

@@ -240,10 +240,10 @@ const UserDashboard = () => {
     <div className="space-y-6">
       {/* Action Bar - Always visible on mobile */}
       {isMobile && (
-        <div className="flex items-center justify-between p-4 bg-gradient-to-r from-slate-800/50 to-slate-900/50 rounded-lg border border-slate-700/50 backdrop-blur-sm">
+        <div className="flex items-center justify-between p-4 bg-white dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700/50">
           <div className="flex items-center gap-2">
             <MessageSquare className="h-6 w-6 text-blue-400" />
-            <span className="text-lg font-semibold text-white">Messages</span>
+            <span className="text-lg font-semibold text-gray-900 dark:text-white">Messages</span>
           </div>
           
           <div className="flex items-center gap-2">
@@ -252,7 +252,7 @@ const UserDashboard = () => {
               variant="ghost"
               size="icon"
               onClick={() => {/* Add message functionality */}}
-              className="text-slate-400 hover:text-white"
+              className="text-slate-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
               title="New Message"
             >
               <Plus className="h-5 w-5" />
@@ -263,7 +263,7 @@ const UserDashboard = () => {
               variant="ghost"
               size="icon"
               onClick={() => setShowAddContact(true)}
-              className="text-slate-400 hover:text-white"
+              className="text-slate-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
               title="Add Contact"
             >
               <UserPlus className="h-5 w-5" />
@@ -274,7 +274,7 @@ const UserDashboard = () => {
               variant="ghost"
               size="icon"
               onClick={() => {/* Navigate to settings */}}
-              className="text-slate-400 hover:text-white"
+              className="text-slate-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
               title="Settings"
             >
               <Settings className="h-5 w-5" />
@@ -292,7 +292,7 @@ const UserDashboard = () => {
           <Button 
             onClick={handleBackToConversations}
             variant="outline"
-            className="w-full border-slate-700 text-slate-300"
+            className="w-full border-slate-300 dark:border-slate-700 text-gray-700 dark:text-slate-300"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Conversations
@@ -325,10 +325,10 @@ const UserDashboard = () => {
               onBack={handleBackToConversations}
             />
           ) : (
-            <Card className="h-full flex items-center justify-center bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-slate-700/50 backdrop-blur-sm">
-              <div className="text-center p-8 text-slate-400">
+            <Card className="h-full flex items-center justify-center bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50">
+              <div className="text-center p-8 text-slate-500 dark:text-slate-400">
                 <MessageSquare className="mx-auto h-16 w-16 mb-4 opacity-50" />
-                <h3 className="text-lg font-semibold text-white mb-2">No conversation selected</h3>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">No conversation selected</h3>
                 <p className="mb-4">Select a conversation to start messaging</p>
               </div>
             </Card>
@@ -346,40 +346,40 @@ const UserDashboard = () => {
             exit={{ opacity: 0 }}
           >
             <motion.div 
-              className="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-md mx-auto"
+              className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 w-full max-w-md mx-auto"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
             >
               <CardHeader className="p-0 mb-4 flex flex-row items-center justify-between">
-                <CardTitle className="text-white">Add New Contact</CardTitle>
+                <CardTitle className="text-gray-900 dark:text-white">Add New Contact</CardTitle>
                 <Button 
                   variant="ghost" 
                   size="icon" 
                   onClick={() => setShowAddContact(false)}
-                  className="text-slate-400 hover:text-white"
+                  className="text-slate-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
                 >
                   <X className="h-5 w-5" />
                 </Button>
               </CardHeader>
               <CardContent className="p-0 space-y-4">
                 <div className="space-y-2">
-                  <Label className="text-blue-100">Name</Label>
+                  <Label className="text-gray-700 dark:text-blue-100">Name</Label>
                   <Input
                     value={newContact.name}
                     onChange={(e) => setNewContact({...newContact, name: e.target.value})}
                     placeholder="John Doe"
-                    className="bg-slate-800 border-slate-700 text-white"
+                    className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white"
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label className="text-blue-100">Phone Number</Label>
+                  <Label className="text-gray-700 dark:text-blue-100">Phone Number</Label>
                   <Input
                     value={newContact.phone}
                     onChange={(e) => setNewContact({...newContact, phone: e.target.value})}
                     placeholder="+1234567890"
-                    className="bg-slate-800 border-slate-700 text-white"
+                    className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white"
                   />
                 </div>
               </CardContent>
@@ -387,13 +387,13 @@ const UserDashboard = () => {
                 <Button 
                   variant="outline" 
                   onClick={() => setShowAddContact(false)}
-                  className="w-full sm:w-auto border-slate-700 text-slate-300"
+                  className="w-full sm:w-auto border-slate-300 dark:border-slate-700 text-gray-700 dark:text-slate-300"
                 >
                   Cancel
                 </Button>
                 <Button 
                   onClick={handleAddContact}
-                  className="w-full sm:w-auto bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+                  className="w-full sm:w-auto bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
                 >
                   Add Contact
                 </Button>
