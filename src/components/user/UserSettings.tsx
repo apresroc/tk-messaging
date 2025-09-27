@@ -131,10 +131,10 @@ const UserSettings = () => {
     <Button
       variant="outline"
       onClick={onToggle}
-      className={`w-16 h-8 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 shadow-sm ${
+      className={`w-16 h-8 rounded-md px-3 py-1 text-xs font-medium transition-all duration-200 ${
         isOn 
-          ? 'bg-green-500 hover:bg-green-600 text-white border-green-500' 
-          : 'bg-red-500 hover:bg-red-600 text-white border-red-500'
+          ? 'bg-green-500 hover:bg-green-600 text-white border-green-500 shadow-sm' 
+          : 'bg-red-500 hover:bg-red-600 text-white border-red-500 shadow-sm'
       }`}
     >
       {isOn ? onLabel : offLabel}
@@ -399,15 +399,7 @@ const UserSettings = () => {
             </div>
             <ToggleButton
               isOn={settings.privacy.readReceipts}
-              onToggle={() => handlePrivacyChange('readReceipts', !settings.privacy.readReceipts)}
-            />
-          </div>
-          
-          <Separator className="bg-slate-200 dark:bg-slate-700" />
-          
-          <div className="flex items-center justify-between">
-            <div>
-              <Label className="text-gray-700 dark:text-blue-100">Typ<dyad-write path="src/components/user/UserSettings.tsx" description="Complete the UserSettings component with square toggle buttons">
+              onToggle={() => handlePrivacyChange('readReceipts', !<dyad-write path="src/components/user/UserSettings.tsx" description="Make toggle buttons square and style them nicely">
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
