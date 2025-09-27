@@ -129,9 +129,9 @@ const UserSettings = () => {
   }) => (
     <div className="flex items-center justify-between">
       <div className="flex-1">
-        <Label className="text-blue-100 cursor-pointer" onClick={onToggle}>{label}</Label>
+        <Label className="text-white cursor-pointer font-medium">{label}</Label>
         {description && (
-          <p className="text-sm text-blue-200 mt-1">{description}</p>
+          <p className="text-sm text-blue-100 mt-1">{description}</p>
         )}
       </div>
       <button
@@ -176,7 +176,7 @@ const UserSettings = () => {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-blue-100">Full Name</Label>
+                <Label htmlFor="name" className="text-white font-medium">Full Name</Label>
                 <Input
                   id="name"
                   value={settings.profile.name}
@@ -187,7 +187,7 @@ const UserSettings = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-blue-100">Email</Label>
+                <Label htmlFor="email" className="text-white font-medium">Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -199,7 +199,7 @@ const UserSettings = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="phone" className="text-blue-100">Phone Number</Label>
+                <Label htmlFor="phone" className="text-white font-medium">Phone Number</Label>
                 <Input
                   id="phone"
                   value={settings.profile.phone}
@@ -224,7 +224,7 @@ const UserSettings = () => {
             <div className="space-y-2">
               <Button 
                 variant="outline" 
-                className="w-full border-white/20 text-blue-100 hover:bg-white/20"
+                className="w-full border-white/20 text-white hover:bg-white/20 font-medium"
               >
                 Change Password
               </Button>
@@ -233,7 +233,7 @@ const UserSettings = () => {
             <div className="space-y-2">
               <Button 
                 variant="outline" 
-                className="w-full border-white/20 text-blue-100 hover:bg-white/20"
+                className="w-full border-white/20 text-white hover:bg-white/20 font-medium"
               >
                 Two-Factor Authentication
               </Button>
@@ -242,7 +242,7 @@ const UserSettings = () => {
             <div className="space-y-2">
               <Button 
                 variant="outline" 
-                className="w-full border-white/20 text-blue-100 hover:bg-white/20"
+                className="w-full border-white/20 text-white hover:bg-white/20 font-medium"
               >
                 Active Sessions
               </Button>
@@ -315,7 +315,7 @@ const UserSettings = () => {
           <Separator className="bg-white/20" />
           
           <div className="space-y-2">
-            <Label className="text-blue-100">Volume Level</Label>
+            <Label className="text-white font-medium">Volume Level</Label>
             <Input
               type="range"
               min="0"
@@ -324,7 +324,7 @@ const UserSettings = () => {
               onChange={(e) => handleSoundChange('volume', parseInt(e.target.value))}
               className="w-full"
             />
-            <div className="flex justify-between text-sm text-blue-200">
+            <div className="flex justify-between text-sm text-blue-100">
               <span>0%</span>
               <span>{settings.sounds.volume}%</span>
               <span>100%</span>
