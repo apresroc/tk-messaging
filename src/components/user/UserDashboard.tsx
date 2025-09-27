@@ -10,7 +10,7 @@ import ConversationList from './ConversationList';
 import MessageThread from './MessageThread';
 import { twilioClient } from '@/lib/twilio-client';
 import { toast } from 'sonner';
-import { MessageSquare, Settings, UserPlus, X, LogOut } from 'lucide-react';
+import { MessageSquare, MessageSquarePlus, Settings, UserPlus, X, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
@@ -293,7 +293,7 @@ const UserDashboard = () => {
               className="text-blue-200 hover:text-white hover:bg-white/10"
               title="New Message"
             >
-              <MessageSquare className="h-5 w-5" />
+              <MessageSquarePlus className="h-5 w-5" />
             </Button>
             <Button
               variant="ghost"
@@ -334,7 +334,7 @@ const UserDashboard = () => {
               className="text-blue-200 hover:text-white hover:bg-white/10"
               title="New Message"
             >
-              <MessageSquare className="h-5 w-5" />
+              <MessageSquarePlus className="h-5 w-5" />
             </Button>
             
             {/* Add Contact Button */}
