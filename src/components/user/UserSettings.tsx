@@ -115,29 +115,38 @@ const UserSettings = () => {
     }));
   };
 
-  // Toggle button component for on/off states
-  const ToggleButton = ({ 
+  // New toggle button component matching the requested design
+  const ToggleSwitch = ({ 
     isOn, 
     onToggle,
-    onLabel = "On",
-    offLabel = "Off"
+    label,
+    description
   }: { 
     isOn: boolean; 
     onToggle: () => void;
-    onLabel?: string;
-    offLabel?: string;
+    label: string;
+    description?: string;
   }) => (
-    <Button
-      variant="outline"
-      onClick={onToggle}
-      className={`w-16 h-8 rounded-md px-2 py-1 text-xs font-medium transition-all duration-200 shadow-sm ${
-        isOn 
-          ? 'bg-green-500 hover:bg-green-600 text-white border-green-500' 
-          : 'bg-red-500 hover:bg-red-600 text-white border-red-500'
-      }`}
-    >
-      {isOn ? onLabel : offLabel}
-    </Button>
+    <div className="flex items-center justify-between">
+      <div className="flex-1">
+        <Label className="text-blue-100 cursor-pointer" onClick={onToggle}>{label}</Label>
+        {description && (
+          <p className="text-sm text-blue-200 mt-1">{description}</p>
+        )}
+      </div>
+      <button
+        onClick={onToggle}
+        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all duration-200 ${
+          isOn ? 'bg-blue-500' : 'bg-slate-600'
+        }`}
+      >
+        <span
+          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ${
+            isOn ? 'translate-x-6' : 'translate-x-1'
+          }`}
+        />
+      </button>
+    </div>
   );
 
   return (
@@ -253,42 +262,30 @@ const UserSettings = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <Label className="text-blue-100">Email Notifications</Label>
-              <p className="text-sm text-blue-200">Receive notifications via email</p>
-            </div>
-            <ToggleButton
-              isOn={settings.notifications.email}
-              onToggle={() => handleNotificationChange('email', !settings.notifications.email)}
-            />
-          </div>
+          <ToggleSwitch
+            isOn={settings.notifications.email}
+            onToggle={() => handleNotificationChange('email', !settings.notifications.email)}
+            label="Email Notifications"
+            description="Receive notifications via email"
+          />
           
           <Separator className="bg-white/20" />
           
-          <div className="flex items-center justify-between">
-            <div>
-              <Label className="text-blue-100">SMS Notifications</Label>
-              <p className="text-sm text-blue-200">Receive notifications via SMS</p>
-            </div>
-            <ToggleButton
-              isOn={settings.notifications.sms}
-              onToggle={() => handleNotificationChange('sms', !settings.notifications.sms)}
-            />
-          </div>
+          <ToggleSwitch
+            isOn={settings.notifications.sms}
+            onToggle={() => handleNotificationChange('sms', !settings.notifications.sms)}
+            label="SMS Notifications"
+            description="Receive notifications via SMS"
+          />
           
           <Separator className="bg-white/20" />
           
-          <div className="flex items-center justify-between">
-            <div>
-              <Label className="text-blue-100">Push Notifications</Label>
-              <p className="text-sm text-blue-200">Receive push notifications on your devices</p>
-            </div>
-            <ToggleButton
-              isOn={settings.notifications.push}
-              onToggle={() => handleNotificationChange('push', !settings.notifications.push)}
-            />
-          </div>
+          <ToggleSwitch
+            isOn={settings.notifications.push}
+            onToggle={() => handleNotificationChange('push', !settings.notifications.push)}
+            label="Push Notifications"
+            description="Receive push notifications on your devices"
+          />
         </CardContent>
       </Card>
       
@@ -301,29 +298,21 @@ const UserSettings = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <Label className="text-blue-100">Message Sounds</Label>
-              <p className="text-sm text-blue-200">Play sound when receiving messages</p>
-            </div>
-            <ToggleButton
-              isOn={settings.sounds.message}
-              onToggle={() => handleSoundChange('message', !settings.sounds.message)}
-            />
-          </div>
+          <ToggleSwitch
+            isOn={settings.sounds.message}
+            onToggle={() => handleSoundChange('message', !settings.sounds.message)}
+            label="Message Sounds"
+            description="Play sound when receiving messages"
+          />
           
           <Separator className="bg-white/20" />
           
-          <div className="flex items-center justify-between">
-            <div>
-              <Label className="text-blue-100">Notification Sounds</Label>
-              <p className="text-sm text-blue-200">Play sound for notifications</p>
-            </div>
-            <ToggleButton
-              isOn={settings.sounds.notification}
-              onToggle={() => handleSoundChange('notification', !settings.sounds.notification)}
-            />
-          </div>
+          <ToggleSwitch
+            isOn={settings.sounds.notification}
+            onToggle={() => handleSoundChange('notification', !settings.sounds.notification)}
+            label="Notification Sounds"
+            description="Play sound for notifications"
+          />
           
           <Separator className="bg-white/20" />
           
@@ -355,33 +344,21 @@ const UserSettings = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <Label className="text-blue-100">Light Theme</Label>
-              <p className="text-sm text-blue-200">Use light color scheme</p>
-            </div>
-            <ToggleButton
-              isOn={settings.theme.mode === 'light'}
-              onToggle={() => handleThemeChange(settings.theme.mode === 'light' ? 'dark' : 'light')}
-              onLabel="On"
-              offLabel="Off"
-            />
-          </div>
+          <ToggleSwitch
+            isOn={settings.theme.mode === 'light'}
+            onToggle={() => handleThemeChange(settings.theme.mode === 'light' ? 'dark' : 'light')}
+            label="Light Theme"
+            description="Use light color scheme"
+          />
           
           <Separator className="bg-white/20" />
           
-          <div className="flex items-center justify-between">
-            <div>
-              <Label className="text-blue-100">Dark Theme</Label>
-              <p className="text-sm text-blue-200">Use dark color scheme</p>
-            </div>
-            <ToggleButton
-              isOn={settings.theme.mode === 'dark'}
-              onToggle={() => handleThemeChange(settings.theme.mode === 'dark' ? 'light' : 'dark')}
-              onLabel="On"
-              offLabel="Off"
-            />
-          </div>
+          <ToggleSwitch
+            isOn={settings.theme.mode === 'dark'}
+            onToggle={() => handleThemeChange(settings.theme.mode === 'dark' ? 'light' : 'dark')}
+            label="Dark Theme"
+            description="Use dark color scheme"
+          />
         </CardContent>
       </Card>
       
@@ -391,29 +368,21 @@ const UserSettings = () => {
           <CardTitle className="text-white">Privacy Settings</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <Label className="text-blue-100">Read Receipts</Label>
-              <p className="text-sm text-blue-200">Allow others to see when you've read their messages</p>
-            </div>
-            <ToggleButton
-              isOn={settings.privacy.readReceipts}
-              onToggle={() => handlePrivacyChange('readReceipts', !settings.privacy.readReceipts)}
-            />
-          </div>
+          <ToggleSwitch
+            isOn={settings.privacy.readReceipts}
+            onToggle={() => handlePrivacyChange('readReceipts', !settings.privacy.readReceipts)}
+            label="Read Receipts"
+            description="Allow others to see when you've read their messages"
+          />
           
           <Separator className="bg-white/20" />
           
-          <div className="flex items-center justify-between">
-            <div>
-              <Label className="text-blue-100">Typing Indicators</Label>
-              <p className="text-sm text-blue-200">Show when you're typing to others</p>
-            </div>
-            <ToggleButton
-              isOn={settings.privacy.typingIndicators}
-              onToggle={() => handlePrivacyChange('typingIndicators', !settings.privacy.typingIndicators)}
-            />
-          </div>
+          <ToggleSwitch
+            isOn={settings.privacy.typingIndicators}
+            onToggle={() => handlePrivacyChange('typingIndicators', !settings.privacy.typingIndicators)}
+            label="Typing Indicators"
+            description="Show when you're typing to others"
+          />
         </CardContent>
       </Card>
     </div>
