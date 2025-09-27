@@ -138,8 +138,8 @@ const UserSettings = () => {
         onClick={onToggle}
         className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
           isOn 
-            ? 'bg-green-200 text-green-900 border border-green-700' 
-            : 'bg-red-200 text-red-900 border border-red-700'
+            ? 'bg-green-200 text-green-900 border-4 border-green-700' 
+            : 'bg-red-200 text-red-900 border-4 border-red-700'
         }`}
       >
         {isOn ? 'ON' : 'OFF'}
