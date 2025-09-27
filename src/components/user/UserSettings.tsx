@@ -6,10 +6,12 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Bell, Volume2, Palette, User, Shield } from 'lucide-react';
+import { Bell, Volume2, Palette, User, Shield, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
 const UserSettings = () => {
+  const navigate = useNavigate();
   const [settings, setSettings] = useState({
     notifications: {
       email: true,
@@ -105,6 +107,17 @@ const UserSettings = () => {
 
   return (
     <div className="space-y-6">
+      <div className="flex items-center gap-4">
+        <Button 
+          variant="outline" 
+          onClick={() => navigate('/conversations')}
+          className="border-slate-300 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Dashboard
+        </Button>
+      </div>
+      
       <div>
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">User Settings</h1>
         <p className="text-slate-600 dark:text-slate-300">Manage your preferences and account settings</p>
