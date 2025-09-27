@@ -250,9 +250,31 @@ const UserDashboard = () => {
     <div className="space-y-0">
       {/* Header - Visible only on desktop */}
       {!isMobile && (
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-white">Messaging Dashboard</h1>
-          <p className="text-blue-200">Manage your conversations and contacts</p>
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-white">Messaging Dashboard</h1>
+            <p className="text-blue-200">Manage your conversations and contacts</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleAddNewMessage}
+              className="text-blue-200 hover:text-white hover:bg-white/10"
+              title="New Message"
+            >
+              <Plus className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleNavigateToSettings}
+              className="text-blue-200 hover:text-white hover:bg-white/10"
+              title="Settings"
+            >
+              <Settings className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
       )}
 
