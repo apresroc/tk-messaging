@@ -3,7 +3,7 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Send, MessageCircle, Phone, Mail, MoreHorizontal } from 'lucide-react';
+import { Send, MessageCircle, Phone, Mail, MoreHorizontal, ArrowLeft } from 'lucide-react';
 import { Message, Conversation } from '@/lib/types';
 import { twilioClient } from '@/lib/twilio-client';
 import { toast } from 'sonner';
@@ -12,11 +12,13 @@ import { motion } from 'framer-motion';
 const MessageThread = ({ 
   conversation,
   messages,
-  onSendMessage
+  onSendMessage,
+  onBack
 }: { 
   conversation: Conversation | null;
   messages: Message[];
   onSendMessage: (content: string) => void;
+  onBack?: () => void;
 }) => {
   const [newMessage, setNewMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -63,16 +65,24 @@ const MessageThread = ({
     <Card className="h-full flex flex-col bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-slate-700/50 backdrop-blur-sm">
       <CardHeader className="border-b border-slate-700/50 p-4">
         <div className="flex items-center gap-3">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={onBack}
+            className="lg:hidden text-slate-400 hover:text-white mr-2"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
           <Avatar className="border-2 border-slate-600">
             <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
               {conversation.contactName.charAt(0)}
             </AvatarFallback>
           </Avatar>
-          <div className="flex-1">
-            <h3 className="font-semibold text-white">{conversation.contactName}</h3>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-semibold text-white truncate">{conversation.contactName}</h3>
             <div className="flex items-center gap-2 mt-1">
               <Phone className="h-3 w-3 text-slate-400" />
-              <span className="text-sm text-slate-400">{conversation.contactPhone}</span>
+              <span className="text-sm text-slate-400 truncate">{conversation.contactPhone}</span>
             </div>
           </div>
           <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white">
@@ -100,13 +110,13 @@ const MessageThread = ({
               transition={{ duration: 0.3, delay: index * 0.05 }}
             >
               <div 
-                className={`max-w-[80%] rounded-2xl px-4 py-2 ${
+                className={`max-w-[85%] sm:max-w-[80%] rounded-2xl px-4 py-2 ${
                   message.direction === 'outbound' 
                     ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-br-none' 
                     : 'bg-slate-700/50 text-slate-200 rounded-bl-none'
                 }`}
               >
-                <p className="whitespace-pre-wrap">{message.content}</p>
+                <p className="whitespace-pre-wrap break-words">{message.content}</p>
                 <div className={`text-xs mt-1 flex items-center gap-2 ${
                   message.direction === 'outbound' ? 'text-blue-100/70' : 'text-slate-400'
                 }`}>

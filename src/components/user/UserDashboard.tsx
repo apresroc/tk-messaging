@@ -10,8 +10,8 @@ import ConversationList from './ConversationList';
 import MessageThread from './MessageThread';
 import { twilioClient } from '@/lib/twilio-client';
 import { toast } from 'sonner';
-import { Plus, Search, Users, MessageSquare, Zap } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Plus, Search, Users, MessageSquare, Zap, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const UserDashboard = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -23,6 +23,7 @@ const UserDashboard = () => {
     phone: ''
   });
   const [showAddContact, setShowAddContact] = useState(false);
+  const [mobileView, setMobileView] = useState<'conversations' | 'messages'>('conversations');
 
   // Load data from localStorage
   useEffect(() => {
@@ -125,6 +126,20 @@ const UserDashboard = () => {
     setMessages(mockMessages);
   }, []);
 
+  // Handle mobile view switching
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1024) {
+        // On mobile, default to conversations view
+        setMobileView('conversations');
+      }
+    };
+    
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const handleAddContact = () => {
     if (!newContact.name || !newContact.phone) {
       toast.error('Name and phone number are required');
@@ -145,6 +160,15 @@ const UserDashboard = () => {
 
   const handleSelectConversation = (id: string) => {
     setSelectedConversationId(id);
+    // On mobile, switch to messages view when selecting a conversation
+    if (window.innerWidth < 1024) {
+      setMobileView('messages');
+    }
+  };
+
+  const handleBackToConversations = () => {
+    setMobileView('conversations');
+    setSelectedConversationId(null);
   };
 
   const handleSendMessage = async (content: string) => {
@@ -250,83 +274,135 @@ const UserDashboard = () => {
         </div>
       </motion.div>
 
-      {/* Main Content Grid */}
+      {/* Mobile View Toggle */}
+      <div className="lg:hidden flex gap-2 mb-4">
+        <Button
+          variant={mobileView === 'conversations' ? 'default' : 'outline'}
+          onClick={() => setMobileView('conversations')}
+          className={mobileView === 'conversations' ? 'bg-gradient-to-r from-blue-500 to-purple-600' : ''}
+        >
+          <MessageSquare className="h-4 w-4 mr-2" />
+          Conversations
+        </Button>
+        <Button
+          variant={mobileView === 'messages' ? 'default' : 'outline'}
+          onClick={() => setMobileView('messages')}
+          disabled={!selectedConversationId}
+          className={mobileView === 'messages' ? 'bg-gradient-to-r from-blue-500 to-purple-600' : ''}
+        >
+          <Users className="h-4 w-4 mr-2" />
+          Messages
+        </Button>
+      </div>
+
+      {/* Main Content Grid - Responsive */}
       <motion.div 
         className="grid grid-cols-1 lg:grid-cols-3 gap-6"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
       >
-        <div className="lg:col-span-1">
+        {/* Conversations List - Hidden on mobile when messages view is active */}
+        <div className={`lg:col-span-1 ${mobileView === 'messages' ? 'hidden lg:block' : 'block'}`}>
           <ConversationList 
             conversations={conversations} 
             onSelectConversation={handleSelectConversation} 
           />
         </div>
         
-        <div className="lg:col-span-2">
-          <MessageThread 
-            conversation={selectedConversation}
-            messages={selectedMessages}
-            onSendMessage={handleSendMessage}
-          />
+        {/* Message Thread - Hidden on mobile when conversations view is active */}
+        <div className={`lg:col-span-2 ${mobileView === 'conversations' ? 'hidden lg:block' : 'block'}`}>
+          {selectedConversationId ? (
+            <MessageThread 
+              conversation={selectedConversation}
+              messages={selectedMessages}
+              onSendMessage={handleSendMessage}
+              onBack={handleBackToConversations}
+            />
+          ) : (
+            <Card className="h-full flex items-center justify-center bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-slate-700/50 backdrop-blur-sm">
+              <div className="text-center p-8 text-slate-400">
+                <MessageSquare className="mx-auto h-16 w-16 mb-4 opacity-50" />
+                <h3 className="text-lg font-semibold text-white mb-2">No conversation selected</h3>
+                <p className="mb-4">Select a conversation to start messaging</p>
+                <Button 
+                  onClick={() => setMobileView('conversations')}
+                  className="lg:hidden bg-gradient-to-r from-blue-500 to-purple-600"
+                >
+                  View Conversations
+                </Button>
+              </div>
+            </Card>
+          )}
         </div>
       </motion.div>
 
-      {/* Add Contact Modal */}
-      {showAddContact && (
-        <motion.div 
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-        >
+      {/* Add Contact Modal - Mobile Optimized */}
+      <AnimatePresence>
+        {showAddContact && (
           <motion.div 
-            className="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-md mx-4"
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
           >
-            <CardHeader className="p-0 mb-4">
-              <CardTitle className="text-white">Add New Contact</CardTitle>
-            </CardHeader>
-            <CardContent className="p-0 space-y-4">
-              <div className="space-y-2">
-                <Label className="text-blue-100">Name</Label>
-                <Input
-                  value={newContact.name}
-                  onChange={(e) => setNewContact({...newContact, name: e.target.value})}
-                  placeholder="John Doe"
-                  className="bg-slate-800 border-slate-700 text-white"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label className="text-blue-100">Phone Number</Label>
-                <Input
-                  value={newContact.phone}
-                  onChange={(e) => setNewContact({...newContact, phone: e.target.value})}
-                  placeholder="+1234567890"
-                  className="bg-slate-800 border-slate-700 text-white"
-                />
-              </div>
-            </CardContent>
-            <CardFooter className="p-0 mt-6 flex justify-end gap-2">
-              <Button 
-                variant="outline" 
-                onClick={() => setShowAddContact(false)}
-                className="border-slate-700 text-slate-300"
-              >
-                Cancel
-              </Button>
-              <Button 
-                onClick={handleAddContact}
-                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-              >
-                Add Contact
-              </Button>
-            </CardFooter>
+            <motion.div 
+              className="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-md mx-auto"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+            >
+              <CardHeader className="p-0 mb-4 flex flex-row items-center justify-between">
+                <CardTitle className="text-white">Add New Contact</CardTitle>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => setShowAddContact(false)}
+                  className="text-slate-400 hover:text-white"
+                >
+                  <X className="h-5 w-5" />
+                </Button>
+              </CardHeader>
+              <CardContent className="p-0 space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-blue-100">Name</Label>
+                  <Input
+                    value={newContact.name}
+                    onChange={(e) => setNewContact({...newContact, name: e.target.value})}
+                    placeholder="John Doe"
+                    className="bg-slate-800 border-slate-700 text-white"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label className="text-blue-100">Phone Number</Label>
+                  <Input
+                    value={newContact.phone}
+                    onChange={(e) => setNewContact({...newContact, phone: e.target.value})}
+                    placeholder="+1234567890"
+                    className="bg-slate-800 border-slate-700 text-white"
+                  />
+                </div>
+              </CardContent>
+              <CardFooter className="p-0 mt-6 flex flex-col sm:flex-row justify-end gap-2">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setShowAddContact(false)}
+                  className="w-full sm:w-auto border-slate-700 text-slate-300"
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  onClick={handleAddContact}
+                  className="w-full sm:w-auto bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+                >
+                  Add Contact
+                </Button>
+              </CardFooter>
+            </motion.div>
           </motion.div>
-        </motion.div>
-      )}
+        )}
+      </AnimatePresence>
     </div>
   );
 };

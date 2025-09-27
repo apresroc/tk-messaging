@@ -88,7 +88,7 @@ const ConversationList = ({
                 whileHover={{ scale: 1.02 }}
               >
                 <div className="flex items-start gap-3">
-                  <Avatar className="border-2 border-slate-600 group-hover:border-blue-500 transition-colors">
+                  <Avatar className="border-2 border-slate-600 group-hover:border-blue-500 transition-colors flex-shrink-0">
                     <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
                       {conversation.contactName.charAt(0)}
                     </AvatarFallback>
@@ -96,7 +96,7 @@ const ConversationList = ({
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
                       <h3 className="font-semibold text-white truncate">{conversation.contactName}</h3>
-                      <span className="text-xs text-slate-400 whitespace-nowrap">
+                      <span className="text-xs text-slate-400 whitespace-nowrap ml-2">
                         {formatTime(conversation.lastMessageTime)}
                       </span>
                     </div>
@@ -105,13 +105,13 @@ const ConversationList = ({
                     </p>
                     <div className="flex items-center justify-between mt-2">
                       <div className="flex items-center gap-2">
-                        <Phone className="h-3 w-3 text-slate-400" />
-                        <span className="text-xs text-slate-400">
+                        <Phone className="h-3 w-3 text-slate-400 flex-shrink-0" />
+                        <span className="text-xs text-slate-400 truncate">
                           {conversation.contactPhone}
                         </span>
                       </div>
                       {conversation.unreadCount > 0 && (
-                        <Badge className="bg-blue-500/20 text-blue-300 border-0">
+                        <Badge className="bg-blue-500/20 text-blue-300 border-0 flex-shrink-0">
                           {conversation.unreadCount}
                         </Badge>
                       )}
