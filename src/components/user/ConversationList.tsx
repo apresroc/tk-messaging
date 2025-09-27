@@ -24,8 +24,8 @@ const ConversationList = ({
     }
 
     const filtered = conversations.filter(conv => 
-      conv.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      conv.customerPhone.includes(searchTerm)
+      conv.contactName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      conv.contactPhone.includes(searchTerm)
     );
     
     setFilteredConversations(filtered);
@@ -65,12 +65,12 @@ const ConversationList = ({
                 <div className="flex items-start gap-3">
                   <Avatar>
                     <AvatarFallback>
-                      {conversation.customerName.charAt(0)}
+                      {conversation.contactName.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <h3 className="font-semibold truncate">{conversation.customerName}</h3>
+                      <h3 className="font-semibold truncate">{conversation.contactName}</h3>
                       <span className="text-xs text-muted-foreground whitespace-nowrap">
                         {conversation.lastMessageTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
@@ -80,7 +80,7 @@ const ConversationList = ({
                     </p>
                     <div className="flex items-center justify-between mt-2">
                       <span className="text-xs text-muted-foreground">
-                        {conversation.customerPhone}
+                        {conversation.contactPhone}
                       </span>
                       {conversation.unreadCount > 0 && (
                         <Badge>{conversation.unreadCount}</Badge>

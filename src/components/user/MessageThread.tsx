@@ -62,12 +62,12 @@ const MessageThread = ({
         <div className="flex items-center gap-3">
           <Avatar>
             <AvatarFallback>
-              {conversation.customerName.charAt(0)}
+              {conversation.contactName.charAt(0)}
             </AvatarFallback>
           </Avatar>
           <div>
-            <h3 className="font-semibold">{conversation.customerName}</h3>
-            <p className="text-sm text-muted-foreground">{conversation.customerPhone}</p>
+            <h3 className="font-semibold">{conversation.contactName}</h3>
+            <p className="text-sm text-muted-foreground">{conversation.contactPhone}</p>
           </div>
         </div>
       </CardHeader>

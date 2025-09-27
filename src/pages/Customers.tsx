@@ -13,74 +13,70 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Search, Plus, Edit, Trash2, Users } from 'lucide-react';
-import { Customer } from '@/lib/types';
+import { Contact } from '@/lib/types';
 import { toast } from 'sonner';
 import Header from '@/components/layout/Header';
 import Sidebar from '@/components/layout/Sidebar';
 
 const Customers = () => {
-  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [contacts, setContacts] = useState<Contact[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredCustomers, setFilteredCustomers] = useState<Customer[]>([]);
-  const [newCustomer, setNewCustomer] = useState({
+  const [filteredContacts, setFilteredContacts] = useState<Contact[]>([]);
+  const [newContact, setNewContact] = useState({
     name: '',
-    email: '',
     phone: ''
   });
   const [showAddForm, setShowAddForm] = useState(false);
 
-  // Load customers from localStorage
+  // Load contacts from localStorage
   useEffect(() => {
-    const savedCustomers = localStorage.getItem('customers');
-    if (savedCustomers) {
-      setCustomers(JSON.parse(savedCustomers));
+    const savedContacts = localStorage.getItem('contacts');
+    if (savedContacts) {
+      setContacts(JSON.parse(savedContacts));
     }
   }, []);
 
-  // Save customers to localStorage
+  // Save contacts to localStorage
   useEffect(() => {
-    localStorage.setItem('customers', JSON.stringify(customers));
-  }, [customers]);
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
-  // Filter customers based on search term
+  // Filter contacts based on search term
   useEffect(() => {
     if (!searchTerm) {
-      setFilteredCustomers(customers);
+      setFilteredContacts(contacts);
       return;
     }
 
-    const filtered = customers.filter(customer => 
-      customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      customer.phone.includes(searchTerm)
+    const filtered = contacts.filter(contact => 
+      contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      contact.phone.includes(searchTerm)
     );
     
-    setFilteredCustomers(filtered);
-  }, [searchTerm, customers]);
+    setFilteredContacts(filtered);
+  }, [searchTerm, contacts]);
 
-  const handleAddCustomer = () => {
-    if (!newCustomer.name || !newCustomer.phone) {
+  const handleAddContact = () => {
+    if (!newContact.name || !newContact.phone) {
       toast.error('Name and phone number are required');
       return;
     }
     
-    const customer: Customer = {
-      id: `cust_${Date.now()}`,
-      name: newCustomer.name,
-      email: newCustomer.email,
-      phone: newCustomer.phone,
-      createdAt: new Date()
+    const contact: Contact = {
+      id: `cont_${Date.now()}`,
+      name: newContact.name,
+      phone: newContact.phone
     };
     
-    setCustomers(prev => [...prev, customer]);
-    setNewCustomer({ name: '', email: '', phone: '' });
+    setContacts(prev => [...prev, contact]);
+    setNewContact({ name: '', phone: '' });
     setShowAddForm(false);
-    toast.success('Customer added successfully');
+    toast.success('Contact added successfully');
   };
 
-  const handleDeleteCustomer = (id: string) => {
-    setCustomers(prev => prev.filter(customer => customer.id !== id));
-    toast.success('Customer deleted');
+  const handleDeleteContact = (id: string) => {
+    setContacts(prev => prev.filter(contact => contact.id !== id));
+    toast.success('Contact deleted');
   };
 
   return (
@@ -91,49 +87,38 @@ const Customers = () => {
         <div className="container py-6 space-y-6 flex-1">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold">Customers</h1>
-              <p className="text-muted-foreground">Manage your customer contacts</p>
+              <h1 className="text-3xl font-bold">Contacts</h1>
+              <p className="text-muted-foreground">Manage your contacts</p>
             </div>
             <Button onClick={() => setShowAddForm(true)}>
               <Plus className="mr-2 h-4 w-4" />
-              Add Customer
+              Add Contact
             </Button>
           </div>
           
           {showAddForm && (
             <Card>
               <CardHeader>
-                <CardTitle>Add New Customer</CardTitle>
+                <CardTitle>Add New Contact</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="customerName">Name</Label>
+                    <Label htmlFor="contactName">Name</Label>
                     <Input
-                      id="customerName"
-                      value={newCustomer.name}
-                      onChange={(e) => setNewCustomer({...newCustomer, name: e.target.value})}
+                      id="contactName"
+                      value={newContact.name}
+                      onChange={(e) => setNewContact({...newContact, name: e.target.value})}
                       placeholder="John Doe"
                     />
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="customerEmail">Email</Label>
+                    <Label htmlFor="contactPhone">Phone Number</Label>
                     <Input
-                      id="customerEmail"
-                      value={newCustomer.email}
-                      onChange={(e) => setNewCustomer({...newCustomer, email: e.target.value})}
-                      placeholder="john@example.com"
-                      type="email"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="customerPhone">Phone Number</Label>
-                    <Input
-                      id="customerPhone"
-                      value={newCustomer.phone}
-                      onChange={(e) => setNewCustomer({...newCustomer, phone: e.target.value})}
+                      id="contactPhone"
+                      value={newContact.phone}
+                      onChange={(e) => setNewContact({...newContact, phone: e.target.value})}
                       placeholder="+1234567890"
                     />
                   </div>
@@ -143,7 +128,7 @@ const Customers = () => {
                   <Button variant="outline" onClick={() => setShowAddForm(false)}>
                     Cancel
                   </Button>
-                  <Button onClick={handleAddCustomer}>Add Customer</Button>
+                  <Button onClick={handleAddContact}>Add Contact</Button>
                 </div>
               </CardContent>
             </Card>
@@ -152,11 +137,11 @@ const Customers = () => {
           <Card>
             <CardHeader>
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <CardTitle>Customer List</CardTitle>
+                <CardTitle>Contact List</CardTitle>
                 <div className="relative w-full sm:w-64">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                   <Input
-                    placeholder="Search customers..."
+                    placeholder="Search contacts..."
                     className="pl-10"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -165,18 +150,18 @@ const Customers = () => {
               </div>
             </CardHeader>
             <CardContent>
-              {filteredCustomers.length === 0 ? (
+              {filteredContacts.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
                   <Users className="mx-auto h-12 w-12 opacity-50" />
                   <p className="mt-2">
-                    {searchTerm ? 'No customers match your search' : 'No customers added yet'}
+                    {searchTerm ? 'No contacts match your search' : 'No contacts added yet'}
                   </p>
                   {!searchTerm && (
                     <Button 
                       className="mt-4" 
                       onClick={() => setShowAddForm(true)}
                     >
-                      Add Your First Customer
+                      Add Your First Contact
                     </Button>
                   )}
                 </div>
@@ -185,20 +170,16 @@ const Customers = () => {
                   <TableHeader>
                     <TableRow>
                       <TableHead>Name</TableHead>
-                      <TableHead>Email</TableHead>
                       <TableHead>Phone</TableHead>
-                      <TableHead>Added</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredCustomers.map((customer) => (
-                      <TableRow key={customer.id}>
-                        <TableCell className="font-medium">{customer.name}</TableCell>
-                        <TableCell>{customer.email}</TableCell>
-                        <TableCell>{customer.phone}</TableCell>
-                        <TableCell>{customer.createdAt.toLocaleDateString()}</TableCell>
+                    {filteredContacts.map((contact) => (
+                      <TableRow key={contact.id}>
+                        <TableCell className="font-medium">{contact.name}</TableCell>
+                        <TableCell>{contact.phone}</TableCell>
                         <TableCell>
                           <Badge variant="secondary">Active</Badge>
                         </TableCell>
@@ -210,7 +191,7 @@ const Customers = () => {
                             <Button 
                               variant="destructive" 
                               size="sm"
-                              onClick={() => handleDeleteCustomer(customer.id)}
+                              onClick={() => handleDeleteContact(contact.id)}
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>

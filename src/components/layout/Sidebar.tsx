@@ -6,23 +6,22 @@ import {
   Settings, 
   Users, 
   Shield, 
-  Home 
+  Home,
+  Contact
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const Sidebar = () => {
   const location = useLocation();
   
-  const navItems = [
+  // Check if user is admin (in a real app, this would come from auth context)
+  const isAdmin = window.location.pathname.includes('admin');
+
+  const navItems = isAdmin ? [
     {
       title: "Dashboard",
-      href: "/",
+      href: "/admin",
       icon: Home,
-    },
-    {
-      title: "Conversations",
-      href: "/conversations",
-      icon: MessageSquare,
     },
     {
       title: "Customers",
@@ -33,12 +32,23 @@ const Sidebar = () => {
       title: "Settings",
       href: "/settings",
       icon: Settings,
+    }
+  ] : [
+    {
+      title: "Conversations",
+      href: "/conversations",
+      icon: MessageSquare,
     },
     {
-      title: "Admin",
-      href: "/admin",
-      icon: Shield,
+      title: "Contacts",
+      href: "/customers",
+      icon: Contact,
     },
+    {
+      title: "Settings",
+      href: "/settings",
+      icon: Settings,
+    }
   ];
 
   return (
@@ -46,7 +56,7 @@ const Sidebar = () => {
       <div className="space-y-4 py-4">
         <div className="px-3 py-2">
           <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
-            TK Messaging
+            {isAdmin ? "Admin Panel" : "Messaging"}
           </h2>
           <div className="space-y-1">
             {navItems.map((item) => {

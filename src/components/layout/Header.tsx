@@ -1,10 +1,9 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/mode-toggle';
-import { User, Home, MessageSquare, Users, Settings } from 'lucide-react';
+import { User, Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import Sidebar from './Sidebar';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -16,7 +15,17 @@ const Header = () => {
   };
 
   const goToHome = () => {
-    navigate('/');
+    // Check if user is admin to determine home route
+    const isAdmin = window.location.pathname.includes('admin');
+    navigate(isAdmin ? '/admin' : '/conversations');
+  };
+
+  // Determine title based on current path
+  const getTitle = () => {
+    if (window.location.pathname.includes('admin')) {
+      return 'TK Messaging Admin';
+    }
+    return 'TK Messaging';
   };
 
   return (
@@ -26,7 +35,7 @@ const Header = () => {
           <Button variant="ghost" size="icon" onClick={goToHome}>
             <Home className="h-6 w-6 text-primary" />
           </Button>
-          <span className="text-xl font-bold">TK Messaging</span>
+          <span className="text-xl font-bold">{getTitle()}</span>
         </div>
         
         <div className="ml-auto flex items-center space-x-4">

@@ -6,6 +6,14 @@ export interface Customer {
   createdAt: Date;
 }
 
+export interface Contact {
+  id: string;
+  name: string;
+  phone: string;
+  lastSeen?: Date;
+  isOnline?: boolean;
+}
+
 export interface AdminSettings {
   twilioAccountSid: string;
   twilioAuthToken: string;
@@ -15,7 +23,7 @@ export interface AdminSettings {
 
 export interface Message {
   id: string;
-  customerId: string;
+  contactId: string;
   content: string;
   direction: 'inbound' | 'outbound';
   timestamp: Date;
@@ -24,9 +32,9 @@ export interface Message {
 
 export interface Conversation {
   id: string;
-  customerId: string;
-  customerName: string;
-  customerPhone: string;
+  contactId: string;
+  contactName: string;
+  contactPhone: string;
   lastMessage: string;
   lastMessageTime: Date;
   unreadCount: number;

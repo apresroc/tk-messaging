@@ -4,46 +4,45 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { Customer, Conversation, Message } from '@/lib/types';
+import { Contact, Conversation, Message } from '@/lib/types';
 import ConversationList from './ConversationList';
 import MessageThread from './MessageThread';
 import { twilioClient } from '@/lib/twilio-client';
 import { toast } from 'sonner';
 
 const UserDashboard = () => {
-  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [contacts, setContacts] = useState<Contact[]>([]);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [messages, setMessages] = useState<Record<string, Message[]>>({});
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
-  const [newCustomer, setNewCustomer] = useState({
+  const [newContact, setNewContact] = useState({
     name: '',
-    email: '',
     phone: ''
   });
 
   // Load data from localStorage
   useEffect(() => {
-    const savedCustomers = localStorage.getItem('customers');
-    if (savedCustomers) {
-      setCustomers(JSON.parse(savedCustomers));
+    const savedContacts = localStorage.getItem('contacts');
+    if (savedContacts) {
+      setContacts(JSON.parse(savedContacts));
     }
     
     // Initialize with mock conversations for demo
     const mockConversations: Conversation[] = [
       {
         id: 'conv_1',
-        customerId: 'cust_1',
-        customerName: 'John Smith',
-        customerPhone: '+1234567890',
+        contactId: 'cont_1',
+        contactName: 'John Smith',
+        contactPhone: '+1234567890',
         lastMessage: 'Hello, I have a question about my order',
         lastMessageTime: new Date(Date.now() - 3600000),
         unreadCount: 2
       },
       {
         id: 'conv_2',
-        customerId: 'cust_2',
-        customerName: 'Sarah Johnson',
-        customerPhone: '+1234567891',
+        contactId: 'cont_2',
+        contactName: 'Sarah Johnson',
+        contactPhone: '+1234567891',
         lastMessage: 'Thanks for the quick response!',
         lastMessageTime: new Date(Date.now() - 86400000),
         unreadCount: 0
@@ -57,7 +56,7 @@ const UserDashboard = () => {
       conv_1: [
         {
           id: 'msg_1',
-          customerId: 'cust_1',
+          contactId: 'cont_1',
           content: 'Hello, I have a question about my order',
           direction: 'inbound',
           timestamp: new Date(Date.now() - 3600000),
@@ -65,7 +64,7 @@ const UserDashboard = () => {
         },
         {
           id: 'msg_2',
-          customerId: 'cust_1',
+          contactId: 'cont_1',
           content: 'Sure, I\'d be happy to help. What is your order number?',
           direction: 'outbound',
           timestamp: new Date(Date.now() - 3500000),
@@ -73,7 +72,7 @@ const UserDashboard = () => {
         },
         {
           id: 'msg_3',
-          customerId: 'cust_1',
+          contactId: 'cont_1',
           content: 'It\'s #12345. I haven\'t received a shipping confirmation yet.',
           direction: 'inbound',
           timestamp: new Date(Date.now() - 3400000),
@@ -83,7 +82,7 @@ const UserDashboard = () => {
       conv_2: [
         {
           id: 'msg_4',
-          customerId: 'cust_2',
+          contactId: 'cont_2',
           content: 'I just wanted to say thanks for the quick response yesterday!',
           direction: 'inbound',
           timestamp: new Date(Date.now() - 86400000),
@@ -91,7 +90,7 @@ const UserDashboard = () => {
         },
         {
           id: 'msg_5',
-          customerId: 'cust_2',
+          contactId: 'cont_2',
           content: 'You\'re welcome! Is there anything else I can help with?',
           direction: 'outbound',
           timestamp: new Date(Date.now() - 86300000),
@@ -99,7 +98,7 @@ const UserDashboard = () => {
         },
         {
           id: 'msg_6',
-          customerId: 'cust_2',
+          contactId: 'cont_2',
           content: 'Thanks for the quick response!',
           direction: 'inbound',
           timestamp: new Date(Date.now() - 86200000),
@@ -111,23 +110,21 @@ const UserDashboard = () => {
     setMessages(mockMessages);
   }, []);
 
-  const handleAddCustomer = () => {
-    if (!newCustomer.name || !newCustomer.phone) {
+  const handleAddContact = () => {
+    if (!newContact.name || !newContact.phone) {
       toast.error('Name and phone number are required');
       return;
     }
     
-    const customer: Customer = {
-      id: `cust_${Date.now()}`,
-      name: newCustomer.name,
-      email: newCustomer.email,
-      phone: newCustomer.phone,
-      createdAt: new Date()
+    const contact: Contact = {
+      id: `cont_${Date.now()}`,
+      name: newContact.name,
+      phone: newContact.phone
     };
     
-    setCustomers(prev => [...prev, customer]);
-    setNewCustomer({ name: '', email: '', phone: '' });
-    toast.success('Customer added successfully');
+    setContacts(prev => [...prev, contact]);
+    setNewContact({ name: '', phone: '' });
+    toast.success('Contact added successfully');
   };
 
   const handleSelectConversation = (id: string) => {
@@ -143,7 +140,7 @@ const UserDashboard = () => {
     // Create new message
     const newMessage: Message = {
       id: `msg_${Date.now()}`,
-      customerId: conversation.customerId,
+      contactId: conversation.contactId,
       content,
       direction: 'outbound',
       timestamp: new Date(),
@@ -170,7 +167,7 @@ const UserDashboard = () => {
     
     // Send via Twilio
     try {
-      const result = await twilioClient.sendMessage(conversation.customerPhone, content);
+      const result = await twilioClient.sendMessage(conversation.contactPhone, content);
       if (result.success) {
         // Update message status
         setMessages(prev => ({
@@ -209,7 +206,7 @@ const UserDashboard = () => {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold">Messaging Dashboard</h1>
-        <p className="text-muted-foreground">Manage your customer conversations</p>
+        <p className="text-muted-foreground">Manage your conversations</p>
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -231,43 +228,32 @@ const UserDashboard = () => {
       
       <Card>
         <CardHeader>
-          <CardTitle>Add New Customer</CardTitle>
+          <CardTitle>Add New Contact</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="customerName">Name</Label>
+              <Label htmlFor="contactName">Name</Label>
               <Input
-                id="customerName"
-                value={newCustomer.name}
-                onChange={(e) => setNewCustomer({...newCustomer, name: e.target.value})}
+                id="contactName"
+                value={newContact.name}
+                onChange={(e) => setNewContact({...newContact, name: e.target.value})}
                 placeholder="John Doe"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="customerEmail">Email</Label>
+              <Label htmlFor="contactPhone">Phone Number</Label>
               <Input
-                id="customerEmail"
-                value={newCustomer.email}
-                onChange={(e) => setNewCustomer({...newCustomer, email: e.target.value})}
-                placeholder="john@example.com"
-                type="email"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="customerPhone">Phone Number</Label>
-              <Input
-                id="customerPhone"
-                value={newCustomer.phone}
-                onChange={(e) => setNewCustomer({...newCustomer, phone: e.target.value})}
+                id="contactPhone"
+                value={newContact.phone}
+                onChange={(e) => setNewContact({...newContact, phone: e.target.value})}
                 placeholder="+1234567890"
               />
             </div>
           </div>
           
-          <Button onClick={handleAddCustomer}>Add Customer</Button>
+          <Button onClick={handleAddContact}>Add Contact</Button>
         </CardContent>
       </Card>
     </div>
