@@ -3,7 +3,7 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Send, MessageCircle, Mail, MoreHorizontal } from 'lucide-react';
+import { Send, MessageCircle, Mail, MoreHorizontal, ArrowLeft } from 'lucide-react';
 import { Message, Conversation } from '@/lib/types';
 import { twilioClient } from '@/lib/twilio-client';
 import { toast } from 'sonner';
@@ -63,8 +63,19 @@ const MessageThread = ({
 
   return (
     <Card className="h-full flex flex-col bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50">
+      {/* Header with back button */}
       <CardHeader className="border-b border-slate-200 dark:border-slate-700/50 p-4">
         <div className="flex items-center gap-3">
+          {onBack && (
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={onBack}
+              className="text-slate-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white lg:hidden"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+          )}
           <Avatar className="border-2 border-slate-300 dark:border-slate-600">
             <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
               {conversation.contactName.charAt(0)}
