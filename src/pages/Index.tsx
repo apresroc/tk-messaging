@@ -104,7 +104,7 @@ const Index = () => {
               <MessageSquare className="h-6 w-6 text-white" />
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent">
-              MessageFlow
+              TK Messaging
             </span>
           </motion.div>
           
@@ -117,13 +117,6 @@ const Index = () => {
             <a href="#features" className="text-blue-100 hover:text-white transition-colors font-medium">Features</a>
             <a href="#pricing" className="text-blue-100 hover:text-white transition-colors font-medium">Pricing</a>
             <a href="#testimonials" className="text-blue-100 hover:text-white transition-colors font-medium">Testimonials</a>
-            <Button 
-              variant="outline" 
-              className="border-blue-400 text-blue-100 hover:bg-blue-400 hover:text-white"
-              onClick={() => document.getElementById('login-section')?.scrollIntoView({ behavior: 'smooth' })}
-            >
-              Login
-            </Button>
           </motion.nav>
         </div>
       </header>
@@ -354,7 +347,7 @@ const Index = () => {
                 <div className="mx-auto bg-gradient-to-r from-blue-500 to-purple-600 w-16 h-16 rounded-2xl flex items-center justify-center mb-4">
                   <MessageSquare className="h-8 w-8 text-white" />
                 </div>
-                <CardTitle className="text-3xl font-bold">Welcome to MessageFlow</CardTitle>
+                <CardTitle className="text-3xl font-bold">Welcome to TK Messaging</CardTitle>
                 <CardDescription className="text-blue-200">
                   Sign in to start revolutionizing your customer conversations
                 </CardDescription>
@@ -419,7 +412,7 @@ const Index = () => {
                   <MessageSquare className="h-5 w-5 text-white" />
                 </div>
                 <span className="text-xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent">
-                  MessageFlow
+                  TK Messaging
                 </span>
               </div>
               <p className="text-slate-400">
@@ -443,7 +436,7 @@ const Index = () => {
           
           <div className="border-t border-slate-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-slate-400 text-sm">
-              © 2024 MessageFlow. All rights reserved.
+              © 2024 TK Messaging. All rights reserved.
             </p>
             <div className="flex gap-6 mt-4 md:mt-0">
               <a href="#" className="text-slate-400 hover:text-blue-300 transition-colors text-sm">Privacy</a>
