@@ -10,7 +10,7 @@ import ConversationList from './ConversationList';
 import MessageThread from './MessageThread';
 import { twilioClient } from '@/lib/twilio-client';
 import { toast } from 'sonner';
-import { Plus, Search, Users, MessageSquare, Zap, X } from 'lucide-react';
+import { Plus, Search, Users, MessageSquare, Zap, X, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const UserDashboard = () => {
@@ -23,7 +23,18 @@ const UserDashboard = () => {
     phone: ''
   });
   const [showAddContact, setShowAddContact] = useState(false);
-  const [mobileView, setMobileView] = useState<'conversations' | 'messages'>('conversations');
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if we're on mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Load data from localStorage
   useEffect(() => {
@@ -126,20 +137,6 @@ const UserDashboard = () => {
     setMessages(mockMessages);
   }, []);
 
-  // Handle mobile view switching
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 1024) {
-        // On mobile, default to conversations view
-        setMobileView('conversations');
-      }
-    };
-    
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
   const handleAddContact = () => {
     if (!newContact.name || !newContact.phone) {
       toast.error('Name and phone number are required');
@@ -160,14 +157,9 @@ const UserDashboard = () => {
 
   const handleSelectConversation = (id: string) => {
     setSelectedConversationId(id);
-    // On mobile, switch to messages view when selecting a conversation
-    if (window.innerWidth < 1024) {
-      setMobileView('messages');
-    }
   };
 
   const handleBackToConversations = () => {
-    setMobileView('conversations');
     setSelectedConversationId(null);
   };
 
@@ -274,44 +266,37 @@ const UserDashboard = () => {
         </div>
       </motion.div>
 
-      {/* Mobile View Toggle */}
-      <div className="lg:hidden flex gap-2 mb-4">
-        <Button
-          variant={mobileView === 'conversations' ? 'default' : 'outline'}
-          onClick={() => setMobileView('conversations')}
-          className={mobileView === 'conversations' ? 'bg-gradient-to-r from-blue-500 to-purple-600' : ''}
-        >
-          <MessageSquare className="h-4 w-4 mr-2" />
-          Conversations
-        </Button>
-        <Button
-          variant={mobileView === 'messages' ? 'default' : 'outline'}
-          onClick={() => setMobileView('messages')}
-          disabled={!selectedConversationId}
-          className={mobileView === 'messages' ? 'bg-gradient-to-r from-blue-500 to-purple-600' : ''}
-        >
-          <Users className="h-4 w-4 mr-2" />
-          Messages
-        </Button>
-      </div>
+      {/* Mobile Back Button */}
+      {isMobile && selectedConversationId && (
+        <div className="lg:hidden">
+          <Button 
+            onClick={handleBackToConversations}
+            variant="outline"
+            className="w-full border-slate-700 text-slate-300"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Conversations
+          </Button>
+        </div>
+      )}
 
-      {/* Main Content Grid - Responsive */}
+      {/* Main Content - Mobile Flow */}
       <motion.div 
         className="grid grid-cols-1 lg:grid-cols-3 gap-6"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
       >
-        {/* Conversations List - Hidden on mobile when messages view is active */}
-        <div className={`lg:col-span-1 ${mobileView === 'messages' ? 'hidden lg:block' : 'block'}`}>
+        {/* Conversations List - Always visible on desktop, hidden on mobile when conversation is selected */}
+        <div className={`${isMobile && selectedConversationId ? 'hidden' : 'block'} lg:col-span-1`}>
           <ConversationList 
             conversations={conversations} 
             onSelectConversation={handleSelectConversation} 
           />
         </div>
         
-        {/* Message Thread - Hidden on mobile when conversations view is active */}
-        <div className={`lg:col-span-2 ${mobileView === 'conversations' ? 'hidden lg:block' : 'block'}`}>
+        {/* Message Thread - Hidden on mobile when no conversation is selected */}
+        <div className={`${isMobile && !selectedConversationId ? 'hidden' : 'block'} lg:col-span-2`}>
           {selectedConversationId ? (
             <MessageThread 
               conversation={selectedConversation}
@@ -325,12 +310,14 @@ const UserDashboard = () => {
                 <MessageSquare className="mx-auto h-16 w-16 mb-4 opacity-50" />
                 <h3 className="text-lg font-semibold text-white mb-2">No conversation selected</h3>
                 <p className="mb-4">Select a conversation to start messaging</p>
-                <Button 
-                  onClick={() => setMobileView('conversations')}
-                  className="lg:hidden bg-gradient-to-r from-blue-500 to-purple-600"
-                >
-                  View Conversations
-                </Button>
+                {isMobile && (
+                  <Button 
+                    onClick={() => window.location.reload()}
+                    className="bg-gradient-to-r from-blue-500 to-purple-600"
+                  >
+                    View Conversations
+                  </Button>
+                )}
               </div>
             </Card>
           )}
