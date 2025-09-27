@@ -5,12 +5,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Contact, Conversation, Message } from '@/lib/types';
+import { Contact, Conversation, Message, MessageMedia } from '@/lib/types';
 import ConversationList from './ConversationList';
 import MessageThread from './MessageThread';
 import { twilioClient } from '@/lib/twilio-client';
 import { toast } from 'sonner';
-import { MessageSquare, MessageSquarePlus, Settings, UserPlus, X, LogOut } from 'lucide-react';
+import { MessageSquare, MessageSquarePlus, Settings, UserPlus, X, LogOut, Paperclip, Image, Video } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
@@ -29,7 +29,8 @@ const UserDashboard = () => {
   const [showNewMessage, setShowNewMessage] = useState(false);
   const [newMessage, setNewMessage] = useState({
     phone: '',
-    content: ''
+    content: '',
+    media: [] as File[]
   });
 
   // Check if we're on mobile
@@ -170,7 +171,7 @@ const UserDashboard = () => {
     setSelectedConversationId(null);
   };
 
-  const handleSendMessage = async (content: string) => {
+  const handleSendMessage = async (content: string, mediaUrls?: string[]) => {
     if (!selectedConversationId) return;
     
     const conversation = conversations.find(c => c.id === selectedConversationId);
@@ -186,6 +187,14 @@ const UserDashboard = () => {
       status: 'sent'
     };
     
+    // Add media to message if provided
+    if (mediaUrls && mediaUrls.length > 0) {
+      newMessage.media = mediaUrls.map(url => ({
+        url,
+        type: url.includes('.mp4') || url.includes('.mov') ? 'video/mp4' : 'image/jpeg'
+      }));
+    }
+    
     // Update messages state
     setMessages(prev => ({
       ...prev,
@@ -197,7 +206,7 @@ const UserDashboard = () => {
       conv.id === selectedConversationId 
         ? { 
             ...conv, 
-            lastMessage: content,
+            lastMessage: content || (mediaUrls && mediaUrls.length > 0 ? 'Sent media' : 'Empty message'),
             lastMessageTime: new Date(),
             unreadCount: 0
           } 
@@ -206,7 +215,7 @@ const UserDashboard = () => {
     
     // Send via Twilio
     try {
-      const result = await twilioClient.sendMessage(conversation.contactPhone, content);
+      const result = await twilioClient.sendMessage(conversation.contactPhone, content, mediaUrls);
       if (result.success) {
         // Update message status
         setMessages(prev => ({
@@ -253,16 +262,23 @@ const UserDashboard = () => {
   };
 
   const handleSendNewMessage = async () => {
-    if (!newMessage.phone || !newMessage.content) {
-      toast.error('Phone number and message content are required');
+    if (!newMessage.phone || (!newMessage.content && newMessage.media.length === 0)) {
+      toast.error('Phone number and message content or media are required');
       return;
     }
     
+    // In a real app, you would upload media files to a server and get URLs
+    // For this demo, we'll just use placeholder URLs if media is attached
+    const mediaUrls = newMessage.media.length > 0 ? [
+      'https://placehold.co/600x400',
+      'https://placehold.co/800x600'
+    ] : undefined;
+    
     try {
-      const result = await twilioClient.sendMessage(newMessage.phone, newMessage.content);
+      const result = await twilioClient.sendMessage(newMessage.phone, newMessage.content, mediaUrls);
       if (result.success) {
         toast.success('Message sent successfully');
-        setNewMessage({ phone: '', content: '' });
+        setNewMessage({ phone: '', content: '', media: [] });
         setShowNewMessage(false);
       } else {
         toast.error(`Failed to send message: ${result.error}`);
@@ -271,6 +287,23 @@ const UserDashboard = () => {
       toast.error('Failed to send message');
       console.error(error);
     }
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+    
+    setNewMessage(prev => ({
+      ...prev,
+      media: [...prev.media, ...Array.from(files)]
+    }));
+  };
+
+  const removeMedia = (index: number) => {
+    setNewMessage(prev => ({
+      ...prev,
+      media: prev.media.filter((_, i) => i !== index)
+    }));
   };
 
   const selectedConversation = conversations.find(c => c.id === selectedConversationId) || null;
@@ -510,6 +543,70 @@ const UserDashboard = () => {
                     placeholder="Type your message here..."
                     className="w-full min-h-[120px] bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white rounded-md p-3"
                   />
+                </div>
+                
+                {/* Media attachment section */}
+                <div className="space-y-2">
+                  <Label className="text-gray-700 dark:text-blue-100">Attachments</Label>
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => document.getElementById('media-input')?.click()}
+                      className="border-slate-300 dark:border-slate-700 text-gray-700 dark:text-slate-300"
+                    >
+                      <Paperclip className="h-4 w-4 mr-2" />
+                      Add Media
+                    </Button>
+                    <input
+                      id="media-input"
+                      type="file"
+                      className="hidden"
+                      multiple
+                      accept="image/*,video/*"
+                      onChange={handleFileSelect}
+                    />
+                    
+                    {newMessage.media.length > 0 && (
+                      <span className="text-sm text-slate-500 dark:text-slate-400">
+                        {newMessage.media.length} file(s) selected
+                      </span>
+                    )}
+                  </div>
+                  
+                  {/* Media previews */}
+                  {newMessage.media.length > 0 && (
+                    <div className="flex gap-2 overflow-x-auto py-2">
+                      {newMessage.media.map((file, index) => (
+                        <div key={index} className="relative">
+                          {file.type.startsWith('image/') ? (
+                            <div className="h-16 w-16 rounded-lg border border-slate-300 dark:border-slate-600 overflow-hidden">
+                              <Image className="h-full w-full p-2 text-slate-500 dark:text-slate-400" />
+                            </div>
+                          ) : file.type.startsWith('video/') ? (
+                            <div className="h-16 w-16 rounded-lg border border-slate-300 dark:border-slate-600 overflow-hidden bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+                              <Video className="h-6 w-6 text-slate-500 dark:text-slate-400" />
+                            </div>
+                          ) : (
+                            <div className="h-16 w-16 rounded-lg border border-slate-300 dark:border-slate-600 overflow-hidden bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+                              <Paperclip className="h-6 w-6 text-slate-500 dark:text-slate-400" />
+                            </div>
+                          )}
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="absolute -top-2 -right-2 h-5 w-5 bg-red-500 text-white rounded-full p-0"
+                            onClick={() => removeMedia(index)}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <line x1="18" y1="6" x2="6" y2="18"></line>
+                              <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </CardContent>
               <div className="p-0 mt-6 flex flex-col sm:flex-row justify-end gap-2">

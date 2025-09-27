@@ -11,9 +11,9 @@ export class TwilioClient {
     console.log('Twilio client initialized with:', { accountSid, fromNumber });
   }
 
-  async sendMessage(to: string, body: string) {
-    // Simulate sending a message
-    console.log('Sending message:', { to, body });
+  async sendMessage(to: string, body: string, mediaUrl?: string[]) {
+    // Simulate sending a message with optional media
+    console.log('Sending message:', { to, body, mediaUrl });
     
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500));

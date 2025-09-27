@@ -21,6 +21,11 @@ export interface AdminSettings {
   webhookUrl: string;
 }
 
+export interface MessageMedia {
+  url: string;
+  type: string;
+}
+
 export interface Message {
   id: string;
   contactId: string;
@@ -28,6 +33,7 @@ export interface Message {
   direction: 'inbound' | 'outbound';
   timestamp: Date;
   status: 'sent' | 'delivered' | 'failed';
+  media?: MessageMedia[];
 }
 
 export interface Conversation {

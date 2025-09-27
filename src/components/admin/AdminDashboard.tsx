@@ -17,7 +17,7 @@ import { Customer, AdminSettings } from '@/lib/types';
 import { twilioClient } from '@/lib/twilio-client';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
-import { Settings, Users, MessageSquare, Zap, Shield, Key, Phone, Globe } from 'lucide-react';
+import { Settings, Users, MessageSquare, Zap, Shield, Key, Phone, Globe, Paperclip, Image, Video } from 'lucide-react';
 
 const AdminDashboard = () => {
   const [settings, setSettings] = useState<AdminSettings>({
@@ -36,8 +36,11 @@ const AdminDashboard = () => {
   
   const [testMessage, setTestMessage] = useState({
     to: '',
-    body: ''
+    body: '',
+    media: [] as File[]
   });
+  
+  const [mediaPreviews, setMediaPreviews] = useState<string[]>([]);
 
   // Load settings from localStorage on component mount
   useEffect(() => {
@@ -96,16 +99,24 @@ const AdminDashboard = () => {
   };
 
   const handleTestMessage = async () => {
-    if (!testMessage.to || !testMessage.body) {
-      toast.error('Recipient and message body are required');
+    if (!testMessage.to || (!testMessage.body && testMessage.media.length === 0)) {
+      toast.error('Recipient and message body or media are required');
       return;
     }
     
+    // In a real app, you would upload media files to a server and get URLs
+    // For this demo, we'll just use placeholder URLs if media is attached
+    const mediaUrls = testMessage.media.length > 0 ? [
+      'https://placehold.co/600x400',
+      'https://placehold.co/800x600'
+    ] : undefined;
+    
     try {
-      const result = await twilioClient.sendMessage(testMessage.to, testMessage.body);
+      const result = await twilioClient.sendMessage(testMessage.to, testMessage.body, mediaUrls);
       if (result.success) {
         toast.success('Test message sent successfully');
-        setTestMessage({ to: '', body: '' });
+        setTestMessage({ to: '', body: '', media: [] });
+        setMediaPreviews([]);
       } else {
         toast.error(`Failed to send message: ${result.error}`);
       }
@@ -118,6 +129,36 @@ const AdminDashboard = () => {
   const handleDeleteCustomer = (id: string) => {
     setCustomers(prev => prev.filter(customer => customer.id !== id));
     toast.success('Customer deleted');
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+    
+    const newFiles = Array.from(files);
+    setTestMessage(prev => ({
+      ...prev,
+      media: [...prev.media, ...newFiles]
+    }));
+    
+    // Create previews for images
+    newFiles.forEach(file => {
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setMediaPreviews(prev => [...prev, e.target?.result as string]);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  };
+
+  const removeMedia = (index: number) => {
+    setTestMessage(prev => ({
+      ...prev,
+      media: prev.media.filter((_, i) => i !== index)
+    }));
+    setMediaPreviews(prev => prev.filter((_, i) => i !== index));
   };
 
   return (
@@ -368,6 +409,62 @@ const AdminDashboard = () => {
                   className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white placeholder:text-slate-400"
                 />
               </div>
+            </div>
+            
+            {/* Media attachment section */}
+            <div className="space-y-2">
+              <Label className="text-gray-700 dark:text-blue-100">Attachments</Label>
+              <div className="flex items-center gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => document.getElementById('test-media-input')?.click()}
+                  className="border-slate-300 dark:border-slate-700 text-gray-700 dark:text-slate-300"
+                >
+                  <Paperclip className="h-4 w-4 mr-2" />
+                  Add Media
+                </Button>
+                <input
+                  id="test-media-input"
+                  type="file"
+                  className="hidden"
+                  multiple
+                  accept="image/*,video/*"
+                  onChange={handleFileSelect}
+                />
+                
+                {testMessage.media.length > 0 && (
+                  <span className="text-sm text-slate-500 dark:text-slate-400">
+                    {testMessage.media.length} file(s) selected
+                  </span>
+                )}
+              </div>
+              
+              {/* Media previews */}
+              {mediaPreviews.length > 0 && (
+                <div className="flex gap-2 overflow-x-auto py-2">
+                  {mediaPreviews.map((preview, index) => (
+                    <div key={index} className="relative">
+                      <img 
+                        src={preview} 
+                        alt="Preview" 
+                        className="h-16 w-16 rounded-lg object-cover border border-slate-300 dark:border-slate-600"
+                      />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute -top-2 -right-2 h-5 w-5 bg-red-500 text-white rounded-full p-0"
+                        onClick={() => removeMedia(index)}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <line x1="18" y1="6" x2="6" y2="18"></line>
+                          <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
             
             <Button 
