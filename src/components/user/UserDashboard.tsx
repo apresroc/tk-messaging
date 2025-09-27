@@ -3,12 +3,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Contact, Conversation, Message } from '@/lib/types';
 import ConversationList from './ConversationList';
 import MessageThread from './MessageThread';
 import { twilioClient } from '@/lib/twilio-client';
 import { toast } from 'sonner';
+import { Plus, Search, Users, MessageSquare, Zap } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const UserDashboard = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -19,6 +22,7 @@ const UserDashboard = () => {
     name: '',
     phone: ''
   });
+  const [showAddContact, setShowAddContact] = useState(false);
 
   // Load data from localStorage
   useEffect(() => {
@@ -46,6 +50,15 @@ const UserDashboard = () => {
         lastMessage: 'Thanks for the quick response!',
         lastMessageTime: new Date(Date.now() - 86400000),
         unreadCount: 0
+      },
+      {
+        id: 'conv_3',
+        contactId: 'cont_3',
+        contactName: 'Mike Wilson',
+        contactPhone: '+1234567892',
+        lastMessage: 'When will my package arrive?',
+        lastMessageTime: new Date(Date.now() - 7200000),
+        unreadCount: 1
       }
     ];
     
@@ -95,13 +108,15 @@ const UserDashboard = () => {
           direction: 'outbound',
           timestamp: new Date(Date.now() - 86300000),
           status: 'delivered'
-        },
+        }
+      ],
+      conv_3: [
         {
           id: 'msg_6',
-          contactId: 'cont_2',
-          content: 'Thanks for the quick response!',
+          contactId: 'cont_3',
+          content: 'When will my package arrive?',
           direction: 'inbound',
-          timestamp: new Date(Date.now() - 86200000),
+          timestamp: new Date(Date.now() - 7200000),
           status: 'delivered'
         }
       ]
@@ -124,6 +139,7 @@ const UserDashboard = () => {
     
     setContacts(prev => [...prev, contact]);
     setNewContact({ name: '', phone: '' });
+    setShowAddContact(false);
     toast.success('Contact added successfully');
   };
 
@@ -176,6 +192,7 @@ const UserDashboard = () => {
             msg.id === newMessage.id ? { ...msg, status: 'delivered' } : msg
           )
         }));
+        toast.success('Message sent successfully');
       } else {
         // Update message status to failed
         setMessages(prev => ({
@@ -204,12 +221,92 @@ const UserDashboard = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Messaging Dashboard</h1>
-        <p className="text-muted-foreground">Manage your conversations</p>
-      </div>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Header Section */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
+              Messaging Dashboard
+            </h1>
+            <p className="text-blue-100">Manage your conversations and contacts</p>
+          </div>
+          <div className="flex items-center gap-4">
+            <Badge variant="secondary" className="bg-blue-500/20 text-blue-300">
+              <Zap className="h-3 w-3 mr-1" />
+              Online
+            </Badge>
+            <Button 
+              onClick={() => setShowAddContact(true)}
+              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              New Contact
+            </Button>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Stats Cards */}
+      <motion.div 
+        className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+      >
+        <Card className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-slate-700/50 backdrop-blur-sm">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-3">
+              <div className="bg-blue-500/20 p-2 rounded-lg">
+                <MessageSquare className="h-5 w-5 text-blue-400" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white">{conversations.length}</p>
+                <p className="text-blue-200 text-sm">Conversations</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-slate-700/50 backdrop-blur-sm">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-3">
+              <div className="bg-purple-500/20 p-2 rounded-lg">
+                <Users className="h-5 w-5 text-purple-400" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white">{contacts.length}</p>
+                <p className="text-purple-200 text-sm">Contacts</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-slate-700/50 backdrop-blur-sm">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-3">
+              <div className="bg-green-500/20 p-2 rounded-lg">
+                <Zap className="h-5 w-5 text-green-400" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white">1.2s</p>
+                <p className="text-green-200 text-sm">Avg Response</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* Main Content Grid */}
+      <motion.div 
+        className="grid grid-cols-1 lg:grid-cols-3 gap-6"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+      >
         <div className="lg:col-span-1">
           <ConversationList 
             conversations={conversations} 
@@ -224,38 +321,62 @@ const UserDashboard = () => {
             onSendMessage={handleSendMessage}
           />
         </div>
-      </div>
-      
-      <Card>
-        <CardHeader>
-          <CardTitle>Add New Contact</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="contactName">Name</Label>
-              <Input
-                id="contactName"
-                value={newContact.name}
-                onChange={(e) => setNewContact({...newContact, name: e.target.value})}
-                placeholder="John Doe"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="contactPhone">Phone Number</Label>
-              <Input
-                id="contactPhone"
-                value={newContact.phone}
-                onChange={(e) => setNewContact({...newContact, phone: e.target.value})}
-                placeholder="+1234567890"
-              />
-            </div>
-          </div>
-          
-          <Button onClick={handleAddContact}>Add Contact</Button>
-        </CardContent>
-      </Card>
+      </motion.div>
+
+      {/* Add Contact Modal */}
+      {showAddContact && (
+        <motion.div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <motion.div 
+            className="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-md mx-4"
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+          >
+            <CardHeader className="p-0 mb-4">
+              <CardTitle className="text-white">Add New Contact</CardTitle>
+            </CardHeader>
+            <CardContent className="p-0 space-y-4">
+              <div className="space-y-2">
+                <Label className="text-blue-100">Name</Label>
+                <Input
+                  value={newContact.name}
+                  onChange={(e) => setNewContact({...newContact, name: e.target.value})}
+                  placeholder="John Doe"
+                  className="bg-slate-800 border-slate-700 text-white"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label className="text-blue-100">Phone Number</Label>
+                <Input
+                  value={newContact.phone}
+                  onChange={(e) => setNewContact({...newContact, phone: e.target.value})}
+                  placeholder="+1234567890"
+                  className="bg-slate-800 border-slate-700 text-white"
+                />
+              </div>
+            </CardContent>
+            <CardFooter className="p-0 mt-6 flex justify-end gap-2">
+              <Button 
+                variant="outline" 
+                onClick={() => setShowAddContact(false)}
+                className="border-slate-700 text-slate-300"
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleAddContact}
+                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+              >
+                Add Contact
+              </Button>
+            </CardFooter>
+          </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 };
