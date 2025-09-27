@@ -12,7 +12,6 @@ import { twilioClient } from '@/lib/twilio-client';
 import { toast } from 'sonner';
 import { Plus, MessageSquare, Settings, UserPlus, ArrowLeft, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ModeToggle } from '@/components/mode-toggle';
 
 const UserDashboard = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -237,13 +236,13 @@ const UserDashboard = () => {
   const selectedMessages = selectedConversationId ? messages[selectedConversationId] || [] : [];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-0">
       {/* Action Bar - Always visible on mobile */}
       {isMobile && (
-        <div className="flex items-center justify-between p-4 bg-white dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700/50">
+        <div className="flex items-center justify-between p-4 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 mb-4">
           <div className="flex items-center gap-2">
             <MessageSquare className="h-6 w-6 text-blue-400" />
-            <span className="text-lg font-semibold text-gray-900 dark:text-white">Messages</span>
+            <span className="text-lg font-semibold text-white">Messages</span>
           </div>
           
           <div className="flex items-center gap-2">
@@ -252,7 +251,7 @@ const UserDashboard = () => {
               variant="ghost"
               size="icon"
               onClick={() => {/* Add message functionality */}}
-              className="text-slate-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
+              className="text-blue-200 hover:text-white hover:bg-white/10"
               title="New Message"
             >
               <Plus className="h-5 w-5" />
@@ -263,7 +262,7 @@ const UserDashboard = () => {
               variant="ghost"
               size="icon"
               onClick={() => setShowAddContact(true)}
-              className="text-slate-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
+              className="text-blue-200 hover:text-white hover:bg-white/10"
               title="Add Contact"
             >
               <UserPlus className="h-5 w-5" />
@@ -274,25 +273,22 @@ const UserDashboard = () => {
               variant="ghost"
               size="icon"
               onClick={() => {/* Navigate to settings */}}
-              className="text-slate-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
+              className="text-blue-200 hover:text-white hover:bg-white/10"
               title="Settings"
             >
               <Settings className="h-5 w-5" />
             </Button>
-            
-            {/* Theme Toggle */}
-            <ModeToggle />
           </div>
         </div>
       )}
 
       {/* Mobile Back Button */}
       {isMobile && selectedConversationId && (
-        <div className="lg:hidden">
+        <div className="lg:hidden mb-4">
           <Button 
             onClick={handleBackToConversations}
             variant="outline"
-            className="w-full border-slate-300 dark:border-slate-700 text-gray-700 dark:text-slate-300"
+            className="w-full border-white/20 text-blue-100 hover:bg-white/20"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Conversations
@@ -325,10 +321,10 @@ const UserDashboard = () => {
               onBack={handleBackToConversations}
             />
           ) : (
-            <Card className="h-full flex items-center justify-center bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50">
-              <div className="text-center p-8 text-slate-500 dark:text-slate-400">
+            <Card className="h-full flex items-center justify-center bg-white/10 backdrop-blur-sm border-white/20">
+              <div className="text-center p-8 text-blue-200">
                 <MessageSquare className="mx-auto h-16 w-16 mb-4 opacity-50" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">No conversation selected</h3>
+                <h3 className="text-lg font-semibold text-white mb-2">No conversation selected</h3>
                 <p className="mb-4">Select a conversation to start messaging</p>
               </div>
             </Card>
@@ -383,7 +379,7 @@ const UserDashboard = () => {
                   />
                 </div>
               </CardContent>
-              <CardFooter className="p-0 mt-6 flex flex-col sm:flex-row justify-end gap-2">
+              <div className="p-0 mt-6 flex flex-col sm:flex-row justify-end gap-2">
                 <Button 
                   variant="outline" 
                   onClick={() => setShowAddContact(false)}
@@ -397,7 +393,7 @@ const UserDashboard = () => {
                 >
                   Add Contact
                 </Button>
-              </CardFooter>
+              </div>
             </motion.div>
           </motion.div>
         )}
