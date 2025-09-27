@@ -148,7 +148,7 @@ const UserSettings = () => {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 dark">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white">User Settings</h1>
@@ -166,7 +166,7 @@ const UserSettings = () => {
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Profile Settings */}
-        <Card className="bg-white/10 backdrop-blur-sm border-white/20 lg:col-span-2">
+        <Card className="bg-slate-800 border-slate-700 lg:col-span-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
               <User className="h-5 w-5 text-blue-400" />
@@ -182,7 +182,7 @@ const UserSettings = () => {
                   value={settings.profile.name}
                   onChange={(e) => handleProfileChange('name', e.target.value)}
                   placeholder="Your name"
-                  className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
+                  className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
                 />
               </div>
               
@@ -194,7 +194,7 @@ const UserSettings = () => {
                   value={settings.profile.email}
                   onChange={(e) => handleProfileChange('email', e.target.value)}
                   placeholder="your.email@example.com"
-                  className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
+                  className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
                 />
               </div>
               
@@ -205,7 +205,7 @@ const UserSettings = () => {
                   value={settings.profile.phone}
                   onChange={(e) => handleProfileChange('phone', e.target.value)}
                   placeholder="+1234567890"
-                  className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
+                  className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
                 />
               </div>
             </div>
@@ -213,7 +213,7 @@ const UserSettings = () => {
         </Card>
         
         {/* Account Security */}
-        <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+        <Card className="bg-slate-800 border-slate-700">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
               <Shield className="h-5 w-5 text-purple-400" />
@@ -224,7 +224,7 @@ const UserSettings = () => {
             <div className="space-y-2">
               <Button 
                 variant="outline" 
-                className="w-full border-white/20 text-white hover:bg-white/20 font-medium"
+                className="w-full border-slate-600 text-white hover:bg-slate-700 font-medium"
               >
                 Change Password
               </Button>
@@ -233,7 +233,7 @@ const UserSettings = () => {
             <div className="space-y-2">
               <Button 
                 variant="outline" 
-                className="w-full border-white/20 text-white hover:bg-white/20 font-medium"
+                className="w-full border-slate-600 text-white hover:bg-slate-700 font-medium"
               >
                 Two-Factor Authentication
               </Button>
@@ -242,7 +242,7 @@ const UserSettings = () => {
             <div className="space-y-2">
               <Button 
                 variant="outline" 
-                className="w-full border-white/20 text-white hover:bg-white/20 font-medium"
+                className="w-full border-slate-600 text-white hover:bg-slate-700 font-medium"
               >
                 Active Sessions
               </Button>
@@ -252,7 +252,7 @@ const UserSettings = () => {
       </div>
       
       {/* Notification Settings */}
-      <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+      <Card className="bg-slate-800 border-slate-700">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white">
             <Bell className="h-5 w-5 text-amber-400" />
@@ -267,7 +267,7 @@ const UserSettings = () => {
             description="Receive notifications via email"
           />
           
-          <Separator className="bg-white/20" />
+          <Separator className="bg-slate-700" />
           
           <ToggleSwitch
             isOn={settings.notifications.sms}
@@ -276,7 +276,7 @@ const UserSettings = () => {
             description="Receive notifications via SMS"
           />
           
-          <Separator className="bg-white/20" />
+          <Separator className="bg-slate-700" />
           
           <ToggleSwitch
             isOn={settings.notifications.push}
@@ -288,7 +288,7 @@ const UserSettings = () => {
       </Card>
       
       {/* Sound Settings */}
-      <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+      <Card className="bg-slate-800 border-slate-700">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white">
             <Volume2 className="h-5 w-5 text-green-400" />
@@ -303,7 +303,7 @@ const UserSettings = () => {
             description="Play sound when receiving messages"
           />
           
-          <Separator className="bg-white/20" />
+          <Separator className="bg-slate-700" />
           
           <ToggleSwitch
             isOn={settings.sounds.notification}
@@ -312,7 +312,7 @@ const UserSettings = () => {
             description="Play sound for notifications"
           />
           
-          <Separator className="bg-white/20" />
+          <Separator className="bg-slate-700" />
           
           <div className="space-y-2">
             <Label className="text-white font-medium">Volume Level</Label>
@@ -324,7 +324,7 @@ const UserSettings = () => {
               onChange={(e) => handleSoundChange('volume', parseInt(e.target.value))}
               className="w-full"
             />
-            <div className="flex justify-between text-sm text-blue-100">
+            <div className="flex justify-between text-sm text-slate-400">
               <span>0%</span>
               <span>{settings.sounds.volume}%</span>
               <span>100%</span>
@@ -334,7 +334,7 @@ const UserSettings = () => {
       </Card>
       
       {/* Theme Settings */}
-      <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+      <Card className="bg-slate-800 border-slate-700">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white">
             <Palette className="h-5 w-5 text-pink-400" />
@@ -349,7 +349,7 @@ const UserSettings = () => {
             description="Use light color scheme"
           />
           
-          <Separator className="bg-white/20" />
+          <Separator className="bg-slate-700" />
           
           <ToggleSwitch
             isOn={settings.theme.mode === 'dark'}
@@ -361,7 +361,7 @@ const UserSettings = () => {
       </Card>
       
       {/* Privacy Settings */}
-      <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+      <Card className="bg-slate-800 border-slate-700">
         <CardHeader>
           <CardTitle className="text-white">Privacy Settings</CardTitle>
         </CardHeader>
@@ -373,7 +373,7 @@ const UserSettings = () => {
             description="Allow others to see when you've read their messages"
           />
           
-          <Separator className="bg-white/20" />
+          <Separator className="bg-slate-700" />
           
           <ToggleSwitch
             isOn={settings.privacy.typingIndicators}
