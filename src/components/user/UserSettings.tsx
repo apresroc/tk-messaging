@@ -452,13 +452,13 @@ const UserSettings = () => {
                 onValueChange={(value) => handleSoundChange('volume', value[0])}
                 max={100}
                 step={1}
-                className="flex-1"
+                className="flex-1 [&_.bg-primary]:bg-blue-500 [&_.bg-primary]:hover:bg-blue-600 [&_.bg-primary]:focus-visible:ring-blue-500"
               />
               <Button
                 variant="outline"
                 size="sm"
                 onClick={playTestSound}
-                className="border-slate-600 text-white hover:bg-slate-700"
+                className="border-blue-400 text-white hover:bg-blue-400 hover:text-white"
                 disabled={!settings.sounds.notification && !settings.sounds.message}
               >
                 <Play className="h-4 w-4" />
