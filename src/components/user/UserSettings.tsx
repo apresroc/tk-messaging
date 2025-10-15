@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { Bell, Volume2, Palette, User, Shield, ArrowLeft } from 'lucide-react';
+import { Bell, Volume2, Palette, User, Shield, ArrowLeft, Play } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@/components/theme-provider';
@@ -80,6 +80,67 @@ const UserSettings = () => {
         [key]: value,
       },
     }));
+  };
+
+  const playTestSound = () => {
+    if (!settings.sounds.notification) {
+      toast.info('Notification sounds are disabled');
+      return;
+    }
+    
+    // Create a simple beep sound using Web Audio API
+    try {
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+      oscillator.type = 'sine';
+      
+      gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+      gainNode.gain.linearRampToValueAtTime(settings.sounds.volume / 100, audioContext.currentTime + 0.01);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.3);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.3);
+      
+      toast.success('Test sound played');
+    } catch (error) {
+      toast.error('Could not play test sound');
+    }
+  };
+
+  const playMessageSound = () => {
+    if (!settings.sounds.message) {
+      toast.info('Message sounds are disabled');
+      return;
+    }
+    
+    try {
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+      oscillator.type = 'sine';
+      
+      gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+      gainNode.gain.linearRampToValueAtTime(settings.sounds.volume / 100, audioContext.currentTime + 0.01);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.2);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.2);
+      
+      toast.success('Message sound played');
+    } catch (error) {
+      toast.error('Could not play message sound');
+    }
   };
 
   const handleThemeChange = (value: "light" | "dark") => {
@@ -302,6 +363,18 @@ const UserSettings = () => {
             label="Message Sounds"
             description="Play sound when receiving messages"
           />
+          <div className="flex justify-end mt-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={playMessageSound}
+              className="border-slate-600 text-white hover:bg-slate-700"
+              disabled={!settings.sounds.message}
+            >
+              <Play className="h-4 w-4 mr-2" />
+              Test Message Sound
+            </Button>
+          </div>
           
           <Separator className="bg-slate-700" />
           
@@ -311,19 +384,42 @@ const UserSettings = () => {
             label="Notification Sounds"
             description="Play sound for notifications"
           />
+          <div className="flex justify-end mt-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={playTestSound}
+              className="border-slate-600 text-white hover:bg-slate-700"
+              disabled={!settings.sounds.notification}
+            >
+              <Play className="h-4 w-4 mr-2" />
+              Test Notification Sound
+            </Button>
+          </div>
           
           <Separator className="bg-slate-700" />
           
           <div className="space-y-2">
             <Label className="text-white font-medium">Volume Level</Label>
-            <Input
-              type="range"
-              min="0"
-              max="100"
-              value={settings.sounds.volume}
-              onChange={(e) => handleSoundChange('volume', parseInt(e.target.value))}
-              className="w-full"
-            />
+            <div className="flex items-center gap-3">
+              <Input
+                type="range"
+                min="0"
+                max="100"
+                value={settings.sounds.volume}
+                onChange={(e) => handleSoundChange('volume', parseInt(e.target.value))}
+                className="flex-1"
+              />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={playTestSound}
+                className="border-slate-600 text-white hover:bg-slate-700"
+                disabled={!settings.sounds.notification && !settings.sounds.message}
+              >
+                <Play className="h-4 w-4" />
+              </Button>
+            </div>
             <div className="flex justify-between text-sm text-slate-400">
               <span>0%</span>
               <span>{settings.sounds.volume}%</span>
