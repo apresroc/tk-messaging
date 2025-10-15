@@ -12,10 +12,9 @@ import { twilioClient } from '@/lib/twilio-client';
 import { toast } from 'sonner';
 import { MessageSquare, MessageSquarePlus, Settings, UserPlus, X, LogOut, Paperclip, Image, Video } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useRouter } from 'next/navigation';
+// Using window.location for navigation to support both environments
 
 const UserDashboard = () => {
-  const router = useRouter();
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [messages, setMessages] = useState<Record<string, Message[]>>({});
@@ -249,12 +248,12 @@ const UserDashboard = () => {
   };
 
   const handleNavigateToSettings = () => {
-    router.push('/settings');
+    if (typeof window !== 'undefined') window.location.href = '/settings';
   };
 
   const handleLogout = () => {
     toast.success('You have been logged out');
-    router.push('/');
+    if (typeof window !== 'undefined') window.location.href = '/';
   };
 
   const handleAddNewMessage = () => {

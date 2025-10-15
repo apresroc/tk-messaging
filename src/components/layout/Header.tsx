@@ -3,20 +3,18 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { LogOut, Settings as SettingsIcon } from "lucide-react";
-import { useRouter, usePathname } from "next/navigation";
 import { toast } from "sonner";
 
 const Header = () => {
-  const router = useRouter();
-  const pathname = usePathname();
+  const pathname = typeof window !== "undefined" ? window.location.pathname : "";
 
   const handleLogout = () => {
     toast.success("You have been logged out");
-    router.push("/");
+    if (typeof window !== "undefined") window.location.href = "/";
   };
 
   const handleSettings = () => {
-    router.push("/settings");
+    if (typeof window !== "undefined") window.location.href = "/settings";
   };
 
   const getPageTitle = () => {
