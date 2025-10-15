@@ -55,6 +55,11 @@ const UserDashboard = () => {
     setMessages({});
   }, []);
 
+  // Persist contacts to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
+
   const handleAddContact = () => {
     if (!newContact.name || !newContact.phone) {
       toast.error('Name and phone number are required');
@@ -216,6 +221,11 @@ const UserDashboard = () => {
     }));
   };
 
+  const startMessageToContact = (phone: string) => {
+    setNewMessage((prev) => ({ ...prev, phone }));
+    setShowNewMessage(true);
+  };
+
   const selectedConversation = conversations.find(c => c.id === selectedConversationId) || null;
   const selectedMessages = selectedConversationId ? messages[selectedConversationId] || [] : [];
 
@@ -237,6 +247,15 @@ const UserDashboard = () => {
               title="New Message"
             >
               <MessageSquarePlus className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setShowAddContact(true)}
+              className="text-blue-200 hover:text-white hover:bg-white/10"
+              title="Add Contact"
+            >
+              <UserPlus className="h-5 w-5" />
             </Button>
             <Button
               variant="ghost"
@@ -313,7 +332,50 @@ const UserDashboard = () => {
         transition={{ duration: 0.6, delay: 0.2 }}
       >
         {/* Conversations List - Always visible on desktop, hidden on mobile when conversation is selected */}
-        <div className={`${isMobile && selectedConversationId ? 'hidden' : 'block'} lg:col-span-1`}>
+        <div className={`${isMobile && selectedConversationId ? 'hidden' : 'block'} lg:col-span-1 space-y-6`}>
+          {/* Contacts Card */}
+          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+            <CardHeader>
+              <CardTitle className="text-white">Contacts</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {contacts.length === 0 ? (
+                <div className="text-sm text-blue-200">No contacts yet. Click "Add Contact" to create one.</div>
+              ) : (
+                <div className="space-y-3">
+                  {contacts.map((c) => (
+                    <div key={c.id} className="flex items-center justify-between rounded-lg p-2 hover:bg-white/10">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-8 w-8">
+                          <AvatarFallback>
+                            {(c.name || c.phone).slice(0, 2).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="text-white font-medium leading-none">{c.name || 'Unnamed'}</div>
+                          <div className="text-xs text-blue-200">{c.phone}</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-blue-200 hover:text-white hover:bg-white/10"
+                          onClick={() => startMessageToContact(c.phone)}
+                          title="Message"
+                        >
+                          <MessageSquare className="h-4 w-4 mr-1" />
+                          Message
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Conversations List */}
           <ConversationList 
             conversations={conversations} 
             onSelectConversation={handleSelectConversation} 
