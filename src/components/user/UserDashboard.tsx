@@ -3,27 +3,19 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Contact, Conversation, Message, MessageMedia } from '@/lib/types';
+import { Conversation, Message } from '@/lib/types';
 import ConversationList from './ConversationList';
 import MessageThread from './MessageThread';
 import { twilioClient } from '@/lib/twilio-client';
 import { toast } from 'sonner';
-import { MessageSquare, MessageSquarePlus, Settings, UserPlus, X, LogOut, Paperclip, Image, Video } from 'lucide-react';
+import { MessageSquare, MessageSquarePlus, Settings, X, LogOut, Paperclip, Image, Video } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 // Using window.location for navigation to support both environments
 
 const UserDashboard = () => {
-  const [contacts, setContacts] = useState<Contact[]>([]);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [messages, setMessages] = useState<Record<string, Message[]>>({});
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
-  const [newContact, setNewContact] = useState({
-    name: '',
-    phone: ''
-  });
-  const [showAddContact, setShowAddContact] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [showNewMessage, setShowNewMessage] = useState(false);
   const [newMessage, setNewMessage] = useState({
@@ -43,40 +35,23 @@ const UserDashboard = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Load data from localStorage
+  // Initialize data
   useEffect(() => {
-    const savedContacts = localStorage.getItem('contacts');
-    if (savedContacts) {
-      setContacts(JSON.parse(savedContacts));
-    }
-    
     // Initialize with mock conversations for demo
     setConversations([]);
     setMessages({});
   }, []);
 
-  // Persist contacts to localStorage whenever they change
+  // If a phone is passed via query param, open New Message prefilled
   useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
-
-  const handleAddContact = () => {
-    if (!newContact.name || !newContact.phone) {
-      toast.error('Name and phone number are required');
-      return;
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const phone = params.get('phone');
+    if (phone) {
+      setNewMessage(prev => ({ ...prev, phone }));
+      setShowNewMessage(true);
     }
-    
-    const contact: Contact = {
-      id: `cont_${Date.now()}`,
-      name: newContact.name,
-      phone: newContact.phone
-    };
-    
-    setContacts(prev => [...prev, contact]);
-    setNewContact({ name: '', phone: '' });
-    setShowAddContact(false);
-    toast.success('Contact added successfully');
-  };
+  }, []);
 
   const handleSelectConversation = (id: string) => {
     setSelectedConversationId(id);
@@ -224,11 +199,6 @@ const UserDashboard = () => {
     }));
   };
 
-  const startMessageToContact = (phone: string) => {
-    setNewMessage((prev) => ({ ...prev, phone }));
-    setShowNewMessage(true);
-  };
-
   const selectedConversation = conversations.find(c => c.id === selectedConversationId) || null;
   const selectedMessages = selectedConversationId ? messages[selectedConversationId] || [] : [];
 
@@ -250,15 +220,6 @@ const UserDashboard = () => {
               title="New Message"
             >
               <MessageSquarePlus className="h-5 w-5" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setShowAddContact(true)}
-              className="text-blue-200 hover:text-white hover:bg-white/10"
-              title="Add Contact"
-            >
-              <UserPlus className="h-5 w-5" />
             </Button>
             <Button
               variant="ghost"
@@ -302,17 +263,6 @@ const UserDashboard = () => {
               <MessageSquarePlus className="h-5 w-5" />
             </Button>
             
-            {/* Add Contact Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setShowAddContact(true)}
-              className="text-blue-200 hover:text-white hover:bg-white/10"
-              title="Add Contact"
-            >
-              <UserPlus className="h-5 w-5" />
-            </Button>
-            
             {/* Settings Button */}
             <Button
               variant="ghost"
@@ -335,50 +285,7 @@ const UserDashboard = () => {
         transition={{ duration: 0.6, delay: 0.2 }}
       >
         {/* Conversations List - Always visible on desktop, hidden on mobile when conversation is selected */}
-        <div className={`${isMobile && selectedConversationId ? 'hidden' : 'block'} lg:col-span-1 space-y-6`}>
-          {/* Contacts Card */}
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-            <CardHeader>
-              <CardTitle className="text-white">Contacts</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {contacts.length === 0 ? (
-                <div className="text-sm text-blue-200">No contacts yet. Click "Add Contact" to create one.</div>
-              ) : (
-                <div className="space-y-3">
-                  {contacts.map((c) => (
-                    <div key={c.id} className="flex items-center justify-between rounded-lg p-2 hover:bg-white/10">
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-8 w-8">
-                          <AvatarFallback>
-                            {(c.name || c.phone).slice(0, 2).toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <div className="text-white font-medium leading-none">{c.name || 'Unnamed'}</div>
-                          <div className="text-xs text-blue-200">{c.phone}</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-blue-200 hover:text-white hover:bg-white/10"
-                          onClick={() => startMessageToContact(c.phone)}
-                          title="Message"
-                        >
-                          <MessageSquare className="h-4 w-4 mr-1" />
-                          Message
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Conversations List */}
+        <div className={`${isMobile && selectedConversationId ? 'hidden' : 'block'} lg:col-span-1`}>
           <ConversationList 
             conversations={conversations} 
             onSelectConversation={handleSelectConversation} 
@@ -406,72 +313,7 @@ const UserDashboard = () => {
         </div>
       </motion.div>
 
-      {/* Add Contact Modal - Mobile Optimized */}
-      <AnimatePresence>
-        {showAddContact && (
-          <motion.div 
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <motion.div 
-              className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 w-full max-w-md mx-auto"
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-            >
-              <CardHeader className="p-0 mb-4 flex flex-row items-center justify-between">
-                <CardTitle className="text-gray-900 dark:text-white">Add New Contact</CardTitle>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  onClick={() => setShowAddContact(false)}
-                  className="text-slate-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
-                >
-                  <X className="h-5 w-5" />
-                </Button>
-              </CardHeader>
-              <CardContent className="p-0 space-y-4">
-                <div className="space-y-2">
-                  <Label className="text-gray-700 dark:text-blue-100">Name</Label>
-                  <Input
-                    value={newContact.name}
-                    onChange={(e) => setNewContact({...newContact, name: e.target.value})}
-                    placeholder="John Doe"
-                    className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label className="text-gray-700 dark:text-blue-100">Phone Number</Label>
-                  <Input
-                    value={newContact.phone}
-                    onChange={(e) => setNewContact({...newContact, phone: e.target.value})}
-                    placeholder="+1234567890"
-                    className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white"
-                  />
-                </div>
-              </CardContent>
-              <div className="p-0 mt-6 flex flex-col sm:flex-row justify-end gap-2">
-                <Button 
-                  variant="outline" 
-                  onClick={() => setShowAddContact(false)}
-                  className="w-full sm:w-auto border-slate-300 dark:border-slate-700 text-gray-700 dark:text-slate-300"
-                >
-                  Cancel
-                </Button>
-                <Button 
-                  onClick={handleAddContact}
-                  className="w-full sm:w-auto bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
-                >
-                  Add Contact
-                </Button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Contacts are now managed on /customers via the header button */}
 
       {/* New Message Modal */}
       <AnimatePresence>
