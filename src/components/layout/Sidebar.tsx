@@ -19,7 +19,7 @@ const Sidebar = () => {
         { title: "Settings", href: "/settings", icon: Settings },
       ]
     : [
-        { title: "Conversations", href: "/conversations", icon: MessageSquare },
+        { title: "Dashboard", href: "/dashboard", icon: Home },
         { title: "Contacts", href: "/customers", icon: Contact },
         { title: "Settings", href: "/settings", icon: Settings },
       ];

@@ -84,6 +84,9 @@ const UserDashboard = () => {
 
   const handleBackToConversations = () => {
     setSelectedConversationId(null);
+    if (isMobile) {
+      if (typeof window !== "undefined") window.location.href = "/dashboard";
+    }
   };
 
   const handleSendMessage = async (content: string, mediaUrls?: string[]) => {

@@ -29,12 +29,12 @@ const Login = () => {
     
     if (email === 'apresroc@gmail.com' && password === '123') {
       toast.success('User login successful');
-      navigate('/conversations');
+      navigate('/dashboard');
       return;
     }
     
     toast.success('Login successful');
-    navigate('/conversations');
+    navigate('/dashboard');
   };
 
   return (
