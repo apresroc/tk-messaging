@@ -15,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 
 const UserSettings = () => {
   const navigate = useNavigate();
@@ -446,12 +447,11 @@ const UserSettings = () => {
           <div className="space-y-2">
             <Label className="text-white font-medium">Volume Level</Label>
             <div className="flex items-center gap-3">
-              <Input
-                type="range"
-                min="0"
-                max="100"
-                value={settings.sounds.volume}
-                onChange={(e) => handleSoundChange('volume', parseInt(e.target.value))}
+              <Slider
+                value={[settings.sounds.volume]}
+                onValueChange={(value) => handleSoundChange('volume', value[0])}
+                max={100}
+                step={1}
                 className="flex-1"
               />
               <Button
