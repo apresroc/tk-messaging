@@ -46,7 +46,6 @@ const LoginPage = () => {
           <div className="flex items-center gap-3">
             <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-xl relative">
               <Smartphone className="h-6 w-6 text-white" />
-              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">TK</span>
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent">Messaging</span>
           </div>
