@@ -59,7 +59,6 @@ const LoginPage = () => {
             <CardHeader className="text-center">
               <div className="mx-auto bg-gradient-to-r from-blue-500 to-purple-600 w-16 h-16 rounded-2xl flex items-center justify-center mb-4 relative">
                 <Smartphone className="h-8 w-8 text-white" />
-                <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-white">TK</span>
               </div>
               <CardTitle className="text-3xl font-bold">Welcome to TK Messaging</CardTitle>
               <CardDescription className="text-blue-200">Sign in to start revolutionizing your customer conversations</CardDescription>
