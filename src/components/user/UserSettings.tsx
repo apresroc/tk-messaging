@@ -59,15 +59,6 @@ const UserSettings = () => {
     pop: { frequency: 300, duration: 0.1, type: 'sawtooth' },
   };
 
-  // Load settings from localStorage
-  useEffect(() => {
-    const savedSettings = localStorage.getItem('userSettings');
-    if (savedSettings) {
-      const parsedSettings = JSON.parse(savedSettings);
-      setSettings(parsedSettings);
-    }
-  }, []);
-
   // Update settings when theme changes from outside (e.g., mode toggle)
   useEffect(() => {
     setSettings(prev => ({
@@ -78,11 +69,6 @@ const UserSettings = () => {
       }
     }));
   }, [theme]);
-
-  // Save settings to localStorage
-  useEffect(() => {
-    localStorage.setItem('userSettings', JSON.stringify(settings));
-  }, [settings]);
 
   const handleNotificationChange = (key: string, value: boolean) => {
     setSettings(prev => ({
