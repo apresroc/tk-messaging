@@ -409,18 +409,6 @@ const UserSettings = () => {
               </SelectContent>
             </Select>
           </div>
-          <div className="flex justify-end mt-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={playMessageSound}
-              className="border-slate-600 text-white hover:bg-slate-700"
-              disabled={!settings.sounds.message}
-            >
-              <Play className="h-4 w-4 mr-2" />
-              Test Message Sound
-            </Button>
-          </div>
           
           <Separator className="bg-slate-700" />
           
@@ -451,18 +439,6 @@ const UserSettings = () => {
                 <SelectItem value="pop">Pop</SelectItem>
               </SelectContent>
             </Select>
-          </div>
-          <div className="flex justify-end mt-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={playTestSound}
-              className="border-slate-600 text-white hover:bg-slate-700"
-              disabled={!settings.sounds.notification}
-            >
-              <Play className="h-4 w-4 mr-2" />
-              Test Notification Sound
-            </Button>
           </div>
           
           <Separator className="bg-slate-700" />
