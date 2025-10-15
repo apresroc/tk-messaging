@@ -8,6 +8,13 @@ import { Bell, Volume2, Palette, User, Shield, ArrowLeft, Play } from 'lucide-re
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@/components/theme-provider';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const UserSettings = () => {
   const navigate = useNavigate();
@@ -22,6 +29,8 @@ const UserSettings = () => {
       message: true,
       notification: true,
       volume: 80,
+      messageSound: 'default',
+      notificationSound: 'chime',
     },
     theme: {
       mode: 'light',
@@ -36,6 +45,18 @@ const UserSettings = () => {
       phone: '',
     },
   });
+
+  // Sound presets configuration
+  const soundPresets = {
+    default: { frequency: 600, duration: 0.2, type: 'sine' },
+    chime: { frequency: 800, duration: 0.3, type: 'sine' },
+    bell: { frequency: 1000, duration: 0.4, type: 'sine' },
+    click: { frequency: 400, duration: 0.1, type: 'square' },
+    whistle: { frequency: 1200, duration: 0.25, type: 'sine' },
+    beep: { frequency: 500, duration: 0.15, type: 'square' },
+    ding: { frequency: 900, duration: 0.2, type: 'sine' },
+    pop: { frequency: 300, duration: 0.1, type: 'sawtooth' },
+  };
 
   // Load settings from localStorage
   useEffect(() => {
@@ -72,7 +93,7 @@ const UserSettings = () => {
     }));
   };
 
-  const handleSoundChange = (key: string, value: boolean | number) => {
+  const handleSoundChange = (key: string, value: boolean | number | string) => {
     setSettings(prev => ({
       ...prev,
       sounds: {
@@ -88,7 +109,8 @@ const UserSettings = () => {
       return;
     }
     
-    // Create a simple beep sound using Web Audio API
+    const soundConfig = soundPresets[settings.sounds.notificationSound as keyof typeof soundPresets];
+    
     try {
       const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
       const oscillator = audioContext.createOscillator();
@@ -97,15 +119,15 @@ const UserSettings = () => {
       oscillator.connect(gainNode);
       gainNode.connect(audioContext.destination);
       
-      oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(soundConfig.frequency, audioContext.currentTime);
+      oscillator.type = soundConfig.type as OscillatorType;
       
       gainNode.gain.setValueAtTime(0, audioContext.currentTime);
       gainNode.gain.linearRampToValueAtTime(settings.sounds.volume / 100, audioContext.currentTime + 0.01);
-      gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.3);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + soundConfig.duration);
       
       oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + 0.3);
+      oscillator.stop(audioContext.currentTime + soundConfig.duration);
       
       toast.success('Test sound played');
     } catch (error) {
@@ -119,6 +141,8 @@ const UserSettings = () => {
       return;
     }
     
+    const soundConfig = soundPresets[settings.sounds.messageSound as keyof typeof soundPresets];
+    
     try {
       const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
       const oscillator = audioContext.createOscillator();
@@ -127,15 +151,15 @@ const UserSettings = () => {
       oscillator.connect(gainNode);
       gainNode.connect(audioContext.destination);
       
-      oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
-      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(soundConfig.frequency, audioContext.currentTime);
+      oscillator.type = soundConfig.type as OscillatorType;
       
       gainNode.gain.setValueAtTime(0, audioContext.currentTime);
       gainNode.gain.linearRampToValueAtTime(settings.sounds.volume / 100, audioContext.currentTime + 0.01);
-      gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.2);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + soundConfig.duration);
       
       oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + 0.2);
+      oscillator.stop(audioContext.currentTime + soundConfig.duration);
       
       toast.success('Message sound played');
     } catch (error) {
@@ -363,6 +387,28 @@ const UserSettings = () => {
             label="Message Sounds"
             description="Play sound when receiving messages"
           />
+          <div className="flex items-center justify-between mt-2">
+            <Label className="text-white text-sm">Message Sound</Label>
+            <Select
+              value={settings.sounds.messageSound}
+              onValueChange={(value) => handleSoundChange('messageSound', value)}
+              disabled={!settings.sounds.message}
+            >
+              <SelectTrigger className="w-32 h-8 bg-slate-700 border-slate-600 text-white">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="default">Default</SelectItem>
+                <SelectItem value="chime">Chime</SelectItem>
+                <SelectItem value="bell">Bell</SelectItem>
+                <SelectItem value="click">Click</SelectItem>
+                <SelectItem value="whistle">Whistle</SelectItem>
+                <SelectItem value="beep">Beep</SelectItem>
+                <SelectItem value="ding">Ding</SelectItem>
+                <SelectItem value="pop">Pop</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <div className="flex justify-end mt-2">
             <Button
               variant="outline"
@@ -384,6 +430,28 @@ const UserSettings = () => {
             label="Notification Sounds"
             description="Play sound for notifications"
           />
+          <div className="flex items-center justify-between mt-2">
+            <Label className="text-white text-sm">Notification Sound</Label>
+            <Select
+              value={settings.sounds.notificationSound}
+              onValueChange={(value) => handleSoundChange('notificationSound', value)}
+              disabled={!settings.sounds.notification}
+            >
+              <SelectTrigger className="w-32 h-8 bg-slate-700 border-slate-600 text-white">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="chime">Chime</SelectItem>
+                <SelectItem value="bell">Bell</SelectItem>
+                <SelectItem value="whistle">Whistle</SelectItem>
+                <SelectItem value="ding">Ding</SelectItem>
+                <SelectItem value="default">Default</SelectItem>
+                <SelectItem value="click">Click</SelectItem>
+                <SelectItem value="beep">Beep</SelectItem>
+                <SelectItem value="pop">Pop</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <div className="flex justify-end mt-2">
             <Button
               variant="outline"
