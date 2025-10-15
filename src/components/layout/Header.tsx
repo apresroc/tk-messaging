@@ -26,7 +26,7 @@ const Header = () => {
     if (pathname === "/admin") {
       return "Manage Twilio settings and customers";
     } else if (pathname === "/dashboard") {
-      return "Messaging Dashboard";
+      return "Conversations";
     } else if (pathname === "/customers") {
       return "Contact Management";
     } else if (pathname === "/settings") {
