@@ -76,9 +76,6 @@ const Index = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-xl relative">
-              <Smartphone className="h-6 w-6 text-white" />
-            </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent">
               TK Messaging
             </span>
@@ -452,14 +449,9 @@ const Index = () => {
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-xl relative">
-                  <Smartphone className="h-5 w-5 text-white" />
-                </div>
-                <span className="text-xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent">
-                  TK Messaging
-                </span>
-              </div>
+              <span className="text-xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent mb-4 block">
+                TK Messaging
+              </span>
               <p className="text-slate-400">
                 Revolutionizing customer conversations with AI-powered messaging.
               </p>
