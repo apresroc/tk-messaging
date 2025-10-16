@@ -33,22 +33,23 @@ declare namespace __next_route_internal_types__ {
 
   type StaticRoutes = 
     | `/`
-    | `/Admin`
-    | `/Customers`
-    | `/Dashboard`
-    | `/Index`
-    | `/Login`
-    | `/NotFound`
-    | `/SettingsPage`
     | `/admin`
+    | `/api/admin/customers`
+    | `/api/admin/settings`
+    | `/api/auth/login`
     | `/api/messages/send`
     | `/api/settings`
+    | `/api/twilio/send-message`
+    | `/api/user/settings`
     | `/api/webhooks/twilio/inbound`
+    | `/contacts`
+    | `/contacts/add`
     | `/conversations`
     | `/customers`
     | `/login`
     | `/settings`
-  type DynamicRoutes<T extends string = string> = never
+  type DynamicRoutes<T extends string = string> = 
+    | `/contacts/edit/${SafeSlug<T>}`
 
   type RouteImpl<T> = 
     | StaticRoutes

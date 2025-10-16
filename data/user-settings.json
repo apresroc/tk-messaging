@@ -1,0 +1,38 @@
+{
+  "test_user": {
+    "notifications": {
+      "email": true,
+      "sms": false
+    },
+    "theme": {
+      "mode": "dark"
+    }
+  },
+  "cust_1760567726847": {
+    "notifications": {
+      "email": true,
+      "sms": true,
+      "push": true
+    },
+    "sounds": {
+      "message": true,
+      "notification": true,
+      "volume": 80,
+      "messageSound": "default",
+      "notificationSound": "chime"
+    },
+    "theme": {
+      "mode": "dark"
+    },
+    "privacy": {
+      "readReceipts": true,
+      "typingIndicators": true
+    },
+    "profile": {
+      "name": "ADP Lawncare",
+      "email": "dakota@adplawncare.com",
+      "phone": "+15852593558",
+      "username": "dakota"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/Anthony/dyad-apps/TK%20Messaging/src/app/not-found.tsx"],"sourcesContent":["\"use client\";\n\nimport React from \"react\";\n\nexport default function NotFound() {\n  return (\n    <div className=\"min-h-screen flex items-center justify-center bg-gray-100\">\n      <div className=\"text-center\">\n        <h1 className=\"text-4xl font-bold mb-4\">404</h1>\n        <p className=\"text-xl text-gray-600 mb-4\">Oops! Page not found</p>\n        <a href=\"/\" className=\"text-blue-500 hover:text-blue-700 underline\">\n          Return to Home\n        </a>\n      </div>\n    </div>\n  );\n}"],"names":[],"mappings":";;;;;AAAA;;AAIe,SAAS;IACtB,qBACE,4TAAC;QAAI,WAAU;kBACb,cAAA,4TAAC;YAAI,WAAU;;8BACb,4TAAC;oBAAG,WAAU;8BAA0B;;;;;;8BACxC,4TAAC;oBAAE,WAAU;8BAA6B;;;;;;8BAC1C,4TAAC;oBAAE,MAAK;oBAAI,WAAU;8BAA8C;;;;;;;;;;;;;;;;;AAM5E;KAZwB","debugId":null}}]
+}

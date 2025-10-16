@@ -31,7 +31,9 @@ const AdminDashboard = () => {
   const [newCustomer, setNewCustomer] = useState({
     name: '',
     email: '',
-    phone: ''
+    phone: '',
+    username: '',
+    password: ''
   });
   
   const [testMessage, setTestMessage] = useState({
@@ -42,60 +44,104 @@ const AdminDashboard = () => {
   
   const [mediaPreviews, setMediaPreviews] = useState<string[]>([]);
 
-  // Load settings from localStorage on component mount
+  // Load settings and customers from API on component mount
   useEffect(() => {
-    const savedSettings = localStorage.getItem('twilioSettings');
-    if (savedSettings) {
-      setSettings(JSON.parse(savedSettings));
-    }
+    const loadData = async () => {
+      try {
+        // Load settings
+        const settingsResponse = await fetch('/api/admin/settings');
+        if (settingsResponse.ok) {
+          const savedSettings = await settingsResponse.json();
+          setSettings(savedSettings);
+          
+          // Initialize Twilio client if settings are available
+          if (savedSettings.twilioAccountSid && savedSettings.twilioAuthToken && savedSettings.twilioPhoneNumber) {
+            twilioClient.initialize(
+              savedSettings.twilioAccountSid,
+              savedSettings.twilioAuthToken,
+              savedSettings.twilioPhoneNumber
+            );
+          }
+        }
+        
+        // Load customers
+        const customersResponse = await fetch('/api/admin/customers');
+        if (customersResponse.ok) {
+          const savedCustomers = await customersResponse.json();
+          setCustomers(savedCustomers);
+        }
+      } catch (error) {
+        console.error('Error loading data:', error);
+        toast.error('Failed to load data');
+      }
+    };
     
-    const savedCustomers = localStorage.getItem('customers');
-    if (savedCustomers) {
-      setCustomers(JSON.parse(savedCustomers));
-    }
+    loadData();
   }, []);
 
-  // Save settings to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem('twilioSettings', JSON.stringify(settings));
-    
-    // Initialize Twilio client when settings change
-    if (settings.twilioAccountSid && settings.twilioAuthToken && settings.twilioPhoneNumber) {
-      twilioClient.initialize(
-        settings.twilioAccountSid,
-        settings.twilioAuthToken,
-        settings.twilioPhoneNumber
-      );
-    }
-  }, [settings]);
-
-  // Save customers to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem('customers', JSON.stringify(customers));
-  }, [customers]);
-
-  const handleSettingsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSettingsChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setSettings(prev => ({ ...prev, [name]: value }));
+    const newSettings = { ...settings, [name]: value };
+    setSettings(newSettings);
+    
+    // Save to API
+    try {
+      const response = await fetch('/api/admin/settings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newSettings),
+      });
+      
+      if (response.ok) {
+        // Initialize Twilio client if all required fields are present
+        if (newSettings.twilioAccountSid && newSettings.twilioAuthToken && newSettings.twilioPhoneNumber) {
+          twilioClient.initialize(
+            newSettings.twilioAccountSid,
+            newSettings.twilioAuthToken,
+            newSettings.twilioPhoneNumber
+          );
+        }
+      } else {
+        const errorData = await response.json();
+        console.error('Settings save failed:', errorData);
+        toast.error(`Failed to save settings: ${errorData.error || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Error saving settings:', error);
+      toast.error('Failed to save settings - network error');
+    }
   };
 
-  const handleAddCustomer = () => {
-    if (!newCustomer.name || !newCustomer.phone) {
-      toast.error('Name and phone number are required');
+  const handleAddCustomer = async () => {
+    if (!newCustomer.name || !newCustomer.phone || !newCustomer.username || !newCustomer.password) {
+      toast.error('Name, phone number, username, and password are required');
       return;
     }
     
-    const customer: Customer = {
-      id: `cust_${Date.now()}`,
-      name: newCustomer.name,
-      email: newCustomer.email,
-      phone: newCustomer.phone,
-      createdAt: new Date()
-    };
-    
-    setCustomers(prev => [...prev, customer]);
-    setNewCustomer({ name: '', email: '', phone: '' });
-    toast.success('Customer added successfully');
+    try {
+      const response = await fetch('/api/admin/customers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newCustomer),
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        setCustomers(prev => [...prev, result.customer]);
+        setNewCustomer({ name: '', email: '', phone: '', username: '', password: '' });
+        toast.success('Customer added successfully');
+      } else {
+        const error = await response.json();
+        toast.error(error.error || 'Failed to add customer');
+      }
+    } catch (error) {
+      console.error('Error adding customer:', error);
+      toast.error('Failed to add customer');
+    }
   };
 
   const handleTestMessage = async () => {
@@ -118,7 +164,7 @@ const AdminDashboard = () => {
         setTestMessage({ to: '', body: '', media: [] });
         setMediaPreviews([]);
       } else {
-        toast.error(`Failed to send message: ${result.error}`);
+        toast.error('Failed to send message');
       }
     } catch (error) {
       toast.error('Failed to send message');
@@ -126,9 +172,23 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleDeleteCustomer = (id: string) => {
-    setCustomers(prev => prev.filter(customer => customer.id !== id));
-    toast.success('Customer deleted');
+  const handleDeleteCustomer = async (id: string) => {
+    try {
+      const response = await fetch(`/api/admin/customers?id=${id}`, {
+        method: 'DELETE',
+      });
+      
+      if (response.ok) {
+        setCustomers(prev => prev.filter(customer => customer.id !== id));
+        toast.success('Customer deleted');
+      } else {
+        const error = await response.json();
+        toast.error(error.error || 'Failed to delete customer');
+      }
+    } catch (error) {
+      console.error('Error deleting customer:', error);
+      toast.error('Failed to delete customer');
+    }
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -170,57 +230,57 @@ const AdminDashboard = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.1 }}
       >
-        <Card className="bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50">
+        <Card className="bg-slate-800/50 border-slate-700/50">
           <CardContent className="p-6">
             <div className="flex items-center gap-3">
               <div className="bg-blue-500/20 p-2 rounded-lg">
                 <Users className="h-5 w-5 text-blue-400" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">{customers.length}</p>
-                <p className="text-blue-600 dark:text-blue-200 text-sm">Customers</p>
+                <p className="text-2xl font-bold text-white">{customers.length}</p>
+                <p className="text-white text-sm">Customers</p>
               </div>
             </div>
           </CardContent>
         </Card>
         
-        <Card className="bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50">
+        <Card className="bg-slate-800/50 border-slate-700/50">
           <CardContent className="p-6">
             <div className="flex items-center gap-3">
               <div className="bg-purple-500/20 p-2 rounded-lg">
                 <MessageSquare className="h-5 w-5 text-purple-400" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">1.2s</p>
-                <p className="text-purple-600 dark:text-purple-200 text-sm">Avg Response</p>
+                <p className="text-2xl font-bold text-white">1.2s</p>
+                <p className="text-white text-sm">Avg Response</p>
               </div>
             </div>
           </CardContent>
         </Card>
         
-        <Card className="bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50">
+        <Card className="bg-slate-800/50 border-slate-700/50">
           <CardContent className="p-6">
             <div className="flex items-center gap-3">
               <div className="bg-green-500/20 p-2 rounded-lg">
                 <Zap className="h-5 w-5 text-green-400" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">99.9%</p>
-                <p className="text-green-600 dark:text-green-200 text-sm">Uptime</p>
+                <p className="text-2xl font-bold text-white">99.9%</p>
+                <p className="text-white text-sm">Uptime</p>
               </div>
             </div>
           </CardContent>
         </Card>
         
-        <Card className="bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50">
+        <Card className="bg-slate-800/50 border-slate-700/50">
           <CardContent className="p-6">
             <div className="flex items-center gap-3">
               <div className="bg-amber-500/20 p-2 rounded-lg">
                 <Shield className="h-5 w-5 text-amber-400" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">24/7</p>
-                <p className="text-amber-600 dark:text-amber-200 text-sm">Support</p>
+                <p className="text-2xl font-bold text-white">24/7</p>
+                <p className="text-white text-sm">Support</p>
               </div>
             </div>
           </CardContent>
@@ -235,33 +295,33 @@ const AdminDashboard = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <Card className="bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50">
+          <Card className="bg-slate-800/50 border-slate-700/50">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+              <CardTitle className="flex items-center gap-2 text-white">
                 <Settings className="h-5 w-5 text-blue-400" />
                 Twilio Settings
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="twilioAccountSid" className="text-gray-700 dark:text-blue-100">Account SID</Label>
+                <Label htmlFor="twilioAccountSid" className="text-white">Account SID</Label>
                 <div className="relative">
-                  <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
+                  <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white h-4 w-4" />
                   <Input
                     id="twilioAccountSid"
                     name="twilioAccountSid"
                     value={settings.twilioAccountSid}
                     onChange={handleSettingsChange}
                     placeholder="ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-                    className="pl-10 bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white placeholder:text-slate-400"
+                    className="pl-10 bg-slate-800 border-slate-700 text-white placeholder:text-white"
                   />
                 </div>
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="twilioAuthToken" className="text-gray-700 dark:text-blue-100">Auth Token</Label>
+                <Label htmlFor="twilioAuthToken" className="text-white">Auth Token</Label>
                 <div className="relative">
-                  <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
+                  <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white h-4 w-4" />
                   <Input
                     id="twilioAuthToken"
                     name="twilioAuthToken"
@@ -269,47 +329,47 @@ const AdminDashboard = () => {
                     value={settings.twilioAuthToken}
                     onChange={handleSettingsChange}
                     placeholder="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-                    className="pl-10 bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white placeholder:text-slate-400"
+                    className="pl-10 bg-slate-800 border-slate-700 text-white placeholder:text-white"
                   />
                 </div>
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="twilioPhoneNumber" className="text-gray-700 dark:text-blue-100">Twilio Phone Number</Label>
+                <Label htmlFor="twilioPhoneNumber" className="text-white">Twilio Phone Number</Label>
                 <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
+                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white h-4 w-4" />
                   <Input
                     id="twilioPhoneNumber"
                     name="twilioPhoneNumber"
                     value={settings.twilioPhoneNumber}
                     onChange={handleSettingsChange}
                     placeholder="+1234567890"
-                    className="pl-10 bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white placeholder:text-slate-400"
+                    className="pl-10 bg-slate-800 border-slate-700 text-white placeholder:text-white"
                   />
                 </div>
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="webhookUrl" className="text-gray-700 dark:text-blue-100">Webhook URL</Label>
+                <Label htmlFor="webhookUrl" className="text-white">Webhook URL</Label>
                 <div className="relative">
-                  <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
+                  <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white h-4 w-4" />
                   <Input
                     id="webhookUrl"
                     name="webhookUrl"
                     value={settings.webhookUrl}
                     onChange={handleSettingsChange}
                     placeholder="https://yourdomain.com/webhook"
-                    className="pl-10 bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white placeholder:text-slate-400"
+                    className="pl-10 bg-slate-800 border-slate-700 text-white placeholder:text-white"
                   />
                 </div>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
+                <p className="text-sm text-white">
                   Configure this URL in your Twilio console to receive incoming messages
                 </p>
               </div>
               
-              <Button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white">
-                Save Settings
-              </Button>
+              <div className="text-sm text-white text-center">
+                Settings are automatically saved as you type
+              </div>
             </CardContent>
           </Card>
         </motion.div>
@@ -320,45 +380,68 @@ const AdminDashboard = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          <Card className="bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50">
+          <Card className="bg-slate-800/50 border-slate-700/50">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+              <CardTitle className="flex items-center gap-2 text-white">
                 <Users className="h-5 w-5 text-purple-400" />
                 Add New Customer
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="customerName" className="text-gray-700 dark:text-blue-100">Name</Label>
+                <Label htmlFor="customerName" className="text-white">Name</Label>
                 <Input
                   id="customerName"
                   value={newCustomer.name}
                   onChange={(e) => setNewCustomer({...newCustomer, name: e.target.value})}
                   placeholder="John Doe"
-                  className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white placeholder:text-slate-400"
+                  className="bg-slate-800 border-slate-700 text-white placeholder:text-white"
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="customerEmail" className="text-gray-700 dark:text-blue-100">Email</Label>
+                <Label htmlFor="customerEmail" className="text-white">Email</Label>
                 <Input
                   id="customerEmail"
                   value={newCustomer.email}
                   onChange={(e) => setNewCustomer({...newCustomer, email: e.target.value})}
                   placeholder="john@example.com"
                   type="email"
-                  className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white placeholder:text-slate-400"
+                  className="bg-slate-800 border-slate-700 text-white placeholder:text-white"
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="customerPhone" className="text-gray-700 dark:text-blue-100">Phone Number</Label>
+                <Label htmlFor="customerPhone" className="text-white">Phone Number</Label>
                 <Input
                   id="customerPhone"
                   value={newCustomer.phone}
                   onChange={(e) => setNewCustomer({...newCustomer, phone: e.target.value})}
                   placeholder="+1234567890"
-                  className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white placeholder:text-slate-400"
+                  className="bg-slate-800 border-slate-700 text-white placeholder:text-white"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="customerUsername" className="text-white">Username</Label>
+                <Input
+                  id="customerUsername"
+                  value={newCustomer.username}
+                  onChange={(e) => setNewCustomer({...newCustomer, username: e.target.value})}
+                  placeholder="johndoe"
+                  className="bg-slate-800 border-slate-700 text-white placeholder:text-white"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="customerPassword" className="text-white">Password</Label>
+                <Input
+                  id="customerPassword"
+                  type="password"
+                  value={newCustomer.password}
+                  onChange={(e) => setNewCustomer({...newCustomer, password: e.target.value})}
+                  placeholder="Enter password"
+                  className="bg-slate-800 border-slate-700 text-white placeholder:text-white"
                 />
               </div>
               
@@ -379,9 +462,9 @@ const AdminDashboard = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.4 }}
       >
-        <Card className="bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50">
+        <Card className="bg-slate-800/50 border-slate-700/50">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+            <CardTitle className="flex items-center gap-2 text-white">
               <MessageSquare className="h-5 w-5 text-green-400" />
               Send Test Message
             </CardTitle>
@@ -389,37 +472,37 @@ const AdminDashboard = () => {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="testTo" className="text-gray-700 dark:text-blue-100">To</Label>
+                <Label htmlFor="testTo" className="text-white">To</Label>
                 <Input
                   id="testTo"
                   value={testMessage.to}
                   onChange={(e) => setTestMessage({...testMessage, to: e.target.value})}
                   placeholder="+1234567890"
-                  className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white placeholder:text-slate-400"
+                  className="bg-slate-800 border-slate-700 text-white placeholder:text-white"
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="testBody" className="text-gray-700 dark:text-blue-100">Message</Label>
+                <Label htmlFor="testBody" className="text-white">Message</Label>
                 <Textarea
                   id="testBody"
                   value={testMessage.body}
                   onChange={(e) => setTestMessage({...testMessage, body: e.target.value})}
                   placeholder="Hello, this is a test message"
-                  className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white placeholder:text-slate-400"
+                  className="bg-slate-800 border-slate-700 text-white placeholder:text-white"
                 />
               </div>
             </div>
             
             {/* Media attachment section */}
             <div className="space-y-2">
-              <Label className="text-gray-700 dark:text-blue-100">Attachments</Label>
+              <Label className="text-white">Attachments</Label>
               <div className="flex items-center gap-2">
                 <Button 
                   variant="outline" 
                   size="sm"
                   onClick={() => document.getElementById('test-media-input')?.click()}
-                  className="border-slate-300 dark:border-slate-700 text-gray-700 dark:text-slate-300"
+                  className="border-slate-600 text-white hover:bg-slate-700 hover:border-slate-500 bg-slate-800"
                 >
                   <Paperclip className="h-4 w-4 mr-2" />
                   Add Media
@@ -434,7 +517,7 @@ const AdminDashboard = () => {
                 />
                 
                 {testMessage.media.length > 0 && (
-                  <span className="text-sm text-slate-500 dark:text-slate-400">
+                  <span className="text-sm text-white">
                     {testMessage.media.length} file(s) selected
                   </span>
                 )}
@@ -448,7 +531,7 @@ const AdminDashboard = () => {
                       <img 
                         src={preview} 
                         alt="Preview" 
-                        className="h-16 w-16 rounded-lg object-cover border border-slate-300 dark:border-slate-600"
+                        className="h-16 w-16 rounded-lg object-cover border border-slate-600"
                       />
                       <Button
                         variant="ghost"
@@ -483,37 +566,39 @@ const AdminDashboard = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.5 }}
       >
-        <Card className="bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50">
+        <Card className="bg-slate-800/50 border-slate-700/50">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+            <CardTitle className="flex items-center gap-2 text-white">
               <Users className="h-5 w-5 text-amber-400" />
               Customers
             </CardTitle>
           </CardHeader>
           <CardContent>
             {customers.length === 0 ? (
-              <p className="text-slate-500 dark:text-slate-400 text-center py-4">No customers added yet</p>
+              <p className="text-white text-center py-4">No customers added yet</p>
             ) : (
               <Table>
                 <TableHeader>
-                  <TableRow className="hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                    <TableHead className="text-gray-700 dark:text-blue-200">Name</TableHead>
-                    <TableHead className="text-gray-700 dark:text-blue-200">Email</TableHead>
-                    <TableHead className="text-gray-700 dark:text-blue-200">Phone</TableHead>
-                    <TableHead className="text-gray-700 dark:text-blue-200">Added</TableHead>
-                    <TableHead className="text-gray-700 dark:text-blue-200">Status</TableHead>
-                    <TableHead className="text-gray-700 dark:text-blue-200">Actions</TableHead>
+                  <TableRow className="hover:bg-slate-800/50">
+                    <TableHead className="text-white">Name</TableHead>
+                    <TableHead className="text-white">Email</TableHead>
+                    <TableHead className="text-white">Phone</TableHead>
+                    <TableHead className="text-white">Username</TableHead>
+                    <TableHead className="text-white">Added</TableHead>
+                    <TableHead className="text-white">Status</TableHead>
+                    <TableHead className="text-white">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {customers.map((customer) => (
-                    <TableRow key={customer.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30">
-                      <TableCell className="font-medium text-gray-900 dark:text-white">{customer.name}</TableCell>
-                      <TableCell className="text-slate-600 dark:text-slate-300">{customer.email}</TableCell>
-                      <TableCell className="text-slate-600 dark:text-slate-300">{customer.phone}</TableCell>
-                      <TableCell className="text-slate-600 dark:text-slate-300">{customer.createdAt.toLocaleDateString()}</TableCell>
+                    <TableRow key={customer.id} className="hover:bg-slate-800/30">
+                      <TableCell className="font-medium text-white">{customer.name}</TableCell>
+                      <TableCell className="text-white">{customer.email}</TableCell>
+                      <TableCell className="text-white">{customer.phone}</TableCell>
+                      <TableCell className="text-white">{customer.username}</TableCell>
+                      <TableCell className="text-white">{new Date(customer.createdAt).toLocaleDateString()}</TableCell>
                       <TableCell>
-                        <Badge variant="secondary" className="bg-green-500/20 text-green-700 dark:text-green-300 border-0">
+                        <Badge variant="secondary" className="bg-green-500/20 text-white border-0">
                           Active
                         </Badge>
                       </TableCell>
@@ -522,7 +607,7 @@ const AdminDashboard = () => {
                           variant="destructive" 
                           size="sm"
                           onClick={() => handleDeleteCustomer(customer.id)}
-                          className="bg-red-500/20 text-red-700 dark:text-red-300 hover:bg-red-500/30 border-0"
+                          className="bg-red-500/20 text-white hover:bg-red-500/30 border-0"
                         >
                           Delete
                         </Button>

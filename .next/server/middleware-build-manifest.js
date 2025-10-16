@@ -5,19 +5,19 @@ globalThis.__BUILD_MANIFEST = {
   "devFiles": [],
   "ampDevFiles": [],
   "polyfillFiles": [
-    "static/chunks/977ca_next_dist_build_polyfills_polyfill-nomodule.js"
+    "static/chunks/3ae14_next_dist_build_polyfills_polyfill-nomodule.js"
   ],
   "lowPriorityFiles": [],
   "rootMainFiles": [
-    "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_98f1bf80._.js",
-    "static/chunks/977ca_next_dist_compiled_react-dom_ebd64d3f._.js",
-    "static/chunks/977ca_next_dist_compiled_next-devtools_index_19fd1c7f.js",
-    "static/chunks/977ca_next_dist_compiled_07648da8._.js",
-    "static/chunks/977ca_next_dist_client_0f2aa079._.js",
-    "static/chunks/977ca_next_dist_100e0f95._.js",
-    "static/chunks/f3855_@swc_helpers_cjs_7b7e65d6._.js",
-    "static/chunks/dyad-apps_TK Messaging_a0ff3932._.js",
-    "static/chunks/turbopack-dyad-apps_TK Messaging_cc548050._.js"
+    "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_d241b55b._.js",
+    "static/chunks/3ae14_next_dist_compiled_react-dom_63bb80d8._.js",
+    "static/chunks/3ae14_next_dist_compiled_next-devtools_index_d37bfaad.js",
+    "static/chunks/3ae14_next_dist_compiled_d9b20e41._.js",
+    "static/chunks/3ae14_next_dist_client_e50fe57a._.js",
+    "static/chunks/3ae14_next_dist_60751fa2._.js",
+    "static/chunks/69652_@swc_helpers_cjs_77b72907._.js",
+    "static/chunks/_a0ff3932._.js",
+    "static/chunks/turbopack-_f1db3ecc._.js"
   ],
   "ampFirstPages": []
 };

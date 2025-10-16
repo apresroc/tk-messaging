@@ -25,13 +25,41 @@ export function ThemeProvider({
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(defaultTheme);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Load user's saved theme on mount
+  useEffect(() => {
+    const loadUserTheme = async () => {
+      try {
+        const userData = sessionStorage.getItem('currentUser');
+        if (userData) {
+          const user = JSON.parse(userData);
+          const response = await fetch(`/api/user/settings?userId=${user.id}`);
+          if (response.ok) {
+            const settings = await response.json();
+            if (settings.theme?.mode) {
+              setTheme(settings.theme.mode);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error loading user theme:', error);
+      } finally {
+        setIsLoaded(true);
+      }
+    };
+
+    loadUserTheme();
+  }, []);
 
   // Apply theme to document when it changes
   useEffect(() => {
-    const root = window.document.documentElement;
-    root.classList.remove("light", "dark");
-    root.classList.add(theme);
-  }, [theme]);
+    if (isLoaded) {
+      const root = window.document.documentElement;
+      root.classList.remove("light", "dark");
+      root.classList.add(theme);
+    }
+  }, [theme, isLoaded]);
 
   const value = {
     theme,
@@ -42,7 +70,16 @@ export function ThemeProvider({
 
   return (
     <ThemeProviderContext.Provider {...props} value={value}>
-      {children}
+      {!isLoaded ? (
+        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-purple-900 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400 mx-auto mb-4"></div>
+            <p className="text-blue-200">Loading...</p>
+          </div>
+        </div>
+      ) : (
+        children
+      )}
     </ThemeProviderContext.Provider>
   );
 }

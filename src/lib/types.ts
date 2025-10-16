@@ -3,7 +3,9 @@ export interface Customer {
   name: string;
   email: string;
   phone: string;
-  createdAt: Date;
+  username: string;
+  password: string;
+  createdAt: string | Date;
 }
 
 export interface Contact {

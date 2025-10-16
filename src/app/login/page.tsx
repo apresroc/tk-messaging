@@ -5,17 +5,18 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { Smartphone } from "lucide-react";
+import { Smartphone, Eye, EyeOff } from "lucide-react";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email || !password) {
@@ -23,20 +24,47 @@ const LoginPage = () => {
       return;
     }
 
+    console.log("Login attempt:", { email, password }); // Debug log
+
+    // Check for admin login first
     if (email === "sysad@techkrafted.com" && password === "123") {
+      console.log("Admin login detected"); // Debug log
       toast.success("Admin login successful");
       router.push("/admin");
       return;
     }
 
-    if (email === "apresroc@gmail.com" && password === "123") {
-      toast.success("User login successful");
-      router.push("/conversations");
+    // Try customer login (email can be username or email)
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: email, password }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Customer login successful:", result.customer);
+        
+        // Store customer data in sessionStorage for profile display
+        sessionStorage.setItem('currentUser', JSON.stringify(result.customer));
+        
+        toast.success("Login successful");
+        router.push("/conversations");
+        return;
+      } else {
+        const error = await response.json();
+        console.log("Customer login failed:", error.error);
+        toast.error(error.error || "Invalid credentials");
+        return;
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error("Login failed. Please try again.");
       return;
     }
-
-    toast.success("Login successful");
-    router.push("/conversations");
   };
 
   return (
@@ -44,10 +72,7 @@ const LoginPage = () => {
       <header className="px-6 py-8">
         <div className="container mx-auto">
           <div className="flex items-center gap-3">
-            <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-xl relative">
-              <Smartphone className="h-6 w-6 text-white" />
-            </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent">Messaging</span>
+            <span className="text-2xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent">TK Messaging</span>
           </div>
         </div>
       </header>
@@ -56,9 +81,6 @@ const LoginPage = () => {
         <div className="w-full max-w-md">
           <Card className="bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700 text-white">
             <CardHeader className="text-center">
-              <div className="mx-auto bg-gradient-to-r from-blue-500 to-purple-600 w-16 h-16 rounded-2xl flex items-center justify-center mb-4 relative">
-                <Smartphone className="h-8 w-8 text-white" />
-              </div>
               <CardTitle className="text-3xl font-bold">Welcome to TK Messaging</CardTitle>
               <CardDescription className="text-blue-200">Sign in to start revolutionizing your customer conversations</CardDescription>
             </CardHeader>
@@ -66,12 +88,12 @@ const LoginPage = () => {
               <form onSubmit={handleLogin} className="space-y-6">
                 <div className="space-y-3">
                   <Label htmlFor="email" className="text-blue-100">
-                    Email
+                    Username or Email
                   </Label>
                   <Input
                     id="email"
-                    type="email"
-                    placeholder="name@example.com"
+                    type="text"
+                    placeholder="username or name@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-400 py-6 rounded-xl"
@@ -86,38 +108,35 @@ const LoginPage = () => {
                       Forgot?
                     </Button>
                   </div>
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="Enter your password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-400 py-6 rounded-xl"
-                  />
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Enter your password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-400 py-6 rounded-xl pr-12"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 text-slate-400 hover:text-slate-300"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
                 </div>
                 <Button type="submit" className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-6 rounded-xl">
                   Sign In
                 </Button>
               </form>
             </CardContent>
-            <CardFooter className="flex flex-col gap-4">
-              <div className="relative w-full">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-slate-700"></div>
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-slate-900 px-2 text-slate-500">Or continue with</span>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <Button variant="outline" className="flex-1 border-slate-700 text-white hover:bg-slate-800">
-                  Google
-                </Button>
-                <Button variant="outline" className="flex-1 border-slate-700 text-white hover:bg-slate-800">
-                  Microsoft
-                </Button>
-              </div>
-            </CardFooter>
           </Card>
         </div>
       </div>

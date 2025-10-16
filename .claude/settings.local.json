@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run dev:*)",
+      "Read(//mnt/c/Users/Anthony/**)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill:*)",
+      "Bash(PORT=3000 npm run dev)",
+      "Bash(netstat:*)",
+      "Bash(ss:*)",
+      "Bash(fuser:*)",
+      "Bash(curl:*)",
+      "Bash(pkill:*)",
+      "Bash(netsh.exe interface portproxy show:*)",
+      "Bash(cat:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

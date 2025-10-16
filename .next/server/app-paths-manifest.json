@@ -1,3 +1,16 @@
 {
-  "/page": "app/page.js"
+  "/_not-found/page": "app/_not-found/page.js",
+  "/admin/page": "app/admin/page.js",
+  "/api/admin/customers/route": "app/api/admin/customers/route.js",
+  "/api/admin/settings/route": "app/api/admin/settings/route.js",
+  "/api/auth/login/route": "app/api/auth/login/route.js",
+  "/api/twilio/send-message/route": "app/api/twilio/send-message/route.js",
+  "/api/user/settings/route": "app/api/user/settings/route.js",
+  "/contacts/add/page": "app/contacts/add/page.js",
+  "/contacts/edit/[id]/page": "app/contacts/edit/[id]/page.js",
+  "/contacts/page": "app/contacts/page.js",
+  "/conversations/page": "app/conversations/page.js",
+  "/login/page": "app/login/page.js",
+  "/page": "app/page.js",
+  "/settings/page": "app/settings/page.js"
 }

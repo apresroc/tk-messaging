@@ -1,0 +1,6 @@
+{
+  "twilioAccountSid": "AC46f8c659bd077f8883274d6c85654288",
+  "twilioAuthToken": "155e3d926ca622aa5c7177b6cdf065b4",
+  "twilioPhoneNumber": "+15856992244",
+  "webhookUrl": "https://sms.radiomaxcomm.com/webhooks/twilio/inbound"
+}

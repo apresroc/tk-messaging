@@ -2,12 +2,12 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { LogOut, Settings as SettingsIcon } from "lucide-react";
+import { LogOut, Settings as SettingsIcon, Users, UserPlus } from "lucide-react";
 import { toast } from "sonner";
-import { Users } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 const Header = () => {
-  const pathname = typeof window !== "undefined" ? window.location.pathname : "";
+  const pathname = usePathname();
 
   const handleLogout = () => {
     toast.success("You have been logged out");
@@ -19,7 +19,11 @@ const Header = () => {
   };
 
   const handleContacts = () => {
-    if (typeof window !== "undefined") window.location.href = "/customers";
+    if (typeof window !== "undefined") window.location.href = "/contacts";
+  };
+
+  const handleAddContact = () => {
+    if (typeof window !== "undefined") window.location.href = "/contacts/add";
   };
 
   const getPageTitle = () => {
@@ -27,8 +31,10 @@ const Header = () => {
       return "Manage Twilio settings and customers";
     } else if (pathname === "/dashboard") {
       return "Conversations";
-    } else if (pathname === "/customers") {
+    } else if (pathname === "/contacts") {
       return "Contact Management";
+    } else if (pathname === "/contacts/add") {
+      return "Add New Contact";
     } else if (pathname === "/settings") {
       return "User Settings";
     }
@@ -36,7 +42,27 @@ const Header = () => {
   };
 
   const showSettingsButton = pathname !== "/admin" && pathname !== "/settings";
-  const showContactsButton = pathname !== "/customers" && pathname !== "/admin";
+  const showContactsButton = pathname !== "/contacts" && pathname !== "/admin";
+  const showAddContactButton = pathname === "/conversations" || pathname === "/dashboard";
+
+  // For admin page, show only logout button
+  if (pathname === "/admin") {
+    return (
+      <header className="border-b border-white/20">
+        <div className="flex h-16 items-center justify-end px-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleLogout}
+            className="text-blue-200 hover:text-white hover:bg-white/10"
+            title="Logout"
+          >
+            <LogOut className="h-5 w-5" />
+          </Button>
+        </div>
+      </header>
+    );
+  }
 
   return (
     <header className="border-b border-white/20">
@@ -45,6 +71,17 @@ const Header = () => {
           <h1 className="text-lg font-semibold text-white">{getPageTitle()}</h1>
         </div>
         <div className="flex items-center space-x-4">
+          {showAddContactButton && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleAddContact}
+              className="text-blue-200 hover:text-white hover:bg-white/10"
+              title="Add Contact"
+            >
+              <UserPlus className="h-5 w-5" />
+            </Button>
+          )}
           {showContactsButton && (
             <Button
               variant="ghost"

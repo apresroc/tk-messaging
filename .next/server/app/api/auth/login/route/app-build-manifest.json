@@ -1,0 +1,15 @@
+{
+  "pages": {
+    "/api/auth/login/route": [
+      "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_d241b55b._.js",
+      "static/chunks/3ae14_next_dist_compiled_react-dom_63bb80d8._.js",
+      "static/chunks/3ae14_next_dist_compiled_next-devtools_index_d37bfaad.js",
+      "static/chunks/3ae14_next_dist_compiled_d9b20e41._.js",
+      "static/chunks/3ae14_next_dist_client_e50fe57a._.js",
+      "static/chunks/3ae14_next_dist_60751fa2._.js",
+      "static/chunks/69652_@swc_helpers_cjs_77b72907._.js",
+      "static/chunks/_a0ff3932._.js",
+      "static/chunks/turbopack-_f1db3ecc._.js"
+    ]
+  }
+}

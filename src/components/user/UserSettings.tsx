@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Bell, Volume2, Palette, User, Shield, ArrowLeft, Play } from 'lucide-react';
 import { toast } from 'sonner';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { useTheme } from '@/components/theme-provider';
 import {
   Select,
@@ -18,7 +18,7 @@ import {
 import { Slider } from "@/components/ui/slider";
 
 const UserSettings = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { theme, setTheme } = useTheme();
   const [settings, setSettings] = useState({
     notifications: {
@@ -44,8 +44,58 @@ const UserSettings = () => {
       name: '',
       email: '',
       phone: '',
+      username: '',
     },
   });
+
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Load current user data and settings on component mount
+  useEffect(() => {
+    const loadUserDataAndSettings = async () => {
+      try {
+        const userData = sessionStorage.getItem('currentUser');
+        if (userData) {
+          const user = JSON.parse(userData);
+          setCurrentUser(user);
+          
+          // Load user settings from API
+          const response = await fetch(`/api/user/settings?userId=${user.id}`);
+          if (response.ok) {
+            const savedSettings = await response.json();
+            setSettings(prev => ({
+              ...prev,
+              ...savedSettings,
+              profile: {
+                name: user.name || '',
+                email: user.email || '',
+                phone: user.phone || '',
+                username: user.username || '',
+              }
+            }));
+          } else {
+            // If no saved settings, use default with user profile
+            setSettings(prev => ({
+              ...prev,
+              profile: {
+                name: user.name || '',
+                email: user.email || '',
+                phone: user.phone || '',
+                username: user.username || '',
+              }
+            }));
+          }
+        }
+      } catch (error) {
+        console.error('Error loading user data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadUserDataAndSettings();
+  }, []);
 
   // Sound presets configuration
   const soundPresets = {
@@ -71,23 +121,27 @@ const UserSettings = () => {
   }, [theme]);
 
   const handleNotificationChange = (key: string, value: boolean) => {
-    setSettings(prev => ({
-      ...prev,
+    const newSettings = {
+      ...settings,
       notifications: {
-        ...prev.notifications,
+        ...settings.notifications,
         [key]: value,
       },
-    }));
+    };
+    setSettings(newSettings);
+    saveSettings(newSettings);
   };
 
   const handleSoundChange = (key: string, value: boolean | number | string) => {
-    setSettings(prev => ({
-      ...prev,
+    const newSettings = {
+      ...settings,
       sounds: {
-        ...prev.sounds,
+        ...settings.sounds,
         [key]: value,
       },
-    }));
+    };
+    setSettings(newSettings);
+    saveSettings(newSettings);
   };
 
   const playTestSound = () => {
@@ -158,33 +212,63 @@ const UserSettings = () => {
     // Apply theme change immediately
     setTheme(value);
     
-    setSettings(prev => ({
-      ...prev,
+    const newSettings = {
+      ...settings,
       theme: {
-        ...prev.theme,
+        ...settings.theme,
         mode: value,
       },
-    }));
+    };
+    setSettings(newSettings);
+    saveSettings(newSettings);
   };
 
   const handlePrivacyChange = (key: string, value: boolean) => {
-    setSettings(prev => ({
-      ...prev,
+    const newSettings = {
+      ...settings,
       privacy: {
-        ...prev.privacy,
+        ...settings.privacy,
         [key]: value,
       },
-    }));
+    };
+    setSettings(newSettings);
+    saveSettings(newSettings);
   };
 
   const handleProfileChange = (key: string, value: string) => {
-    setSettings(prev => ({
-      ...prev,
+    const newSettings = {
+      ...settings,
       profile: {
-        ...prev.profile,
+        ...settings.profile,
         [key]: value,
       },
-    }));
+    };
+    setSettings(newSettings);
+    saveSettings(newSettings);
+  };
+
+  // Save settings to API
+  const saveSettings = async (newSettings: any) => {
+    if (!currentUser) return;
+
+    try {
+      const response = await fetch('/api/user/settings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: currentUser.id,
+          settings: newSettings,
+        }),
+      });
+
+      if (!response.ok) {
+        console.error('Failed to save settings');
+      }
+    } catch (error) {
+      console.error('Error saving settings:', error);
+    }
   };
 
   // Single box toggle button component showing either ON or OFF
@@ -219,6 +303,17 @@ const UserSettings = () => {
     </div>
   );
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-purple-900 text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400 mx-auto mb-4"></div>
+          <p className="text-blue-200">Loading settings...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 dark">
       <div className="flex items-center justify-between">
@@ -228,7 +323,7 @@ const UserSettings = () => {
         </div>
         <Button 
           variant="outline" 
-          onClick={() => navigate('/conversations')}
+          onClick={() => router.push('/conversations')}
           className="border-blue-400 text-white hover:bg-blue-400 hover:text-white font-medium"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
@@ -277,6 +372,17 @@ const UserSettings = () => {
                   value={settings.profile.phone}
                   onChange={(e) => handleProfileChange('phone', e.target.value)}
                   placeholder="+1234567890"
+                  className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="username" className="text-white font-medium">Username</Label>
+                <Input
+                  id="username"
+                  value={settings.profile.username}
+                  onChange={(e) => handleProfileChange('username', e.target.value)}
+                  placeholder="your_username"
                   className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
                 />
               </div>
@@ -468,21 +574,36 @@ const UserSettings = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <ToggleSwitch
-            isOn={settings.theme.mode === 'light'}
-            onToggle={() => handleThemeChange(settings.theme.mode === 'light' ? 'dark' : 'light')}
-            label="Light Theme"
-            description="Use light color scheme"
-          />
-          
-          <Separator className="bg-slate-700" />
-          
-          <ToggleSwitch
-            isOn={settings.theme.mode === 'dark'}
-            onToggle={() => handleThemeChange(settings.theme.mode === 'dark' ? 'light' : 'dark')}
-            label="Dark Theme"
-            description="Use dark color scheme"
-          />
+          <div className="space-y-3">
+            <Label className="text-white font-medium">Color Scheme</Label>
+            <div className="flex gap-4">
+              <Button
+                variant={settings.theme.mode === 'light' ? 'default' : 'outline'}
+                onClick={() => handleThemeChange('light')}
+                className={`flex-1 ${
+                  settings.theme.mode === 'light'
+                    ? 'bg-blue-500 hover:bg-blue-600 text-white'
+                    : 'border-slate-600 text-slate-300 hover:bg-slate-700'
+                }`}
+              >
+                ☀️ Light
+              </Button>
+              <Button
+                variant={settings.theme.mode === 'dark' ? 'default' : 'outline'}
+                onClick={() => handleThemeChange('dark')}
+                className={`flex-1 ${
+                  settings.theme.mode === 'dark'
+                    ? 'bg-blue-500 hover:bg-blue-600 text-white'
+                    : 'border-slate-600 text-slate-300 hover:bg-slate-700'
+                }`}
+              >
+                🌙 Dark
+              </Button>
+            </div>
+            <p className="text-sm text-blue-100">
+              Currently using: <span className="font-medium">{settings.theme.mode === 'light' ? 'Light' : 'Dark'} theme</span>
+            </p>
+          </div>
         </CardContent>
       </Card>
       

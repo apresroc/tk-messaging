@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/Anthony/dyad-apps/TK%20Messaging/src/app/conversations/layout.tsx"],"sourcesContent":["import React from \"react\";\n\nexport default function ConversationsLayout({ children }: { children: React.ReactNode }) {\n  return <>{children}</>;\n}"],"names":[],"mappings":";;;;;;AAEe,SAAS,oBAAoB,EAAE,QAAQ,EAAiC;IACrF,qBAAO;kBAAG;;AACZ","debugId":null}}]
+}

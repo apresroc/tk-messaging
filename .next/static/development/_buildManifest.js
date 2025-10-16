@@ -5,13 +5,6 @@ self.__BUILD_MANIFEST = {
     "fallback": []
   },
   "sortedPages": [
-    "/Admin",
-    "/Customers",
-    "/Dashboard",
-    "/Index",
-    "/Login",
-    "/NotFound",
-    "/SettingsPage",
     "/_app",
     "/_error"
   ]

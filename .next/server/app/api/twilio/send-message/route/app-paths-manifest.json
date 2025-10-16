@@ -1,0 +1,3 @@
+{
+  "/api/twilio/send-message/route": "app/api/twilio/send-message/route.js"
+}

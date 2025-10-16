@@ -8,7 +8,7 @@ import ConversationList from './ConversationList';
 import MessageThread from './MessageThread';
 import { twilioClient } from '@/lib/twilio-client';
 import { toast } from 'sonner';
-import { MessageSquare, MessageSquarePlus, Settings, X, LogOut, Paperclip, Image, Video } from 'lucide-react';
+import { MessageSquare, MessageSquarePlus, Settings, X, LogOut, Paperclip, Image, Video, Users, UserPlus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 // Using window.location for navigation to support both environments
 
@@ -23,6 +23,9 @@ const UserDashboard = () => {
     content: '',
     media: [] as File[]
   });
+  const [contacts, setContacts] = useState<any[]>([]);
+  const [contactSuggestions, setContactSuggestions] = useState<any[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   // Check if we're on mobile
   useEffect(() => {
@@ -37,10 +40,53 @@ const UserDashboard = () => {
 
   // Initialize data
   useEffect(() => {
-    // Initialize with mock conversations for demo
-    setConversations([]);
-    setMessages({});
+    // Load conversations from localStorage
+    const savedConversations = localStorage.getItem('conversations');
+    if (savedConversations) {
+      const parsedConversations = JSON.parse(savedConversations);
+      // Convert date strings back to Date objects
+      const conversationsWithDates = parsedConversations.map((conv: any) => ({
+        ...conv,
+        lastMessageTime: new Date(conv.lastMessageTime)
+      }));
+      setConversations(conversationsWithDates);
+    }
+    
+    // Load messages from localStorage
+    const savedMessages = localStorage.getItem('messages');
+    if (savedMessages) {
+      const parsedMessages = JSON.parse(savedMessages);
+      // Convert date strings back to Date objects for all messages
+      const messagesWithDates: { [key: string]: Message[] } = {};
+      Object.keys(parsedMessages).forEach(conversationId => {
+        messagesWithDates[conversationId] = parsedMessages[conversationId].map((msg: any) => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp)
+        }));
+      });
+      setMessages(messagesWithDates);
+    }
+    
+    // Load contacts from localStorage
+    const savedContacts = localStorage.getItem('contacts');
+    if (savedContacts) {
+      setContacts(JSON.parse(savedContacts));
+    }
   }, []);
+
+  // Save conversations to localStorage whenever they change
+  useEffect(() => {
+    if (conversations.length > 0) {
+      localStorage.setItem('conversations', JSON.stringify(conversations));
+    }
+  }, [conversations]);
+
+  // Save messages to localStorage whenever they change
+  useEffect(() => {
+    if (Object.keys(messages).length > 0) {
+      localStorage.setItem('messages', JSON.stringify(messages));
+    }
+  }, [messages]);
 
   // If a phone is passed via query param, open New Message prefilled
   useEffect(() => {
@@ -145,6 +191,14 @@ const UserDashboard = () => {
     if (typeof window !== 'undefined') window.location.href = '/settings';
   };
 
+  const handleNavigateToContacts = () => {
+    if (typeof window !== 'undefined') window.location.href = '/contacts';
+  };
+
+  const handleNavigateToAddContact = () => {
+    if (typeof window !== 'undefined') window.location.href = '/contacts/add';
+  };
+
   const handleLogout = () => {
     toast.success('You have been logged out');
     if (typeof window !== 'undefined') window.location.href = '/';
@@ -152,6 +206,41 @@ const UserDashboard = () => {
 
   const handleAddNewMessage = () => {
     setShowNewMessage(true);
+  };
+
+  // Search contacts by name or phone
+  const searchContacts = (query: string) => {
+    if (!query.trim()) {
+      setContactSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    const suggestions = contacts.filter(contact =>
+      contact.name.toLowerCase().includes(query.toLowerCase()) ||
+      contact.phone.includes(query)
+    );
+
+    setContactSuggestions(suggestions);
+    setShowSuggestions(suggestions.length > 0);
+  };
+
+  // Handle phone input change with contact search
+  const handlePhoneChange = (value: string) => {
+    setNewMessage({...newMessage, phone: value});
+    searchContacts(value);
+  };
+
+  // Select a contact from suggestions
+  const selectContact = (contact: any) => {
+    setNewMessage({...newMessage, phone: contact.phone});
+    setShowSuggestions(false);
+    setContactSuggestions([]);
+  };
+
+  // Check if conversation already exists for a contact
+  const getExistingConversation = (contactId: string) => {
+    return conversations.find(conv => conv.contactId === contactId);
   };
 
   const handleSendNewMessage = async () => {
@@ -170,6 +259,51 @@ const UserDashboard = () => {
     try {
       const result = await twilioClient.sendMessage(newMessage.phone, newMessage.content, mediaUrls);
       if (result.success) {
+        // Find or create conversation for this phone number
+        const existingConversation = conversations.find(conv => conv.contactPhone === newMessage.phone);
+        
+        if (existingConversation) {
+          // Update existing conversation
+          setConversations(prev => prev.map(conv => 
+            conv.id === existingConversation.id 
+              ? {
+                  ...conv,
+                  lastMessage: newMessage.content,
+                  lastMessageTime: new Date(),
+                  unreadCount: conv.unreadCount + 1
+                }
+              : conv
+          ));
+          setSelectedConversationId(existingConversation.id);
+        } else {
+          // Create new conversation
+          const newConversation: Conversation = {
+            id: `conv_${Date.now()}`,
+            contactId: `contact_${Date.now()}`,
+            contactName: newMessage.phone, // Use phone as name if no contact found
+            contactPhone: newMessage.phone,
+            lastMessage: newMessage.content,
+            lastMessageTime: new Date(),
+            unreadCount: 0
+          };
+          
+          // Check if we have a contact with this phone number
+          const matchingContact = contacts.find(contact => contact.phone === newMessage.phone);
+          if (matchingContact) {
+            newConversation.contactId = matchingContact.id;
+            newConversation.contactName = matchingContact.name;
+          }
+          
+          setConversations(prev => [newConversation, ...prev]);
+          setSelectedConversationId(newConversation.id);
+          
+          // Initialize empty messages for this conversation
+          setMessages(prev => ({
+            ...prev,
+            [newConversation.id]: []
+          }));
+        }
+        
         toast.success('Message sent successfully');
         setNewMessage({ phone: '', content: '', media: [] });
         setShowNewMessage(false);
@@ -212,6 +346,24 @@ const UserDashboard = () => {
             <p className="text-blue-200">Manage your conversations and contacts</p>
           </div>
           <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleNavigateToAddContact}
+              className="text-blue-200 hover:text-white hover:bg-white/10"
+              title="Add Contact"
+            >
+              <UserPlus className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleNavigateToContacts}
+              className="text-blue-200 hover:text-white hover:bg-white/10"
+              title="Contacts"
+            >
+              <Users className="h-5 w-5" />
+            </Button>
             <Button
               variant="ghost"
               size="icon"
@@ -263,6 +415,28 @@ const UserDashboard = () => {
               <MessageSquarePlus className="h-5 w-5" />
             </Button>
             
+            {/* Add Contact Button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleNavigateToAddContact}
+              className="text-blue-200 hover:text-white hover:bg-white/10"
+              title="Add Contact"
+            >
+              <UserPlus className="h-5 w-5" />
+            </Button>
+            
+            {/* Contacts Button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleNavigateToContacts}
+              className="text-blue-200 hover:text-white hover:bg-white/10"
+              title="Contacts"
+            >
+              <Users className="h-5 w-5" />
+            </Button>
+            
             {/* Settings Button */}
             <Button
               variant="ghost"
@@ -300,6 +474,7 @@ const UserDashboard = () => {
               messages={selectedMessages}
               onSendMessage={handleSendMessage}
               onBack={handleBackToConversations}
+              contacts={contacts}
             />
           ) : (
             <Card className="h-full flex items-center justify-center bg-white/10 backdrop-blur-sm border-white/20">
@@ -343,13 +518,40 @@ const UserDashboard = () => {
               </CardHeader>
               <CardContent className="p-0 space-y-4">
                 <div className="space-y-2">
-                  <Label className="text-gray-700 dark:text-blue-100">Phone Number</Label>
-                  <Input
-                    value={newMessage.phone}
-                    onChange={(e) => setNewMessage({...newMessage, phone: e.target.value})}
-                    placeholder="+1234567890"
-                    className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white"
-                  />
+                  <Label className="text-gray-700 dark:text-blue-100">Phone Number or Contact Name</Label>
+                  <div className="relative">
+                    <Input
+                      value={newMessage.phone}
+                      onChange={(e) => handlePhoneChange(e.target.value)}
+                      placeholder="+1234567890 or type contact name"
+                      className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-gray-900 dark:text-white"
+                      onFocus={() => {
+                        if (contactSuggestions.length > 0) {
+                          setShowSuggestions(true);
+                        }
+                      }}
+                      onBlur={() => {
+                        // Delay hiding suggestions to allow clicking on them
+                        setTimeout(() => setShowSuggestions(false), 200);
+                      }}
+                    />
+                    
+                    {/* Contact Suggestions Dropdown */}
+                    {showSuggestions && contactSuggestions.length > 0 && (
+                      <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-md shadow-lg z-10 max-h-48 overflow-y-auto">
+                        {contactSuggestions.map((contact) => (
+                          <div
+                            key={contact.id}
+                            className="px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer border-b border-slate-200 dark:border-slate-600 last:border-b-0"
+                            onClick={() => selectContact(contact)}
+                          >
+                            <div className="font-medium text-gray-900 dark:text-white">{contact.name}</div>
+                            <div className="text-sm text-gray-500 dark:text-gray-400">{contact.phone}</div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
                 
                 <div className="space-y-2">

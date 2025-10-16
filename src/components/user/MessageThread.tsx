@@ -19,12 +19,14 @@ const MessageThread = ({
   conversation,
   messages,
   onSendMessage,
-  onBack
+  onBack,
+  contacts = []
 }: { 
   conversation: Conversation | null;
   messages: Message[];
   onSendMessage: (content: string, mediaUrl?: string[]) => void;
   onBack?: () => void;
+  contacts?: any[];
 }) => {
   const [newMessage, setNewMessage] = useState('');
   const [mediaFiles, setMediaFiles] = useState<File[]>([]);
@@ -94,17 +96,33 @@ const MessageThread = ({
     if (onBack) onBack();
   };
 
-  const handleAddRecipient = () => {
-    if (!conversation) return;
-    toast.info('Add recipient functionality would open here');
-    // In a real app, this would open a modal to add recipients
-  };
 
   const handleAddToContacts = () => {
     if (!conversation) return;
+    
+    // Check if contact already exists
+    const existingContact = contacts.find(contact => contact.phone === conversation.contactPhone);
+    if (existingContact) {
+      toast.info(`${conversation.contactName} is already in your contacts`);
+      return;
+    }
+    
+    // Add to contacts
+    const newContact = {
+      id: `contact_${Date.now()}`,
+      name: conversation.contactName,
+      phone: conversation.contactPhone,
+      email: ''
+    };
+    
+    const updatedContacts = [...contacts, newContact];
+    localStorage.setItem('contacts', JSON.stringify(updatedContacts));
     toast.success(`${conversation.contactName} added to contacts`);
-    // In a real app, this would add the contact to the user's contacts
   };
+
+  // Check if contact already exists
+  const isContactAlreadyAdded = conversation ? 
+    contacts.some(contact => contact.phone === conversation.contactPhone) : false;
 
   if (!conversation) {
     return (
@@ -159,13 +177,13 @@ const MessageThread = ({
                 <Trash2 className="mr-2 h-4 w-4" />
                 <span>Delete Conversation</span>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleAddRecipient}>
-                <UserPlus className="mr-2 h-4 w-4" />
-                <span>Add Recipient</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleAddToContacts}>
+              <DropdownMenuItem 
+                onClick={handleAddToContacts}
+                disabled={isContactAlreadyAdded}
+                className={isContactAlreadyAdded ? "opacity-50 cursor-not-allowed" : ""}
+              >
                 <User className="mr-2 h-4 w-4" />
-                <span>Add to Contacts</span>
+                <span>{isContactAlreadyAdded ? "Already in Contacts" : "Add to Contacts"}</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
